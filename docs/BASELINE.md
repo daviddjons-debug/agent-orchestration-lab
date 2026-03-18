@@ -4,8 +4,8 @@
 A minimal 4-step orchestration pipeline is working:
 
 1. `scripts/orchestrator.py` creates a new run folder with initial artifacts.
-2. `scripts/planner.py` creates `02_planner.md` from `01_orchestrator.md`.
-3. `scripts/builder.py` reads the plan semantically and writes `output/result.json`.
+2. `scripts/planner.py` creates `02_plan.json` as the source-of-truth plan and `02_planner.md` as a human-readable trace.
+3. `scripts/builder.py` reads `02_plan.json` and writes `output/result.json`.
 4. `scripts/reviewer.py` validates files on disk and returns PASS/FAIL.
 
 ## Current artifact contract
@@ -43,7 +43,7 @@ That defect was fixed by making `builder.py` parse planner-defined fields and bu
 ## Current conclusion
 This repository now proves **orchestration mechanics** with:
 - separate executable role nodes
-- semantic planner -> builder handoff
+- structured planner -> builder handoff via `02_plan.json`
 - structured artifact generation
 - formal reviewer gate
 - reproducible regression test

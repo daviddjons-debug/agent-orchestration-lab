@@ -5,6 +5,7 @@ import sys
 REQUIRED = [
     "00_user_goal.md",
     "01_orchestrator.md",
+    "02_plan.json",
     "02_planner.md",
     "03_builder.md",
     "run_manifest.json",
@@ -26,6 +27,7 @@ def main() -> int:
     require_exact_message = True
 
     artifact = base / artifact_rel
+    plan_ok = False
     json_ok = False
     status_ok = False
     message_ok = False
@@ -43,6 +45,18 @@ def main() -> int:
 
         artifact = base / artifact_rel
 
+        try:
+            plan = json.loads((base / "02_plan.json").read_text(encoding="utf-8"))
+            plan_ok = (
+                isinstance(plan, dict)
+                and plan.get("artifact_path") == artifact_rel
+                and isinstance(plan.get("payload"), dict)
+                and plan["payload"].get("status") == expected_status
+                and plan["payload"].get("message") == expected_message
+            )
+        except Exception:
+            plan_ok = False
+
         if artifact.exists():
             try:
                 data = json.loads(artifact.read_text(encoding="utf-8"))
@@ -59,13 +73,14 @@ def main() -> int:
             if not require_exact_message:
                 message_ok = artifact.exists()
 
-    ok = (not missing) and artifact.exists() and json_ok and status_ok and message_ok
+    ok = (not missing) and plan_ok and artifact.exists() and json_ok and status_ok and message_ok
 
     verdict = (
         "# Reviewer Verdict\n\n"
-        "Source: files on disk, run_manifest.json, and review_policy\n\n"
+        "Source: files on disk, run_manifest.json, 02_plan.json, and review_policy\n\n"
         "Checklist:\n"
         f"- [{'x' if not missing else ' '}] Required prior artifacts exist\n"
+        f"- [{'x' if plan_ok else ' '}] 02_plan.json matches run_manifest.json contract\n"
         f"- [{'x' if artifact.exists() else ' '}] {artifact_rel} exists\n"
         f"- [{'x' if json_ok else ' '}] {artifact_rel} satisfies JSON policy\n"
         f"- [{'x' if status_ok else ' '}] status satisfies policy\n"

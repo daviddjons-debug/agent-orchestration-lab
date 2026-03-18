@@ -12,8 +12,8 @@ USER_GOAL = (
 ORCHESTRATOR_HANDOFF = (
     "# Orchestrator Handoff\n\n"
     "Assigned workflow:\n"
-    "1. Planner must read only this handoff and create 02_planner.md.\n"
-    "2. Builder must read only 02_planner.md and create output/result.json plus 03_builder.md.\n"
+    "1. Planner must read only this handoff and run_manifest.json, then create 02_plan.json and 02_planner.md.\n"
+    "2. Builder must read only 02_plan.json and create output/result.json plus 03_builder.md.\n"
     "3. Reviewer must evaluate files on disk and write 04_reviewer.md.\n\n"
     "Constraints:\n"
     "- Expected artifact path: output/result.json\n"
