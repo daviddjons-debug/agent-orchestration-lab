@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 import subprocess
 import sys
 
@@ -26,14 +27,29 @@ def main() -> int:
     run_dir = latest_run(base)
     print(f"SELFTEST_RUN={run_dir}")
 
+    manifest_file = run_dir / "run_manifest.json"
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    manifest["artifact_path"] = "output/custom/result.json"
+    manifest["expected_message"] = "manifest override works"
+    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+    sh(["python3", "scripts/planner.py", str(run_dir)])
+    sh(["python3", "scripts/builder.py", str(run_dir)])
+    override_pass = sh(["python3", "scripts/reviewer.py", str(run_dir)])
+    if "Final verdict: PASS" not in override_pass.stdout:
+        print("SELFTEST ERROR: expected PASS after manifest override")
+        return 1
+
     plan = run_dir / "02_planner.md"
     plan.write_text(
         "# Planner Output\n\n"
-        "Source: 01_orchestrator.md only\n\n"
+        "Source: 01_orchestrator.md and run_manifest.json only\n\n"
         "Plan:\n"
-        "1. Create output/result.json\n"
-        "2. Write JSON field status: WRONG\n"
-        "3. Write JSON field message: WRONG VALUE\n",
+        "1. Create directory output if missing.\n"
+        "2. Create file output/custom/result.json.\n"
+        "3. Write JSON field status: WRONG\n"
+        "4. Write JSON field message: WRONG VALUE\n"
+        "5. Record completion in 03_builder.md.\n",
         encoding="utf-8",
     )
 
@@ -47,7 +63,7 @@ def main() -> int:
     sh(["python3", "scripts/builder.py", str(run_dir)])
     good = sh(["python3", "scripts/reviewer.py", str(run_dir)])
     if "Final verdict: PASS" not in good.stdout:
-        print("SELFTEST ERROR: expected PASS after plan restore")
+        print("SELFTEST ERROR: expected PASS after planner restore")
         return 1
 
     print("SELFTEST RESULT: PASS")

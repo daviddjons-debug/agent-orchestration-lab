@@ -1,5 +1,6 @@
 from pathlib import Path
 from datetime import datetime
+import json
 import sys
 
 USER_GOAL = (
@@ -12,11 +13,12 @@ ORCHESTRATOR_HANDOFF = (
     "# Orchestrator Handoff\n\n"
     "Assigned workflow:\n"
     "1. Planner must read only this handoff and create 02_planner.md.\n"
-    "2. Builder must read only 02_planner.md and create output/hello.txt plus 03_builder.md.\n"
+    "2. Builder must read only 02_planner.md and create output/result.json plus 03_builder.md.\n"
     "3. Reviewer must evaluate files on disk and write 04_reviewer.md.\n\n"
     "Constraints:\n"
-    "- Expected artifact path: output/hello.txt\n"
-    "- Expected exact content: multi-agent orchestration check passed\n"
+    "- Expected artifact path: output/result.json\n"
+    "- Expected JSON field status: ok\n"
+    "- Expected JSON field message: multi-agent orchestration check passed\n"
     "- Any missing file or content mismatch = FAIL\n"
 )
 
@@ -26,8 +28,16 @@ def main() -> int:
     base = root / run
     base.mkdir(parents=True, exist_ok=True)
 
+    manifest = {
+        "run_id": run,
+        "artifact_path": "output/result.json",
+        "expected_status": "ok",
+        "expected_message": "multi-agent orchestration check passed",
+    }
+
     (base / "00_user_goal.md").write_text(USER_GOAL, encoding="utf-8")
     (base / "01_orchestrator.md").write_text(ORCHESTRATOR_HANDOFF, encoding="utf-8")
+    (base / "run_manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
     print(base)
     return 0
