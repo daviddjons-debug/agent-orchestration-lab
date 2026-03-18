@@ -115,6 +115,7 @@ def main() -> int:
         encoding="utf-8",
     )
 
+    print("== EXPECTED FAILURE: invalid 02_plan.json schema ==")
     invalid_plan = sh(["python3", "scripts/builder.py", str(run_dir)], allow_fail=True)
     if invalid_plan.returncode == 0:
         print("SELFTEST ERROR: expected builder failure on invalid 02_plan.json")
@@ -122,6 +123,7 @@ def main() -> int:
     if "json artifact missing object field: required_fields" not in ((invalid_plan.stdout or "") + (invalid_plan.stderr or "")):
         print("SELFTEST ERROR: expected explicit schema error for invalid 02_plan.json")
         return 1
+    print("Expected builder failure observed.")
 
     print("SELFTEST RESULT: PASS")
     return 0
