@@ -24,34 +24,47 @@ def main() -> int:
     if not isinstance(plan, dict):
         return fail("02_plan.json root must be an object")
 
-    artifact_rel = plan.get("artifact_path")
-    payload = plan.get("payload")
+    artifacts = plan.get("artifacts")
+    if not isinstance(artifacts, list) or not artifacts:
+        return fail("02_plan.json missing non-empty list field: artifacts")
 
-    if not isinstance(artifact_rel, str) or not artifact_rel.strip():
-        return fail("02_plan.json missing non-empty string field: artifact_path")
-    if not isinstance(payload, dict):
-        return fail("02_plan.json missing object field: payload")
+    created = []
+    for artifact_spec in artifacts:
+        if not isinstance(artifact_spec, dict):
+            return fail("02_plan.json artifacts must contain only objects")
 
-    status_value = payload.get("status")
-    message_value = payload.get("message")
+        artifact_rel = artifact_spec.get("path")
+        artifact_type = artifact_spec.get("type")
 
-    if not isinstance(status_value, str):
-        return fail("02_plan.json payload missing string field: status")
-    if not isinstance(message_value, str):
-        return fail("02_plan.json payload missing string field: message")
+        if not isinstance(artifact_rel, str) or not artifact_rel.strip():
+            return fail("artifact spec missing non-empty string field: path")
+        if artifact_type not in {"json", "text"}:
+            return fail(f"artifact spec has unsupported type: {artifact_type}")
 
-    artifact = base / artifact_rel
-    artifact.parent.mkdir(parents=True, exist_ok=True)
-    artifact.write_text(json.dumps({"status": status_value, "message": message_value}, indent=2) + "\n", encoding="utf-8")
+        artifact = base / artifact_rel
+        artifact.parent.mkdir(parents=True, exist_ok=True)
+
+        if artifact_type == "json":
+            required_fields = artifact_spec.get("required_fields")
+            if not isinstance(required_fields, dict):
+                return fail(f"json artifact missing object field: required_fields ({artifact_rel})")
+            artifact.write_text(json.dumps(required_fields, indent=2) + "\n", encoding="utf-8")
+            created.append(f"- created {artifact_rel} [json]")
+        else:
+            exact_content = artifact_spec.get("exact_content")
+            if not isinstance(exact_content, str):
+                return fail(f"text artifact missing string field: exact_content ({artifact_rel})")
+            artifact.write_text(exact_content, encoding="utf-8")
+            created.append(f"- created {artifact_rel} [text]")
 
     builder_report = (
         "# Builder Output\n\n"
         "Source: 02_plan.json only\n\n"
         "Actions completed:\n"
-        f"- created {artifact_rel}\n"
-        f"- wrote JSON from planner: status={status_value}, message={message_value}\n\n"
-        "Artifact path:\n"
-        f"- {artifact_rel}\n"
+        + "\n".join(created)
+        + "\n\nArtifact paths:\n"
+        + "\n".join(f"- {a['path']}" for a in artifacts)
+        + "\n"
     )
     (base / "03_builder.md").write_text(builder_report, encoding="utf-8")
     print(builder_report)

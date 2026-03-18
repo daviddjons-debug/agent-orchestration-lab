@@ -19,74 +19,80 @@ def main() -> int:
     base = Path(sys.argv[1])
     missing = [x for x in REQUIRED if not (base / x).exists()]
 
-    artifact_rel = "output/result.json"
-    expected_status = "ok"
-    expected_message = "multi-agent orchestration check passed"
-    require_valid_json = True
-    require_exact_status = True
-    require_exact_message = True
-
-    artifact = base / artifact_rel
     plan_ok = False
-    json_ok = False
-    status_ok = False
-    message_ok = False
+    artifact_checks = []
+    artifact_results = []
+    ok = False
 
     if not missing:
-        manifest = json.loads((base / "run_manifest.json").read_text(encoding="utf-8"))
-        artifact_rel = manifest["artifact_path"]
-        expected_status = manifest["expected_status"]
-        expected_message = manifest["expected_message"]
-
-        policy = manifest.get("review_policy", {})
-        require_valid_json = policy.get("require_valid_json", True)
-        require_exact_status = policy.get("require_exact_status", True)
-        require_exact_message = policy.get("require_exact_message", True)
-
-        artifact = base / artifact_rel
-
         try:
+            manifest = json.loads((base / "run_manifest.json").read_text(encoding="utf-8"))
             plan = json.loads((base / "02_plan.json").read_text(encoding="utf-8"))
-            plan_ok = (
-                isinstance(plan, dict)
-                and plan.get("artifact_path") == artifact_rel
-                and isinstance(plan.get("payload"), dict)
-                and plan["payload"].get("status") == expected_status
-                and plan["payload"].get("message") == expected_message
-            )
         except Exception:
-            plan_ok = False
+            manifest = None
+            plan = None
 
-        if artifact.exists():
-            try:
-                data = json.loads(artifact.read_text(encoding="utf-8"))
-                json_ok = isinstance(data, dict)
-                status_ok = json_ok and ((data.get("status") == expected_status) if require_exact_status else ("status" in data))
-                message_ok = json_ok and ((data.get("message") == expected_message) if require_exact_message else ("message" in data))
-            except Exception:
-                json_ok = False
+        manifest_artifacts = manifest.get("artifacts") if isinstance(manifest, dict) else None
+        plan_artifacts = plan.get("artifacts") if isinstance(plan, dict) else None
+        policy = manifest.get("review_policy", {}) if isinstance(manifest, dict) else {}
 
-        if not require_valid_json:
-            json_ok = artifact.exists()
-            if not require_exact_status:
-                status_ok = artifact.exists()
-            if not require_exact_message:
-                message_ok = artifact.exists()
+        require_valid_json = policy.get("require_valid_json", True)
+        require_exact_text = policy.get("require_exact_text", True)
 
-    ok = (not missing) and plan_ok and artifact.exists() and json_ok and status_ok and message_ok
+        plan_ok = (
+            isinstance(manifest_artifacts, list)
+            and isinstance(plan_artifacts, list)
+            and plan_artifacts == manifest_artifacts
+        )
 
-    verdict = (
-        "# Reviewer Verdict\n\n"
-        "Source: files on disk, run_manifest.json, 02_plan.json, and review_policy\n\n"
-        "Checklist:\n"
-        f"- [{'x' if not missing else ' '}] Required prior artifacts exist\n"
-        f"- [{'x' if plan_ok else ' '}] 02_plan.json matches run_manifest.json contract\n"
-        f"- [{'x' if artifact.exists() else ' '}] {artifact_rel} exists\n"
-        f"- [{'x' if json_ok else ' '}] {artifact_rel} satisfies JSON policy\n"
-        f"- [{'x' if status_ok else ' '}] status satisfies policy\n"
-        f"- [{'x' if message_ok else ' '}] message satisfies policy\n\n"
-        f"Final verdict: {'PASS' if ok else 'FAIL'}\n"
-    )
+        if isinstance(manifest_artifacts, list):
+            for spec in manifest_artifacts:
+                path = spec.get("path", "<missing>")
+                atype = spec.get("type")
+                artifact = base / path
+                exists_ok = artifact.exists()
+                content_ok = False
+
+                if exists_ok:
+                    if atype == "json":
+                        try:
+                            data = json.loads(artifact.read_text(encoding="utf-8"))
+                            required_fields = spec.get("required_fields")
+                            if isinstance(required_fields, dict):
+                                content_ok = isinstance(data, dict) and all(data.get(k) == v for k, v in required_fields.items())
+                            elif not require_valid_json:
+                                content_ok = True
+                        except Exception:
+                            content_ok = not require_valid_json
+                    elif atype == "text":
+                        exact_content = spec.get("exact_content")
+                        if isinstance(exact_content, str):
+                            actual = artifact.read_text(encoding="utf-8")
+                            content_ok = (actual == exact_content) if require_exact_text else True
+
+                artifact_checks.append((path, exists_ok, content_ok))
+                artifact_results.append(exists_ok and content_ok)
+
+        ok = (not missing) and plan_ok and bool(artifact_results) and all(artifact_results)
+
+    lines = [
+        "# Reviewer Verdict",
+        "",
+        "Source: files on disk, run_manifest.json, 02_plan.json, and review_policy",
+        "",
+        "Checklist:",
+        f"- [{'x' if not missing else ' '}] Required prior artifacts exist",
+        f"- [{'x' if plan_ok else ' '}] 02_plan.json matches run_manifest.json contract",
+    ]
+    for path, exists_ok, content_ok in artifact_checks:
+        lines.append(f"- [{'x' if exists_ok else ' '}] {path} exists")
+        lines.append(f"- [{'x' if content_ok else ' '}] {path} satisfies declared contract")
+    lines.extend([
+        "",
+        f"Final verdict: {'PASS' if ok else 'FAIL'}",
+        "",
+    ])
+    verdict = "\n".join(lines)
 
     (base / "04_reviewer.md").write_text(verdict, encoding="utf-8")
     print(verdict)

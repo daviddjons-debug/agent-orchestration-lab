@@ -30,8 +30,21 @@ def main() -> int:
     manifest_file = run_dir / "run_manifest.json"
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
 
-    manifest["artifact_path"] = "output/custom/result.json"
-    manifest["expected_message"] = "manifest override works"
+    manifest["artifacts"] = [
+        {
+            "path": "output/custom/result.json",
+            "type": "json",
+            "required_fields": {
+                "status": "ok",
+                "message": "manifest override works",
+            },
+        },
+        {
+            "path": "output/custom/summary.txt",
+            "type": "text",
+            "exact_content": "manifest override works\n",
+        },
+    ]
     manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
     sh(["python3", "scripts/planner.py", str(run_dir)])
@@ -41,32 +54,13 @@ def main() -> int:
         print("SELFTEST ERROR: expected PASS after manifest override")
         return 1
 
-    plan = run_dir / "02_plan.json"
-    plan.write_text(
-        json.dumps(
-            {
-                "source": ["01_orchestrator.md", "run_manifest.json"],
-                "steps": [
-                    "Create directory output if missing.",
-                    "Create file output/custom/result.json.",
-                    "Write JSON field status: WRONG",
-                    "Write JSON field message: WRONG VALUE",
-                    "Record completion in 03_builder.md.",
-                ],
-                "artifact_path": "output/custom/result.json",
-                "payload": {"status": "WRONG", "message": "WRONG VALUE"},
-                "acceptance_criteria": [
-                    "output/custom/result.json exists",
-                    "file contains valid JSON",
-                    "status exactly equals: ok",
-                    "message exactly equals: manifest override works",
-                    "any mismatch must cause reviewer FAIL",
-                ],
-            },
-            indent=2,
-        ) + "\n",
-        encoding="utf-8",
-    )
+    plan_file = run_dir / "02_plan.json"
+    plan_data = json.loads(plan_file.read_text(encoding="utf-8"))
+    corrupted = json.loads(json.dumps(plan_data))
+    corrupted["artifacts"][0]["required_fields"]["status"] = "WRONG"
+    corrupted["artifacts"][0]["required_fields"]["message"] = "WRONG VALUE"
+    corrupted["artifacts"][1]["exact_content"] = "WRONG VALUE\n"
+    plan_file.write_text(json.dumps(corrupted, indent=2) + "\n", encoding="utf-8")
 
     sh(["python3", "scripts/builder.py", str(run_dir)])
     bad = sh(["python3", "scripts/reviewer.py", str(run_dir)], allow_fail=True)
@@ -83,25 +77,38 @@ def main() -> int:
 
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
     manifest["review_policy"]["require_valid_json"] = False
-    manifest["review_policy"]["require_exact_status"] = False
-    manifest["review_policy"]["require_exact_message"] = False
+    manifest["review_policy"]["require_exact_text"] = False
     manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
-    artifact = run_dir / manifest["artifact_path"]
-    artifact.parent.mkdir(parents=True, exist_ok=True)
-    artifact.write_text("NOT JSON AT ALL\n", encoding="utf-8")
+    json_artifact = next(a for a in manifest["artifacts"] if a["type"] == "json")
+    text_artifact = next(a for a in manifest["artifacts"] if a["type"] == "text")
+
+    artifact_json = run_dir / json_artifact["path"]
+    artifact_json.parent.mkdir(parents=True, exist_ok=True)
+    artifact_json.write_text("NOT JSON AT ALL\n", encoding="utf-8")
+
+    artifact_text = run_dir / text_artifact["path"]
+    artifact_text.parent.mkdir(parents=True, exist_ok=True)
+    artifact_text.write_text("TOTALLY DIFFERENT TEXT\n", encoding="utf-8")
 
     relaxed = sh(["python3", "scripts/reviewer.py", str(run_dir)])
     if "Final verdict: PASS" not in relaxed.stdout:
-        print("SELFTEST ERROR: expected PASS on fully relaxed non-JSON policy")
+        print("SELFTEST ERROR: expected PASS on relaxed artifact policy")
         return 1
 
     broken_plan = run_dir / "02_plan.json"
     broken_plan.write_text(
         json.dumps(
             {
-                "artifact_path": manifest["artifact_path"],
-                "payload": {"status": "ok"},
+                "source": ["01_orchestrator.md", "run_manifest.json"],
+                "steps": ["broken"],
+                "artifacts": [
+                    {
+                        "path": json_artifact["path"],
+                        "type": "json",
+                    }
+                ],
+                "acceptance_criteria": ["broken"],
             },
             indent=2,
         ) + "\n",
@@ -112,7 +119,7 @@ def main() -> int:
     if invalid_plan.returncode == 0:
         print("SELFTEST ERROR: expected builder failure on invalid 02_plan.json")
         return 1
-    if "payload missing string field: message" not in ((invalid_plan.stdout or "") + (invalid_plan.stderr or "")):
+    if "json artifact missing object field: required_fields" not in ((invalid_plan.stdout or "") + (invalid_plan.stderr or "")):
         print("SELFTEST ERROR: expected explicit schema error for invalid 02_plan.json")
         return 1
 

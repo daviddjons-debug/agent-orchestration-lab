@@ -5,7 +5,7 @@ A minimal 4-step orchestration pipeline is working:
 
 1. `scripts/orchestrator.py` creates a new run folder with initial artifacts.
 2. `scripts/planner.py` creates `02_plan.json` as the source-of-truth plan and `02_planner.md` as a human-readable trace.
-3. `scripts/builder.py` reads `02_plan.json` and writes `output/result.json`.
+3. `scripts/builder.py` reads `02_plan.json` and writes all declared output artifacts.
 4. `scripts/reviewer.py` validates files on disk and returns PASS/FAIL.
 
 ## Current artifact contract
@@ -54,4 +54,4 @@ It does **not** yet prove:
 - dynamic planning quality across non-trivial tasks
 
 ## Next likely milestone
-Move from one small JSON artifact to a richer structured artifact or a tiny multi-file output with stricter reviewer assertions.
+Extend the artifact contract further with nested directories, richer schemas, or additional artifact types beyond `json` and `text`.

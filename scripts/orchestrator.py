@@ -13,12 +13,10 @@ ORCHESTRATOR_HANDOFF = (
     "# Orchestrator Handoff\n\n"
     "Assigned workflow:\n"
     "1. Planner must read only this handoff and run_manifest.json, then create 02_plan.json and 02_planner.md.\n"
-    "2. Builder must read only 02_plan.json and create output/result.json plus 03_builder.md.\n"
+    "2. Builder must read only 02_plan.json and create all declared output files plus 03_builder.md.\n"
     "3. Reviewer must evaluate files on disk and write 04_reviewer.md.\n\n"
     "Constraints:\n"
-    "- Expected artifact path: output/result.json\n"
-    "- Expected JSON field status: ok\n"
-    "- Expected JSON field message: multi-agent orchestration check passed\n"
+    "- Expected artifact files are declared in run_manifest.json\n"
     "- Any missing file or content mismatch = FAIL\n"
 )
 
@@ -30,13 +28,24 @@ def main() -> int:
 
     manifest = {
         "run_id": run,
-        "artifact_path": "output/result.json",
-        "expected_status": "ok",
-        "expected_message": "multi-agent orchestration check passed",
+        "artifacts": [
+            {
+                "path": "output/result.json",
+                "type": "json",
+                "required_fields": {
+                    "status": "ok",
+                    "message": "multi-agent orchestration check passed",
+                },
+            },
+            {
+                "path": "output/summary.txt",
+                "type": "text",
+                "exact_content": "multi-agent orchestration check passed\n",
+            },
+        ],
         "review_policy": {
             "require_valid_json": True,
-            "require_exact_status": True,
-            "require_exact_message": True,
+            "require_exact_text": True,
         },
     }
 
