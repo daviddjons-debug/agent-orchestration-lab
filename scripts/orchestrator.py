@@ -33,6 +33,11 @@ def main() -> int:
         "artifact_path": "output/result.json",
         "expected_status": "ok",
         "expected_message": "multi-agent orchestration check passed",
+        "review_policy": {
+            "require_valid_json": True,
+            "require_exact_status": True,
+            "require_exact_message": True,
+        },
     }
 
     (base / "00_user_goal.md").write_text(USER_GOAL, encoding="utf-8")

@@ -21,6 +21,10 @@ def main() -> int:
     artifact_rel = "output/result.json"
     expected_status = "ok"
     expected_message = "multi-agent orchestration check passed"
+    require_valid_json = True
+    require_exact_status = True
+    require_exact_message = True
+
     artifact = base / artifact_rel
     json_ok = False
     status_ok = False
@@ -31,28 +35,41 @@ def main() -> int:
         artifact_rel = manifest["artifact_path"]
         expected_status = manifest["expected_status"]
         expected_message = manifest["expected_message"]
+
+        policy = manifest.get("review_policy", {})
+        require_valid_json = policy.get("require_valid_json", True)
+        require_exact_status = policy.get("require_exact_status", True)
+        require_exact_message = policy.get("require_exact_message", True)
+
         artifact = base / artifact_rel
 
         if artifact.exists():
             try:
                 data = json.loads(artifact.read_text(encoding="utf-8"))
                 json_ok = isinstance(data, dict)
-                status_ok = json_ok and data.get("status") == expected_status
-                message_ok = json_ok and data.get("message") == expected_message
+                status_ok = json_ok and ((data.get("status") == expected_status) if require_exact_status else ("status" in data))
+                message_ok = json_ok and ((data.get("message") == expected_message) if require_exact_message else ("message" in data))
             except Exception:
                 json_ok = False
+
+        if not require_valid_json:
+            json_ok = artifact.exists()
+            if not require_exact_status:
+                status_ok = artifact.exists()
+            if not require_exact_message:
+                message_ok = artifact.exists()
 
     ok = (not missing) and artifact.exists() and json_ok and status_ok and message_ok
 
     verdict = (
         "# Reviewer Verdict\n\n"
-        "Source: files on disk and run_manifest.json\n\n"
+        "Source: files on disk, run_manifest.json, and review_policy\n\n"
         "Checklist:\n"
         f"- [{'x' if not missing else ' '}] Required prior artifacts exist\n"
         f"- [{'x' if artifact.exists() else ' '}] {artifact_rel} exists\n"
-        f"- [{'x' if json_ok else ' '}] {artifact_rel} contains valid JSON\n"
-        f"- [{'x' if status_ok else ' '}] status matches manifest expected value\n"
-        f"- [{'x' if message_ok else ' '}] message matches manifest expected value\n\n"
+        f"- [{'x' if json_ok else ' '}] {artifact_rel} satisfies JSON policy\n"
+        f"- [{'x' if status_ok else ' '}] status satisfies policy\n"
+        f"- [{'x' if message_ok else ' '}] message satisfies policy\n\n"
         f"Final verdict: {'PASS' if ok else 'FAIL'}\n"
     )
 

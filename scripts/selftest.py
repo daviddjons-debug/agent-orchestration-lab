@@ -29,6 +29,7 @@ def main() -> int:
 
     manifest_file = run_dir / "run_manifest.json"
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+
     manifest["artifact_path"] = "output/custom/result.json"
     manifest["expected_message"] = "manifest override works"
     manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
@@ -64,6 +65,21 @@ def main() -> int:
     good = sh(["python3", "scripts/reviewer.py", str(run_dir)])
     if "Final verdict: PASS" not in good.stdout:
         print("SELFTEST ERROR: expected PASS after planner restore")
+        return 1
+
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    manifest["review_policy"]["require_valid_json"] = False
+    manifest["review_policy"]["require_exact_status"] = False
+    manifest["review_policy"]["require_exact_message"] = False
+    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+    artifact = run_dir / manifest["artifact_path"]
+    artifact.parent.mkdir(parents=True, exist_ok=True)
+    artifact.write_text("NOT JSON AT ALL\n", encoding="utf-8")
+
+    relaxed = sh(["python3", "scripts/reviewer.py", str(run_dir)])
+    if "Final verdict: PASS" not in relaxed.stdout:
+        print("SELFTEST ERROR: expected PASS on fully relaxed non-JSON policy")
         return 1
 
     print("SELFTEST RESULT: PASS")
