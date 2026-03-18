@@ -1,40 +1,39 @@
-# Next Experiment — Structured Artifact
+# Next Experiment — Beyond the Multi-File Baseline
 
-## Goal
-Upgrade the orchestration test from a toy text artifact to a structured output artifact.
+## Current state
+The lab already proves a structured multi-file artifact contract:
+- planner writes `02_plan.json` as the source of truth;
+- builder creates multiple manifest-declared artifacts;
+- reviewer validates both contract alignment and artifact contents;
+- selftest covers valid, broken, restored, relaxed, and invalid-schema cases.
 
-## New target artifact
-`output/result.json`
+## Next goal
+Move from a minimal multi-file proof to a richer contract that is still falsifiable and easy to audit.
 
-## Required JSON shape
-```json
-{
-  "status": "ok",
-  "message": "multi-agent orchestration check passed"
-}
-```
+## Candidate upgrade paths
+1. **Richer JSON schema**
+   - nested objects;
+   - arrays with exact expectations;
+   - stricter reviewer assertions.
 
-## Why this matters
-A plain text file is too weak as a proof target.
-A structured artifact allows stricter validation:
-- required file path
-- valid JSON syntax
-- required keys
-- exact values
-- future schema extension
+2. **Additional artifact types**
+   - add a second structured file;
+   - validate mixed artifact sets under one run contract.
 
-## What will need to change
-1. `planner.py` must define the required JSON artifact and expected values.
-2. `builder.py` must read the planner output semantically and create `output/result.json`.
-3. `reviewer.py` must validate:
-   - file existence
-   - valid JSON
-   - required keys
-   - exact expected values
-4. `selftest.py` must corrupt JSON expectations and verify FAIL, then restore and verify PASS.
+3. **Nested output topology**
+   - require artifacts in subdirectories;
+   - confirm builder and reviewer handle multi-path outputs correctly.
+
+4. **Planner hardening**
+   - validate planner output shape before builder execution;
+   - make planner defects fail earlier and more explicitly.
+
+5. **More realistic task shape**
+   - preserve strict contracts while moving beyond toy content generation.
 
 ## Success criterion
-The full scripted pipeline must pass on valid JSON output and fail on semantic corruption.
-
-## Constraint
-Do not remove the current baseline until the JSON pipeline is proven.
+The upgraded pipeline must still satisfy all of the following:
+- valid runs pass end-to-end;
+- corrupted contract or corrupted output fails deterministically;
+- restored state passes again;
+- the reason for failure is visible in the run artifacts and console output.
