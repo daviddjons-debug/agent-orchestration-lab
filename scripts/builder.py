@@ -61,7 +61,14 @@ def main() -> int:
         if not isinstance(value, list) or not value or not all(isinstance(x, str) and x.strip() for x in value):
             return fail(f"02_plan.json missing non-empty string-list field: {field}")
 
+    allowed_read_set = plan["allowed_read_set"]
     allowed_change_set = plan["allowed_change_set"]
+
+    normalized_read_set = [item.strip() for item in allowed_read_set]
+    if "02_plan.json" not in normalized_read_set:
+        return fail("allowed_read_set must include 02_plan.json for baseline builder contract")
+    if any(item != "02_plan.json" for item in normalized_read_set):
+        return fail("allowed_read_set exceeds baseline builder read contract")
 
     artifacts = plan.get("artifacts")
     if not isinstance(artifacts, list) or not artifacts:

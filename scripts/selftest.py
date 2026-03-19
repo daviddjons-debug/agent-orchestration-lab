@@ -120,6 +120,26 @@ def main() -> int:
         print("SELFTEST ERROR: expected PASS after restoring builder boundary contract")
         return 1
 
+    read_boundary_plan = json.loads((run_dir / "02_plan.json").read_text(encoding="utf-8"))
+    read_boundary_plan["allowed_read_set"] = ["02_plan.json", "run_manifest.json"]
+    (run_dir / "02_plan.json").write_text(json.dumps(read_boundary_plan, indent=2) + "\n", encoding="utf-8")
+
+    builder_read_boundary = sh(["python3", "scripts/builder.py", str(run_dir)], allow_fail=True)
+    if builder_read_boundary.returncode == 0:
+        print("SELFTEST ERROR: expected builder FAIL when allowed_read_set exceeds baseline builder contract")
+        return 1
+    read_boundary_text = (builder_read_boundary.stdout or "") + (builder_read_boundary.stderr or "")
+    if "allowed_read_set exceeds baseline builder read contract" not in read_boundary_text:
+        print("SELFTEST ERROR: expected explicit builder evidence for allowed_read_set enforcement")
+        return 1
+
+    sh(["python3", "scripts/planner.py", str(run_dir)])
+    sh(["python3", "scripts/builder.py", str(run_dir)])
+    read_boundary_restored = sh(["python3", "scripts/reviewer.py", str(run_dir)])
+    if "Final verdict: PASS" not in read_boundary_restored.stdout:
+        print("SELFTEST ERROR: expected PASS after restoring builder read boundary contract")
+        return 1
+
     rogue = run_dir / "output/rogue.txt"
     rogue.parent.mkdir(parents=True, exist_ok=True)
     rogue.write_text("drift\n", encoding="utf-8")
@@ -195,11 +215,11 @@ def main() -> int:
                 "objective": "Produce declared artifacts for the current run contract",
                 "problem_locus": "run contract files and declared outputs",
                 "dependency_ring": ["01_orchestrator.md", "run_manifest.json", "02_plan.json", "output/"],
-                "allowed_read_set": ["01_orchestrator.md", "run_manifest.json"],
+                "allowed_read_set": ["02_plan.json"],
                 "allowed_change_set": ["02_plan.json", "02_planner.md", "output/", "03_builder.md"],
                 "forbidden_zone": ["scripts/", "docs/baseline_v1/"],
                 "verification_targets": ["manifest-plan alignment", "declared artifact existence", "declared artifact content checks"],
-                "blockers_or_uncertainties": ["current runtime does not enforce read/change boundaries mechanically"],
+                "blockers_or_uncertainties": ["current runtime does not enforce read boundaries mechanically"],
                 "steps": ["broken"],
                 "artifacts": [
                     {

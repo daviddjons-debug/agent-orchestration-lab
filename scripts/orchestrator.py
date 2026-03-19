@@ -37,8 +37,7 @@ def main() -> int:
             "output/",
         ],
         "allowed_read_set": [
-            "01_orchestrator.md",
-            "run_manifest.json",
+            "02_plan.json",
         ],
         "allowed_change_set": [
             "02_plan.json",
@@ -56,7 +55,7 @@ def main() -> int:
             "declared artifact content checks",
         ],
         "blockers_or_uncertainties": [
-            "current runtime does not enforce read/change boundaries mechanically",
+            "current runtime does not enforce read boundaries mechanically",
         ],
         "artifacts": [
             {
