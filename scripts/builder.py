@@ -24,6 +24,28 @@ def main() -> int:
     if not isinstance(plan, dict):
         return fail("02_plan.json root must be an object")
 
+    required_string_fields = [
+        "objective",
+        "problem_locus",
+    ]
+    for field in required_string_fields:
+        value = plan.get(field)
+        if not isinstance(value, str) or not value.strip():
+            return fail(f"02_plan.json missing non-empty string field: {field}")
+
+    required_list_fields = [
+        "dependency_ring",
+        "allowed_read_set",
+        "allowed_change_set",
+        "forbidden_zone",
+        "verification_targets",
+        "blockers_or_uncertainties",
+    ]
+    for field in required_list_fields:
+        value = plan.get(field)
+        if not isinstance(value, list) or not value or not all(isinstance(x, str) and x.strip() for x in value):
+            return fail(f"02_plan.json missing non-empty string-list field: {field}")
+
     artifacts = plan.get("artifacts")
     if not isinstance(artifacts, list) or not artifacts:
         return fail("02_plan.json missing non-empty list field: artifacts")

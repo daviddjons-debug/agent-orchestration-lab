@@ -120,11 +120,19 @@ def main() -> int:
         json.dumps(
             {
                 "source": ["01_orchestrator.md", "run_manifest.json"],
+                "objective": "Produce declared artifacts for the current run contract",
+                "problem_locus": "run contract files and declared outputs",
+                "dependency_ring": ["01_orchestrator.md", "run_manifest.json", "02_plan.json", "output/"],
+                "allowed_read_set": ["01_orchestrator.md", "run_manifest.json"],
+                "allowed_change_set": ["02_plan.json", "02_planner.md", "output/", "03_builder.md"],
+                "forbidden_zone": ["scripts/", "docs/baseline_v1/"],
+                "verification_targets": ["manifest-plan alignment", "declared artifact existence", "declared artifact content checks"],
+                "blockers_or_uncertainties": ["current runtime does not enforce read/change boundaries mechanically"],
                 "steps": ["broken"],
                 "artifacts": [
                     {
                         "path": json_artifact["path"],
-                        "type": "json",
+                        "type": "json"
                     }
                 ],
                 "acceptance_criteria": ["broken"],
