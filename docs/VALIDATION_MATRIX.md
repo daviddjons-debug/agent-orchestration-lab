@@ -50,9 +50,15 @@ Define the minimum task set required to distinguish a real surgical orchestratio
   - the case can distinguish `invoke` from `skip` on evidence, not ritual.
 
 ### 6. Task with justified local hardening
-- Goal: verify that the system can distinguish required hardening from opportunistic refactoring.
+- Goal: verify that the system can distinguish required local hardening from opportunistic refactoring and can justify why the hardening is necessary for the declared task rather than decorative scope growth.
 - Expected profile: Heavy
-- What must be checked: hardening is local, justified, bounded, and not used as cover for scope drift.
+- Runnable lab interpretation: a bounded scenario where a task can be completed without a broader rewrite, but one local protective change may still be justified if evidence ties it directly to the same failure surface.
+- What must be checked:
+  - the system distinguishes direct fix, justified local hardening, and optional refactoring;
+  - any hardening remains inside the declared local surface and does not widen into unrelated cleanup;
+  - tester or reviewer records evidence for why the hardening is required rather than cosmetic;
+  - the case can reject opportunistic refactoring disguised as safety or cleanup;
+  - the case can pass when the hardening is tightly linked, bounded, and evidence-backed.
 
 ## Evaluation dimensions
 - problem localization accuracy
