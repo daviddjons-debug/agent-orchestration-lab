@@ -26,6 +26,14 @@ def main() -> int:
 
     plan = {
         "source": ["01_orchestrator.md", "run_manifest.json"],
+        "objective": manifest.get("objective", ""),
+        "problem_locus": manifest.get("problem_locus", ""),
+        "dependency_ring": manifest.get("dependency_ring", []),
+        "allowed_read_set": manifest.get("allowed_read_set", []),
+        "allowed_change_set": manifest.get("allowed_change_set", []),
+        "forbidden_zone": manifest.get("forbidden_zone", []),
+        "verification_targets": manifest.get("verification_targets", []),
+        "blockers_or_uncertainties": manifest.get("blockers_or_uncertainties", []),
         "steps": [
             "Create output directories if missing.",
             "Create all files declared in manifest artifacts.",
@@ -46,6 +54,13 @@ def main() -> int:
         "",
         "Source: 01_orchestrator.md and run_manifest.json only",
         "",
+        f"Objective: {plan['objective']}",
+        f"Problem locus: {plan['problem_locus']}",
+        f"Dependency ring: {', '.join(plan['dependency_ring'])}",
+        f"Allowed read set: {', '.join(plan['allowed_read_set'])}",
+        f"Allowed change set: {', '.join(plan['allowed_change_set'])}",
+        f"Forbidden zone: {', '.join(plan['forbidden_zone'])}",
+        "",
         "Plan:",
         "1. Create output directories if missing.",
     ]
@@ -62,7 +77,17 @@ def main() -> int:
         "- every text artifact satisfies exact_content when required",
         "- any missing file or content mismatch must cause reviewer FAIL",
         "",
+        "Verification targets:",
     ])
+    for item in plan["verification_targets"]:
+        lines.append(f"- {item}")
+    lines.extend([
+        "",
+        "Blockers or uncertainties:",
+    ])
+    for item in plan["blockers_or_uncertainties"]:
+        lines.append(f"- {item}")
+    lines.append("")
     plan_text = "\n".join(lines)
 
     (base / "02_plan.json").write_text(json.dumps(plan, indent=2) + "\n", encoding="utf-8")
