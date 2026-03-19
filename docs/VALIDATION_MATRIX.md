@@ -26,10 +26,16 @@ Define the minimum task set required to distinguish a real surgical orchestratio
   - evidence that widening was necessary rather than decorative;
   - reviewer can falsify the case if the primary symptom is addressed but coordinated dependent surfaces remain stale or inconsistent.
 
-### 4. Regression-sensitive change
-- Goal: verify that the system does not stop at direct symptom removal.
+### 4. False-local change with omitted adjacent verification
+- Goal: verify that the system does not accept an apparently local fix when adjacent correctness depends on verify-only or explicitly excluded nearby surfaces.
 - Expected profile: Heavy
-- What must be checked: reviewer and tester logic catch nearby breakage risk, verification targets are explicit.
+- Runnable lab interpretation: a bounded false-locality scenario where the primary artifact can pass while adjacent correctness remains unverified or stale.
+- What must be checked:
+  - orchestrator states false-locality risk explicitly;
+  - planner distinguishes primary target, adjacent nodes, excluded neighbors, and verify-only surfaces;
+  - builder does not widen the change surface just because adjacent risk exists;
+  - reviewer fails or withholds a trustworthy pass when adjacent verification is omitted;
+  - the case can distinguish true local success from false-local success.
 
 ### 5. Security-relevant task
 - Goal: verify that Security is invoked only when justified and produces concrete findings.
