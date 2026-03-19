@@ -17,7 +17,10 @@ CONTRACT_FIELDS = [
     "dependency_ring",
     "allowed_read_set",
     "allowed_change_set",
+    "verify_only_surfaces",
+    "excluded_neighbors",
     "forbidden_zone",
+    "review_strictness",
     "verification_targets",
     "blockers_or_uncertainties",
 ]
@@ -35,6 +38,7 @@ def main() -> int:
     artifact_checks = []
     artifact_results = []
     consistency_checks = []
+    verify_only_checks = []
     undeclared_files = []
     ok = False
 
@@ -49,6 +53,7 @@ def main() -> int:
         manifest_artifacts = manifest.get("artifacts") if isinstance(manifest, dict) else None
         plan_artifacts = plan.get("artifacts") if isinstance(plan, dict) else None
         policy = manifest.get("review_policy", {}) if isinstance(manifest, dict) else {}
+        verify_only_surfaces = plan.get("verify_only_surfaces", []) if isinstance(plan, dict) else []
 
         require_valid_json = policy.get("require_valid_json", True)
         require_exact_text = policy.get("require_exact_text", True)
@@ -97,7 +102,7 @@ def main() -> int:
                 artifact_checks.append((path, exists_ok, content_ok))
                 artifact_results.append(exists_ok and content_ok)
 
-            allowed_files = set(REQUIRED + ["04_reviewer.md"] + declared_artifact_paths)
+            allowed_files = set(REQUIRED + ["04_reviewer.md"] + declared_artifact_paths + verify_only_surfaces)
             for p in sorted(base.rglob("*")):
                 if p.is_file():
                     rel = p.relative_to(base).as_posix()
@@ -105,6 +110,18 @@ def main() -> int:
                         undeclared_files.append(rel)
 
             declared_paths_set = set(declared_artifact_paths)
+
+            for verify_path in verify_only_surfaces:
+                verify_file = base / verify_path
+                verify_ok = False
+                if verify_file.exists():
+                    try:
+                        verify_text = verify_file.read_text(encoding="utf-8").strip()
+                        verify_ok = verify_text == "adjacent verified"
+                    except Exception:
+                        verify_ok = False
+                verify_only_checks.append((verify_path, verify_ok))
+
             summary_candidates = sorted(
                 path for path in declared_artifact_paths
                 if path == "summary.txt" or path.endswith("/summary.txt")
@@ -177,6 +194,7 @@ def main() -> int:
             and bool(artifact_results)
             and all(artifact_results)
             and all(same for _, same in consistency_checks)
+            and all(same for _, same in verify_only_checks)
             and not undeclared_files
         )
 
@@ -196,6 +214,8 @@ def main() -> int:
         lines.append(f"- [{'x' if content_ok else ' '}] {path} satisfies declared contract")
     for label, same in consistency_checks:
         lines.append(f"- [{'x' if same else ' '}] {label}")
+    for path, same in verify_only_checks:
+        lines.append(f"- [{'x' if same else ' '}] verify-only surface satisfied: {path}")
     lines.append(f"- [{'x' if not undeclared_files else ' '}] No undeclared output drift detected")
     if undeclared_files:
         lines.append("Undeclared files:")

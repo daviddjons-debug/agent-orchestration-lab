@@ -1,24 +1,51 @@
 # Evidence — Case 04
 
 ## Scenario status
-Not yet executed in runtime.
+Executed in runtime.
 
-## Intended PASS condition
-- reviewer rejects false-local success when the primary artifact passes but adjacent verify-only validation is missing, stale, or unverified;
-- builder stays narrow and does not modify the adjacent verify-only surface;
-- the run distinguishes true local success from false-local success.
+## Executed run
+- run directory: `docs/runs/orchestrated-2026-03-19_21-03-09`
 
-## Intended falsification path
-- primary artifact satisfies its direct contract;
-- adjacent verify-only artifact is missing, stale, or not explicitly verified;
-- reviewer must not issue a trustworthy pass.
+## Observed failure path
+The runtime produced a valid primary artifact:
+- `output/result.json`
 
-## What must be captured after execution
-- manifest/plan shape for Case 04;
-- builder behavior on the primary surface;
-- reviewer verdict for missing or stale adjacent verification;
-- reviewer verdict after adjacent verification condition is satisfied;
-- any gap between role-level semantics and current runtime mechanics.
+Reviewer returned `FAIL` when:
+- the primary artifact satisfied its declared contract;
+- `output/adjacent_status.txt` was declared as a verify-only surface;
+- the verify-only surface was missing and therefore not satisfied.
+
+Observed reviewer evidence:
+- `output/result.json` exists
+- `output/result.json` satisfies declared contract
+- `verify-only surface satisfied: output/adjacent_status.txt` -> FAIL
+- final verdict -> `FAIL`
+
+## Observed success path
+Reviewer returned `PASS` after:
+- `output/adjacent_status.txt` was created as a verify-only surface;
+- file content was set to exactly `adjacent verified`
+
+Observed reviewer evidence:
+- `output/result.json` exists
+- `output/result.json` satisfies declared contract
+- `verify-only surface satisfied: output/adjacent_status.txt` -> PASS
+- final verdict -> `PASS`
+
+## What this now proves
+- manifest -> plan propagation for:
+  - `verify_only_surfaces`
+  - `excluded_neighbors`
+  - `review_strictness`
+- reviewer can reject false-local success when adjacent verify-only validation is missing
+- reviewer can accept the same run once the verify-only adjacent condition is satisfied
+- current bounded runtime now has real executable evidence for Case 04
+
+## What this still does not prove
+- repository-scale dependency discovery
+- tester-stage execution
+- full runtime enforcement of all Surgical Edition extension semantics
+- code-level blast-radius control
 
 ## Current judgment
-Pending runnable execution.
+Validation Case 04 is passed as a bounded runtime false-locality verification scenario.

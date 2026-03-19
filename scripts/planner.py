@@ -31,7 +31,10 @@ def main() -> int:
         "dependency_ring": manifest.get("dependency_ring", []),
         "allowed_read_set": manifest.get("allowed_read_set", []),
         "allowed_change_set": manifest.get("allowed_change_set", []),
+        "verify_only_surfaces": manifest.get("verify_only_surfaces", []),
+        "excluded_neighbors": manifest.get("excluded_neighbors", []),
         "forbidden_zone": manifest.get("forbidden_zone", []),
+        "review_strictness": manifest.get("review_strictness", "standard"),
         "verification_targets": manifest.get("verification_targets", []),
         "blockers_or_uncertainties": manifest.get("blockers_or_uncertainties", []),
         "steps": [
