@@ -34,6 +34,7 @@ def main() -> int:
     contract_checks = []
     artifact_checks = []
     artifact_results = []
+    consistency_checks = []
     undeclared_files = []
     ok = False
 
@@ -103,11 +104,42 @@ def main() -> int:
                     if rel not in allowed_files:
                         undeclared_files.append(rel)
 
+            declared_paths_set = set(declared_artifact_paths)
+            summary_candidates = sorted(
+                path for path in declared_artifact_paths
+                if path == "summary.txt" or path.endswith("/summary.txt")
+            )
+
+            for summary_path in summary_candidates:
+                summary_posix = Path(summary_path).as_posix()
+                parent = Path(summary_posix).parent
+                result_posix = (parent / "result.json").as_posix()
+                if result_posix == ".":
+                    result_posix = "result.json"
+                if result_posix not in declared_paths_set:
+                    continue
+
+                result_json = base / result_posix
+                summary_txt = base / summary_posix
+                same_message = False
+
+                if result_json.exists() and summary_txt.exists():
+                    try:
+                        result_data = json.loads(result_json.read_text(encoding="utf-8"))
+                        json_message = result_data.get("message")
+                        summary_message = summary_txt.read_text(encoding="utf-8").rstrip("\n")
+                        same_message = isinstance(json_message, str) and summary_message == json_message
+                    except Exception:
+                        same_message = False
+
+                consistency_checks.append((f"{result_posix} <-> {summary_posix} message consistency", same_message))
+
         ok = (
             (not missing)
             and plan_ok
             and bool(artifact_results)
             and all(artifact_results)
+            and all(same for _, same in consistency_checks)
             and not undeclared_files
         )
 
@@ -125,6 +157,8 @@ def main() -> int:
     for path, exists_ok, content_ok in artifact_checks:
         lines.append(f"- [{'x' if exists_ok else ' '}] {path} exists")
         lines.append(f"- [{'x' if content_ok else ' '}] {path} satisfies declared contract")
+    for label, same in consistency_checks:
+        lines.append(f"- [{'x' if same else ' '}] {label}")
     lines.append(f"- [{'x' if not undeclared_files else ' '}] No undeclared output drift detected")
     if undeclared_files:
         lines.append("Undeclared files:")

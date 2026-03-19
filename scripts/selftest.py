@@ -140,20 +140,47 @@ def main() -> int:
         return 1
 
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
-    manifest["review_policy"]["require_valid_json"] = False
-    manifest["review_policy"]["require_exact_text"] = False
-    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
-
     json_artifact = next(a for a in manifest["artifacts"] if a["type"] == "json")
     text_artifact = next(a for a in manifest["artifacts"] if a["type"] == "text")
 
     artifact_json = run_dir / json_artifact["path"]
+    artifact_text = run_dir / text_artifact["path"]
+
+    stale_json = {"status": "ok", "message": "manifest override works"}
+    artifact_json.write_text(json.dumps(stale_json, indent=2) + "\n", encoding="utf-8")
+    artifact_text.write_text("STALE SUMMARY\n", encoding="utf-8")
+
+    stale_summary = sh(["python3", "scripts/reviewer.py", str(run_dir)], allow_fail=True)
+    if stale_summary.returncode == 0:
+        print("SELFTEST ERROR: expected FAIL on stale adjacent summary")
+        return 1
+    stale_text = (stale_summary.stdout or "") + (stale_summary.stderr or "")
+    if "message consistency" not in stale_text or "Final verdict: FAIL" not in stale_text:
+        print("SELFTEST ERROR: expected reviewer evidence for adjacent summary inconsistency")
+        return 1
+
+    sh(["python3", "scripts/planner.py", str(run_dir)])
+    sh(["python3", "scripts/builder.py", str(run_dir)])
+    stale_restored = sh(["python3", "scripts/reviewer.py", str(run_dir)])
+    if "Final verdict: PASS" not in stale_restored.stdout:
+        print("SELFTEST ERROR: expected PASS after restoring adjacent summary consistency")
+        return 1
+
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    manifest["review_policy"]["require_valid_json"] = False
+    manifest["review_policy"]["require_exact_text"] = False
+    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+    artifact_json = run_dir / json_artifact["path"]
     artifact_json.parent.mkdir(parents=True, exist_ok=True)
-    artifact_json.write_text("NOT JSON AT ALL\n", encoding="utf-8")
+    artifact_json.write_text(
+        json.dumps({"status": "ok", "message": "manifest override works"}, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
     artifact_text = run_dir / text_artifact["path"]
     artifact_text.parent.mkdir(parents=True, exist_ok=True)
-    artifact_text.write_text("TOTALLY DIFFERENT TEXT\n", encoding="utf-8")
+    artifact_text.write_text("manifest override works", encoding="utf-8")
 
     relaxed = sh(["python3", "scripts/reviewer.py", str(run_dir)])
     if "Final verdict: PASS" not in relaxed.stdout:
