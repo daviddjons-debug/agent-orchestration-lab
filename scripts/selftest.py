@@ -324,6 +324,116 @@ def main() -> int:
         print("SELFTEST ERROR: expected PASS on relaxed artifact policy")
         return 1
 
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    manifest["objective"] = "Validate false-local success rejection with verify-only adjacent surface"
+    manifest["problem_locus"] = "primary artifact may pass while adjacent verify-only surface remains unverified"
+    manifest["dependency_ring"] = [
+        "01_orchestrator.md",
+        "run_manifest.json",
+        "02_plan.json",
+        "output/result.json",
+        "output/adjacent_status.txt",
+    ]
+    manifest["allowed_read_set"] = ["02_plan.json"]
+    manifest["allowed_change_set"] = [
+        "02_plan.json",
+        "02_planner.md",
+        "output/",
+        "03_builder.md",
+    ]
+    manifest["verify_only_surfaces"] = ["output/adjacent_status.txt"]
+    manifest["excluded_neighbors"] = []
+    manifest["review_strictness"] = "strict"
+    manifest["verification_targets"] = [
+        "manifest-plan alignment",
+        "primary artifact contract",
+        "verify-only adjacent surface satisfaction",
+    ]
+    manifest["artifacts"] = [
+        {
+            "path": "output/result.json",
+            "type": "json",
+            "required_fields": {
+                "status": "ok",
+                "message": "primary success",
+            },
+        },
+    ]
+    manifest["review_policy"]["require_valid_json"] = True
+    manifest["review_policy"]["require_exact_text"] = True
+    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+    for rel in ["output/result.json", "output/custom/result.json", "output/custom/summary.txt", "output/summary.txt", "output/adjacent_status.txt"]:
+        target = run_dir / rel
+        if target.exists():
+            target.unlink()
+
+    sh(["python3", "scripts/planner.py", str(run_dir)])
+    sh(["python3", "scripts/builder.py", str(run_dir)])
+
+    case04_fail = sh(["python3", "scripts/reviewer.py", str(run_dir)], allow_fail=True)
+    if case04_fail.returncode == 0:
+        print("SELFTEST ERROR: expected FAIL on Case 04 false-local missing verify-only surface")
+        return 1
+    case04_fail_text = (case04_fail.stdout or "") + (case04_fail.stderr or "")
+    if "verify-only surface satisfied: output/adjacent_status.txt" not in case04_fail_text:
+        print("SELFTEST ERROR: expected reviewer evidence for missing Case 04 verify-only surface")
+        return 1
+
+    adjacent = run_dir / "output/adjacent_status.txt"
+    adjacent.parent.mkdir(parents=True, exist_ok=True)
+    adjacent.write_text("adjacent verified\n", encoding="utf-8")
+
+    case04_pass = sh(["python3", "scripts/reviewer.py", str(run_dir)])
+    if "Final verdict: PASS" not in case04_pass.stdout:
+        print("SELFTEST ERROR: expected PASS after satisfying Case 04 verify-only surface")
+        return 1
+
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    manifest["objective"] = "Produce declared artifacts for the current run contract"
+    manifest["problem_locus"] = "run contract files and declared outputs"
+    manifest["dependency_ring"] = ["01_orchestrator.md", "run_manifest.json", "02_plan.json", "output/"]
+    manifest["allowed_read_set"] = ["02_plan.json"]
+    manifest["allowed_change_set"] = ["02_plan.json", "02_planner.md", "output/", "03_builder.md"]
+    manifest["verify_only_surfaces"] = []
+    manifest["excluded_neighbors"] = []
+    manifest["review_strictness"] = "standard"
+    manifest["verification_targets"] = ["manifest-plan alignment", "declared artifact existence", "declared artifact content checks"]
+    manifest["artifacts"] = [
+        {
+            "path": json_artifact["path"],
+            "type": "json",
+            "required_fields": {
+                "status": "ok",
+                "message": "manifest override works",
+            },
+        },
+        {
+            "path": text_artifact["path"],
+            "type": "text",
+            "exact_content": "manifest override works\n",
+        },
+    ]
+    manifest["review_policy"]["require_valid_json"] = False
+    manifest["review_policy"]["require_exact_text"] = False
+    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+    for rel in ["output/result.json", "output/adjacent_status.txt"]:
+        target = run_dir / rel
+        if target.exists():
+            target.unlink()
+
+    artifact_json = run_dir / json_artifact["path"]
+    artifact_json.parent.mkdir(parents=True, exist_ok=True)
+    artifact_json.write_text(
+        json.dumps({"status": "ok", "message": "manifest override works"}, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    artifact_text = run_dir / text_artifact["path"]
+    artifact_text.parent.mkdir(parents=True, exist_ok=True)
+    artifact_text.write_text("manifest override works", encoding="utf-8")
+
     broken_plan = run_dir / "02_plan.json"
     broken_plan.write_text(
         json.dumps(
