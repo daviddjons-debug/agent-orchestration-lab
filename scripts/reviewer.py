@@ -134,6 +134,43 @@ def main() -> int:
 
                 consistency_checks.append((f"{result_posix} <-> {summary_posix} message consistency", same_message))
 
+            spec_posix = "src/spec.json"
+            summary_posix = "src/generated_summary.txt"
+            manifest_posix = "src/generated_manifest.json"
+            if (
+                spec_posix in declared_paths_set
+                and summary_posix in declared_paths_set
+                and manifest_posix in declared_paths_set
+            ):
+                spec_json = base / spec_posix
+                summary_txt = base / summary_posix
+                manifest_json = base / manifest_posix
+
+                spec_summary_same = False
+                spec_manifest_same = False
+
+                try:
+                    if spec_json.exists() and summary_txt.exists():
+                        spec_data = json.loads(spec_json.read_text(encoding="utf-8"))
+                        spec_message = spec_data.get("message")
+                        summary_message = summary_txt.read_text(encoding="utf-8").rstrip("\n")
+                        spec_summary_same = isinstance(spec_message, str) and summary_message == spec_message
+                except Exception:
+                    spec_summary_same = False
+
+                try:
+                    if spec_json.exists() and manifest_json.exists():
+                        spec_data = json.loads(spec_json.read_text(encoding="utf-8"))
+                        manifest_data = json.loads(manifest_json.read_text(encoding="utf-8"))
+                        spec_message = spec_data.get("message")
+                        manifest_message = manifest_data.get("message")
+                        spec_manifest_same = isinstance(spec_message, str) and manifest_message == spec_message
+                except Exception:
+                    spec_manifest_same = False
+
+                consistency_checks.append((f"{spec_posix} <-> {summary_posix} message consistency", spec_summary_same))
+                consistency_checks.append((f"{spec_posix} <-> {manifest_posix} message consistency", spec_manifest_same))
+
         ok = (
             (not missing)
             and plan_ok

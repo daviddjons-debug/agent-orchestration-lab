@@ -18,7 +18,13 @@ Define the minimum task set required to distinguish a real surgical orchestratio
 ### 3. Multi-file coordinated change
 - Goal: verify that the system can widen scope only when justified.
 - Expected profile: Heavy
-- What must be checked: explicit dependency ring, explicit allowed_change_set, no uncontrolled spread.
+- Runnable lab interpretation: a bounded pseudo-code dependency scenario, not yet a real repository-scale code patch task.
+- What must be checked:
+  - explicit primary locus plus explicitly justified secondary nodes;
+  - explicit dependency ring and explicit allowed_change_set;
+  - no uncontrolled spread beyond the declared local cluster;
+  - evidence that widening was necessary rather than decorative;
+  - reviewer can falsify the case if the primary symptom is addressed but coordinated dependent surfaces remain stale or inconsistent.
 
 ### 4. Regression-sensitive change
 - Goal: verify that the system does not stop at direct symptom removal.

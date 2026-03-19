@@ -187,6 +187,123 @@ def main() -> int:
         return 1
 
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    previous_artifacts = [
+        a.get("path")
+        for a in manifest.get("artifacts", [])
+        if isinstance(a, dict) and isinstance(a.get("path"), str)
+    ]
+    for rel in previous_artifacts:
+        target = run_dir / rel
+        if target.exists():
+            target.unlink()
+
+    manifest["artifacts"] = [
+        {
+            "path": "src/spec.json",
+            "type": "json",
+            "required_fields": {
+                "message": "cluster update works"
+            },
+        },
+        {
+            "path": "src/generated_summary.txt",
+            "type": "text",
+            "exact_content": "cluster update works\n",
+        },
+        {
+            "path": "src/generated_manifest.json",
+            "type": "json",
+            "required_fields": {
+                "message": "cluster update works"
+            },
+        },
+    ]
+    manifest["allowed_change_set"] = [
+        "02_plan.json",
+        "02_planner.md",
+        "03_builder.md",
+        "src/",
+    ]
+    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+    sh(["python3", "scripts/planner.py", str(run_dir)])
+    sh(["python3", "scripts/builder.py", str(run_dir)])
+    cluster_pass = sh(["python3", "scripts/reviewer.py", str(run_dir)])
+    if "Final verdict: PASS" not in cluster_pass.stdout:
+        print("SELFTEST ERROR: expected PASS on Case 03 coordinated cluster scenario")
+        return 1
+    cluster_text = (cluster_pass.stdout or "") + (cluster_pass.stderr or "")
+    if "src/spec.json <-> src/generated_summary.txt message consistency" not in cluster_text:
+        print("SELFTEST ERROR: expected reviewer evidence for spec-summary cluster consistency")
+        return 1
+    if "src/spec.json <-> src/generated_manifest.json message consistency" not in cluster_text:
+        print("SELFTEST ERROR: expected reviewer evidence for spec-manifest cluster consistency")
+        return 1
+
+    (run_dir / "src/generated_summary.txt").write_text("STALE CLUSTER SUMMARY\n", encoding="utf-8")
+    cluster_stale = sh(["python3", "scripts/reviewer.py", str(run_dir)], allow_fail=True)
+    if cluster_stale.returncode == 0:
+        print("SELFTEST ERROR: expected FAIL on stale Case 03 dependent summary")
+        return 1
+    cluster_stale_text = (cluster_stale.stdout or "") + (cluster_stale.stderr or "")
+    if "src/spec.json <-> src/generated_summary.txt message consistency" not in cluster_stale_text:
+        print("SELFTEST ERROR: expected reviewer evidence for stale Case 03 summary inconsistency")
+        return 1
+
+    sh(["python3", "scripts/planner.py", str(run_dir)])
+    sh(["python3", "scripts/builder.py", str(run_dir)])
+    cluster_restored = sh(["python3", "scripts/reviewer.py", str(run_dir)])
+    if "Final verdict: PASS" not in cluster_restored.stdout:
+        print("SELFTEST ERROR: expected PASS after restoring Case 03 coordinated cluster scenario")
+        return 1
+
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    manifest["artifacts"] = [
+        {
+            "path": "output/custom/result.json",
+            "type": "json",
+            "required_fields": {
+                "status": "ok",
+                "message": "manifest override works",
+            },
+        },
+        {
+            "path": "output/custom/summary.txt",
+            "type": "text",
+            "exact_content": "manifest override works\n",
+        },
+    ]
+    manifest["allowed_change_set"] = [
+        "02_plan.json",
+        "02_planner.md",
+        "output/",
+        "03_builder.md",
+    ]
+    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+    src_dir = run_dir / "src"
+    if src_dir.exists():
+        for child in sorted(src_dir.rglob("*"), reverse=True):
+            if child.is_file():
+                child.unlink()
+            elif child.is_dir():
+                try:
+                    child.rmdir()
+                except OSError:
+                    pass
+        try:
+            src_dir.rmdir()
+        except OSError:
+            pass
+
+    sh(["python3", "scripts/planner.py", str(run_dir)])
+    sh(["python3", "scripts/builder.py", str(run_dir)])
+    post_cluster_restore = sh(["python3", "scripts/reviewer.py", str(run_dir)])
+    if "Final verdict: PASS" not in post_cluster_restore.stdout:
+        print("SELFTEST ERROR: expected PASS after restoring post-Case-03 baseline artifact scenario")
+        return 1
+
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
     manifest["review_policy"]["require_valid_json"] = False
     manifest["review_policy"]["require_exact_text"] = False
     manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
