@@ -31,11 +31,12 @@ PASS for a bounded adjacent-dependency-risk scenario in current runtime.
 - adjacent-node verification is no longer only decorative documentation language
 - reviewer can falsify a local scenario where the primary surface is correct but the neighboring dependent surface is not
 - current runtime now supports a bounded bridge from Case 01 to Case 02
+- baseline Builder read-boundary compatibility is enforced and falsifiable
 
 ## What this PASS does not prove
 - real source-code dependency analysis
 - genuine discovery of adjacent dependency risk without predeclared scenario structure
-- enforced `allowed_read_set` in runtime
+- full runtime `allowed_read_set` enforcement beyond the baseline Builder contract
 - tester as a runnable stage for adjacent-risk cases
 - full behavioral dependency validation on non-artifact engineering tasks
 

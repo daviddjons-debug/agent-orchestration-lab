@@ -42,18 +42,19 @@ PASS for narrow contract execution in current runtime, with verified write-bound
 - reviewer validates full manifest-plan contract alignment, not only artifact presence
 - reviewer detects undeclared output drift
 - builder enforces declared write boundary through `allowed_change_set`
+- builder enforces baseline-compatible declared read boundary through `allowed_read_set`
 - selftest covers valid, corrupted, drifted, restored, relaxed-policy, undeclared-output, and builder-boundary cases
 
 ## What this PASS still does not prove
 - real problem-locus reasoning in runtime beyond propagated contract fields
 - real dependency-ring reasoning in runtime beyond propagated contract fields
-- enforced `allowed_read_set` in runtime
+- full runtime `allowed_read_set` enforcement beyond the baseline Builder contract
 - tester as a runnable runtime stage
 - security as a runnable runtime stage
 - full surgical-runtime behavior on real code-patch tasks
 
 ## Final judgment
-Validation Case 01 is passed as a narrow contract-execution scenario with verified reviewer-side and builder-side write-boundary controls.
+Validation Case 01 is passed as a narrow contract-execution scenario with verified reviewer-side contract checks, builder-side write-boundary controls, and baseline Builder read-boundary validation.
 
 It is still not passed as a full surgical-runtime scenario.
 

@@ -67,6 +67,6 @@ Unknowns, assumptions, or missing evidence that may affect correctness.
 
 ## Current status
 This contract is defined at the documentation layer first.
-Current runtime proves propagation of `allowed_read_set`, but does not yet enforce it mechanically.
+Current runtime proves propagation of `allowed_read_set` and baseline Builder-compatible read-boundary enforcement, but does not yet provide full mechanical runtime read sandboxing.
 Planner input scope remains role-defined and separate from `allowed_read_set` semantics.
 Runtime enforcement can be expanded later if justified.
