@@ -60,5 +60,19 @@ Define the minimum task set required to distinguish a real surgical orchestratio
 - system reads or changes more than necessary without proof
 
 ## Current status
-This validation matrix is defined at the documentation layer first.
-Runnable scenario implementations can be added next.
+This validation matrix is no longer documentation-only.
+
+Currently implemented and evidenced at bounded runtime level:
+- Case 01: narrow single-node fix
+- Case 02: local fix with adjacent dependency risk
+- Case 03: bounded pseudo-code multi-file coordinated change
+
+Not yet implemented as runnable validation classes:
+- Case 04: regression-sensitive change
+- Case 05: security-relevant task
+- Case 06: task with justified local hardening
+
+Current boundary:
+- Cases 01-03 are proven only in bounded lab-runtime form
+- this is still not evidence of repository-scale code orchestration
+- planner-side read-boundary enforcement and general runtime read sandboxing remain unproven
