@@ -34,6 +34,7 @@ def main() -> int:
     contract_checks = []
     artifact_checks = []
     artifact_results = []
+    undeclared_files = []
     ok = False
 
     if not missing:
@@ -51,12 +52,10 @@ def main() -> int:
         require_valid_json = policy.get("require_valid_json", True)
         require_exact_text = policy.get("require_exact_text", True)
 
-        contract_ok = []
         if isinstance(manifest, dict) and isinstance(plan, dict):
             for field in CONTRACT_FIELDS:
                 same = manifest.get(field) == plan.get(field)
                 contract_checks.append((field, same))
-                contract_ok.append(same)
 
         artifacts_match = (
             isinstance(manifest_artifacts, list)
@@ -64,11 +63,14 @@ def main() -> int:
             and plan_artifacts == manifest_artifacts
         )
 
-        plan_ok = artifacts_match and bool(contract_checks) and all(x[1] for x in contract_checks)
+        plan_ok = artifacts_match and bool(contract_checks) and all(same for _, same in contract_checks)
 
+        declared_artifact_paths = []
         if isinstance(manifest_artifacts, list):
             for spec in manifest_artifacts:
                 path = spec.get("path", "<missing>")
+                declared_artifact_paths.append(path)
+
                 atype = spec.get("type")
                 artifact = base / path
                 exists_ok = artifact.exists()
@@ -94,7 +96,20 @@ def main() -> int:
                 artifact_checks.append((path, exists_ok, content_ok))
                 artifact_results.append(exists_ok and content_ok)
 
-        ok = (not missing) and plan_ok and bool(artifact_results) and all(artifact_results)
+            allowed_files = set(REQUIRED + ["04_reviewer.md"] + declared_artifact_paths)
+            for p in sorted(base.rglob("*")):
+                if p.is_file():
+                    rel = p.relative_to(base).as_posix()
+                    if rel not in allowed_files:
+                        undeclared_files.append(rel)
+
+        ok = (
+            (not missing)
+            and plan_ok
+            and bool(artifact_results)
+            and all(artifact_results)
+            and not undeclared_files
+        )
 
     lines = [
         "# Reviewer Verdict",
@@ -110,6 +125,11 @@ def main() -> int:
     for path, exists_ok, content_ok in artifact_checks:
         lines.append(f"- [{'x' if exists_ok else ' '}] {path} exists")
         lines.append(f"- [{'x' if content_ok else ' '}] {path} satisfies declared contract")
+    lines.append(f"- [{'x' if not undeclared_files else ' '}] No undeclared output drift detected")
+    if undeclared_files:
+        lines.append("Undeclared files:")
+        for path in undeclared_files:
+            lines.append(f"- {path}")
     lines.extend([
         "",
         f"Final verdict: {'PASS' if ok else 'FAIL'}",

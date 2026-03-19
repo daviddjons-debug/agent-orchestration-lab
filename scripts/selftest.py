@@ -29,6 +29,7 @@ def main() -> int:
 
     manifest_file = run_dir / "run_manifest.json"
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    previous_artifacts = [a.get("path") for a in manifest.get("artifacts", []) if isinstance(a, dict) and isinstance(a.get("path"), str)]
 
     manifest["artifacts"] = [
         {
@@ -46,6 +47,11 @@ def main() -> int:
         },
     ]
     manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+    for rel in previous_artifacts:
+        target = run_dir / rel
+        if target.exists():
+            target.unlink()
 
     sh(["python3", "scripts/planner.py", str(run_dir)])
     sh(["python3", "scripts/builder.py", str(run_dir)])
@@ -92,6 +98,45 @@ def main() -> int:
     re_good = sh(["python3", "scripts/reviewer.py", str(run_dir)])
     if "Final verdict: PASS" not in re_good.stdout:
         print("SELFTEST ERROR: expected PASS after restoring surgical contract")
+        return 1
+
+    boundary_plan = json.loads((run_dir / "02_plan.json").read_text(encoding="utf-8"))
+    boundary_plan["allowed_change_set"] = ["02_plan.json", "02_planner.md", "03_builder.md"]
+    (run_dir / "02_plan.json").write_text(json.dumps(boundary_plan, indent=2) + "\n", encoding="utf-8")
+
+    builder_boundary = sh(["python3", "scripts/builder.py", str(run_dir)], allow_fail=True)
+    if builder_boundary.returncode == 0:
+        print("SELFTEST ERROR: expected builder FAIL when artifact path is outside allowed_change_set")
+        return 1
+    boundary_text = (builder_boundary.stdout or "") + (builder_boundary.stderr or "")
+    if "artifact path outside allowed_change_set" not in boundary_text or "output/custom/result.json" not in boundary_text:
+        print("SELFTEST ERROR: expected explicit builder evidence for allowed_change_set enforcement")
+        return 1
+
+    sh(["python3", "scripts/planner.py", str(run_dir)])
+    sh(["python3", "scripts/builder.py", str(run_dir)])
+    boundary_restored = sh(["python3", "scripts/reviewer.py", str(run_dir)])
+    if "Final verdict: PASS" not in boundary_restored.stdout:
+        print("SELFTEST ERROR: expected PASS after restoring builder boundary contract")
+        return 1
+
+    rogue = run_dir / "output/rogue.txt"
+    rogue.parent.mkdir(parents=True, exist_ok=True)
+    rogue.write_text("drift\n", encoding="utf-8")
+
+    undeclared_drift = sh(["python3", "scripts/reviewer.py", str(run_dir)], allow_fail=True)
+    if undeclared_drift.returncode == 0:
+        print("SELFTEST ERROR: expected FAIL on undeclared output drift")
+        return 1
+    drift_text = (undeclared_drift.stdout or "") + (undeclared_drift.stderr or "")
+    if "No undeclared output drift detected" not in drift_text or "output/rogue.txt" not in drift_text:
+        print("SELFTEST ERROR: expected reviewer evidence for undeclared output drift")
+        return 1
+
+    rogue.unlink()
+    drift_restored = sh(["python3", "scripts/reviewer.py", str(run_dir)])
+    if "Final verdict: PASS" not in drift_restored.stdout:
+        print("SELFTEST ERROR: expected PASS after removing undeclared output drift")
         return 1
 
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
