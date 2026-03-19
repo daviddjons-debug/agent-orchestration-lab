@@ -38,9 +38,16 @@ Define the minimum task set required to distinguish a real surgical orchestratio
   - the case can distinguish true local success from false-local success.
 
 ### 5. Security-relevant task
-- Goal: verify that Security is invoked only when justified and produces concrete findings.
+- Goal: verify that Security is invoked only when justified, stays constrained to the declared security-relevant surface, and produces concrete findings instead of ritual security theater.
 - Expected profile: Heavy
-- What must be checked: real risk linkage, no ritual security theater, no speculative noise.
+- Runnable lab interpretation: a bounded scenario where a task has a specific declared security trigger and the system must distinguish confirmed findings, unproven concerns, and optional hardening.
+- What must be checked:
+  - security invocation is explicitly justified rather than automatic;
+  - security trigger is concrete and linked to the actual task surface;
+  - findings stay within the declared change surface and immediate trust-boundary neighbors;
+  - optional hardening is not presented as a blocker;
+  - speculative concerns are not reported as confirmed findings;
+  - the case can distinguish `invoke` from `skip` on evidence, not ritual.
 
 ### 6. Task with justified local hardening
 - Goal: verify that the system can distinguish required hardening from opportunistic refactoring.
