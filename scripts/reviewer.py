@@ -11,6 +11,17 @@ REQUIRED = [
     "run_manifest.json",
 ]
 
+CONTRACT_FIELDS = [
+    "objective",
+    "problem_locus",
+    "dependency_ring",
+    "allowed_read_set",
+    "allowed_change_set",
+    "forbidden_zone",
+    "verification_targets",
+    "blockers_or_uncertainties",
+]
+
 def main() -> int:
     if len(sys.argv) != 2:
         print("Usage: python3 scripts/reviewer.py <run_dir>")
@@ -20,6 +31,7 @@ def main() -> int:
     missing = [x for x in REQUIRED if not (base / x).exists()]
 
     plan_ok = False
+    contract_checks = []
     artifact_checks = []
     artifact_results = []
     ok = False
@@ -39,11 +51,20 @@ def main() -> int:
         require_valid_json = policy.get("require_valid_json", True)
         require_exact_text = policy.get("require_exact_text", True)
 
-        plan_ok = (
+        contract_ok = []
+        if isinstance(manifest, dict) and isinstance(plan, dict):
+            for field in CONTRACT_FIELDS:
+                same = manifest.get(field) == plan.get(field)
+                contract_checks.append((field, same))
+                contract_ok.append(same)
+
+        artifacts_match = (
             isinstance(manifest_artifacts, list)
             and isinstance(plan_artifacts, list)
             and plan_artifacts == manifest_artifacts
         )
+
+        plan_ok = artifacts_match and bool(contract_checks) and all(x[1] for x in contract_checks)
 
         if isinstance(manifest_artifacts, list):
             for spec in manifest_artifacts:
@@ -82,8 +103,10 @@ def main() -> int:
         "",
         "Checklist:",
         f"- [{'x' if not missing else ' '}] Required prior artifacts exist",
-        f"- [{'x' if plan_ok else ' '}] 02_plan.json matches run_manifest.json contract",
+        f"- [{'x' if plan_ok else ' '}] 02_plan.json matches full run_manifest.json contract",
     ]
+    for field, same in contract_checks:
+        lines.append(f"- [{'x' if same else ' '}] {field} matches between manifest and plan")
     for path, exists_ok, content_ok in artifact_checks:
         lines.append(f"- [{'x' if exists_ok else ' '}] {path} exists")
         lines.append(f"- [{'x' if content_ok else ' '}] {path} satisfies declared contract")

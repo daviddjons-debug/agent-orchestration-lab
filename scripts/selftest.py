@@ -75,6 +75,25 @@ def main() -> int:
         print("SELFTEST ERROR: expected PASS after planner restore")
         return 1
 
+    drifted_plan = json.loads((run_dir / "02_plan.json").read_text(encoding="utf-8"))
+    drifted_plan["allowed_change_set"] = ["HACKED_SCOPE/"]
+    (run_dir / "02_plan.json").write_text(json.dumps(drifted_plan, indent=2) + "\n", encoding="utf-8")
+
+    surgical_drift = sh(["python3", "scripts/reviewer.py", str(run_dir)], allow_fail=True)
+    if surgical_drift.returncode == 0:
+        print("SELFTEST ERROR: expected FAIL on surgical contract drift")
+        return 1
+    if "allowed_change_set matches between manifest and plan" not in ((surgical_drift.stdout or "") + (surgical_drift.stderr or "")):
+        print("SELFTEST ERROR: expected reviewer evidence for allowed_change_set drift")
+        return 1
+
+    sh(["python3", "scripts/planner.py", str(run_dir)])
+    sh(["python3", "scripts/builder.py", str(run_dir)])
+    re_good = sh(["python3", "scripts/reviewer.py", str(run_dir)])
+    if "Final verdict: PASS" not in re_good.stdout:
+        print("SELFTEST ERROR: expected PASS after restoring surgical contract")
+        return 1
+
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
     manifest["review_policy"]["require_valid_json"] = False
     manifest["review_policy"]["require_exact_text"] = False
