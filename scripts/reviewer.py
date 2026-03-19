@@ -39,6 +39,7 @@ def main() -> int:
     artifact_results = []
     consistency_checks = []
     verify_only_checks = []
+    security_checks = []
     undeclared_files = []
     ok = False
 
@@ -122,6 +123,49 @@ def main() -> int:
                         verify_ok = False
                 verify_only_checks.append((verify_path, verify_ok))
 
+            security_input_posix = "output/security_input.json"
+            security_review_posix = "output/security_review.json"
+            if (
+                security_input_posix in declared_paths_set
+                and security_review_posix in declared_paths_set
+            ):
+                security_input = base / security_input_posix
+                security_review = base / security_review_posix
+
+                trigger_link_ok = False
+                blocking_reason_ok = False
+
+                try:
+                    if security_input.exists() and security_review.exists():
+                        input_data = json.loads(security_input.read_text(encoding="utf-8"))
+                        review_data = json.loads(security_review.read_text(encoding="utf-8"))
+
+                        input_trigger = input_data.get("security_trigger")
+                        review_trigger = review_data.get("security_trigger")
+                        invocation = review_data.get("security_invocation_decision")
+                        optional_hardening = review_data.get("optional_hardening", [])
+                        blocking_reason = review_data.get("blocking_security_reason")
+
+                        trigger_link_ok = (
+                            invocation == "invoke"
+                            and isinstance(input_trigger, str) and input_trigger.strip()
+                            and review_trigger == input_trigger
+                        )
+
+                        blocking_reason_ok = (
+                            isinstance(blocking_reason, str) and blocking_reason.strip()
+                            and (
+                                not isinstance(optional_hardening, list)
+                                or blocking_reason not in optional_hardening
+                            )
+                        )
+                except Exception:
+                    trigger_link_ok = False
+                    blocking_reason_ok = False
+
+                security_checks.append(("security trigger linked to declared surface", trigger_link_ok))
+                security_checks.append(("blocking security reason is not optional hardening", blocking_reason_ok))
+
             summary_candidates = sorted(
                 path for path in declared_artifact_paths
                 if path == "summary.txt" or path.endswith("/summary.txt")
@@ -195,6 +239,7 @@ def main() -> int:
             and all(artifact_results)
             and all(same for _, same in consistency_checks)
             and all(same for _, same in verify_only_checks)
+            and all(same for _, same in security_checks)
             and not undeclared_files
         )
 
@@ -216,6 +261,8 @@ def main() -> int:
         lines.append(f"- [{'x' if same else ' '}] {label}")
     for path, same in verify_only_checks:
         lines.append(f"- [{'x' if same else ' '}] verify-only surface satisfied: {path}")
+    for label, same in security_checks:
+        lines.append(f"- [{'x' if same else ' '}] {label}")
     lines.append(f"- [{'x' if not undeclared_files else ' '}] No undeclared output drift detected")
     if undeclared_files:
         lines.append("Undeclared files:")
