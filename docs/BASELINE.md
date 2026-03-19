@@ -1,51 +1,59 @@
 # Agent Orchestration Lab — Baseline
 
-## What is currently proven
-A minimal 4-step orchestration pipeline is working:
+## What is currently runnable
+A runnable orchestration pipeline exists with these executable roles:
 
-1. `scripts/orchestrator.py` creates a new run folder with initial artifacts.
-2. `scripts/planner.py` creates `02_plan.json` as the source-of-truth plan and `02_planner.md` as a human-readable trace.
-3. `scripts/builder.py` reads `02_plan.json` and writes all declared output artifacts.
-4. `scripts/reviewer.py` validates files on disk and returns PASS/FAIL.
-
-## What the current baseline actually is
-This is a runnable **4-role contract pipeline**, not yet a full surgical agent system.
-
-Current runnable roles:
 - Orchestrator
 - Planner
 - Builder
 - Reviewer
 
-Missing as real runnable roles:
-- Tester
-- Security
+The runtime can create a run folder, derive a plan artifact, execute declared writes through the builder, and evaluate the result through a reviewer gate.
 
-## Current artifact contract
-Target artifacts:
-- `output/result.json`
-- `output/summary.txt`
+Tester and Security still exist only as non-runnable role concepts, not as enforced runtime stages.
 
-Required JSON shape:
-```json
-{
-  "status": "ok",
-  "message": "multi-agent orchestration check passed"
-}
-```
+## What is currently proven
+The repository no longer proves only a minimal 4-step artifact pipeline.
 
-Required text content:
-```text
-multi-agent orchestration check passed
-```
+It now proves a bounded orchestration runtime with:
+
+1. structured orchestrator -> planner -> builder -> reviewer execution;
+2. planner-defined contract propagation into runtime artifacts;
+3. builder enforcement against undeclared writes;
+4. reviewer-side detection of contract drift and malformed outputs;
+5. reproducible validation through self-test and explicit validation cases.
+
+## What is proven at artifact level
+The current baseline proves the following at artifact level:
+
+- separate executable role nodes;
+- structured planner -> builder handoff via `02_plan.json`;
+- structured artifact generation from declared contract data;
+- formal reviewer gate with PASS/FAIL behavior;
+- manifest/runtime influence over output contract shape;
+- builder write-boundary enforcement;
+- regression coverage for semantic corruption and schema failure;
+- bounded adjacent-artifact consistency checks in validation scenarios.
+
+## What is not yet proven at code or task level
+The repository does **not** yet prove:
+
+- real surgical triage on live engineering tasks;
+- real dependency-aware planning over code graphs;
+- enforced `allowed_read_set` or equivalent hard read boundaries;
+- minimal patch-zone discipline on real source files;
+- runnable Tester stage with execution-backed validation;
+- runnable Security stage with real policy enforcement;
+- realistic multi-file code repair with bounded blast radius.
 
 ## What was falsified
 A fake handoff was detected earlier:
+
 - `builder.py` originally ignored planner meaning;
 - it wrote a hardcoded expected value;
 - this produced a false positive PASS.
 
-That defect was fixed by making `builder.py` parse planner-defined fields and build artifacts from planner-provided contract data.
+That defect was corrected by making the builder consume planner-defined contract data instead of emitting a fixed expected result.
 
 ## Reproducible checks
 ### Happy path
@@ -54,7 +62,8 @@ That defect was fixed by making `builder.py` parse planner-defined fields and bu
 ### Full regression
 `python3 scripts/selftest.py`
 
-`selftest.py` verifies:
+`selftest.py` currently verifies:
+
 - PASS on a valid run;
 - PASS after manifest override with different output paths and values;
 - FAIL after semantic corruption of planner output;
@@ -63,24 +72,28 @@ That defect was fixed by making `builder.py` parse planner-defined fields and bu
 - explicit builder failure on invalid planner schema.
 
 ## Current conclusion
-This repository proves:
-- separate executable role nodes;
-- structured planner -> builder handoff via `02_plan.json`;
-- structured artifact generation from declared contract;
-- formal reviewer gate;
-- reproducible regression checks.
+This repository now represents a runnable **artifact-level orchestration baseline** with partial surgical discipline.
 
-It does **not** yet prove:
-- surgical triage behavior;
-- dependency-aware planning;
-- minimal patch-zone discipline;
-- scope-drift control in realistic task execution;
-- tester/security role integration.
+That is stronger than a toy pipeline, but still weaker than a true surgical runtime for live code tasks.
+
+The honest boundary is:
+
+- artifact-level orchestration discipline: proven for bounded runtime artifacts and validation cases;
+- code-level surgical execution discipline: not yet proven.
 
 ## Immediate transition principle
-Do not replace the runnable baseline first.
-Preserve it.
-Then redesign the role contracts so the same 4-role system stops being merely an artifact pipeline and becomes a surgical orchestration baseline.
+Do not replace the runnable baseline.
 
-## Next likely milestone
-Rewrite the 4 existing roles into a surgical contract baseline before adding any new runnable roles.
+Preserve the working runtime and continue hardening it by closing falsifiable gaps one at a time.
+
+Do not inflate the system with additional roles or framework complexity before the current baseline proves stricter control over read scope, dependency reasoning, and bounded intervention.
+
+## Next falsifiable milestone
+The next load-bearing milestone is not a vague role rewrite.
+
+It is to prove one missing hard control in runtime behavior, preferably one of:
+
+- enforced `allowed_read_set` or equivalent hard read-boundary control;
+- a new validation case that moves from artifact-only consistency into bounded code-level dependency behavior.
+
+Only after that should additional runnable stages or profile layers be treated as meaningful progress.
