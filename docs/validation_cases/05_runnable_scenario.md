@@ -7,24 +7,30 @@ A bounded run simulates a task with a declared security trigger and a constraine
 `output/security_input.json`
 
 Expected task shape:
-- file exists;
-- file describes a surface with a concrete security trigger;
-- file content allows distinguishing real security linkage from speculative concerns.
+```json
+{
+  "surface": "file_upload_handler",
+  "security_trigger": "unsafe file handling",
+  "declared_risk": "uploaded filename reaches filesystem path construction"
+}
+```
 
 ## Security review artifact
 `output/security_review.json`
 
 Expected review shape:
-- file exists;
-- file contains:
-  - `security_invocation_decision`
-  - `security_trigger`
-  - `inspected_surfaces`
-  - `confirmed_findings`
-  - `unproven_concerns`
-  - `optional_hardening`
-  - `residual_risk`
-  - `blocking_security_reason`
+```json
+{
+  "security_invocation_decision": "invoke",
+  "security_trigger": "unsafe file handling",
+  "inspected_surfaces": ["output/security_input.json"],
+  "confirmed_findings": ["uploaded filename reaches filesystem path construction"],
+  "unproven_concerns": [],
+  "optional_hardening": [],
+  "residual_risk": "path validation still required in real implementation",
+  "blocking_security_reason": "filesystem path construction uses untrusted filename input"
+}
+```
 
 ## Intended constraint model
 - Security is justified only when the declared trigger is concrete;
@@ -34,9 +40,9 @@ Expected review shape:
 
 ## Failure mode to falsify
 The system must fail the case if:
-- Security is invoked without a concrete trigger;
-- reported findings are speculative and not linked to the declared surface;
-- optional hardening is escalated as a blocking security reason.
+- Security is invoked without a concrete trigger; or
+- `blocking_security_reason` is filled with optional hardening or unsupported speculation; or
+- `confirmed_findings` are not linked to the declared input surface.
 
 ## Success criterion
 The runtime can distinguish:
