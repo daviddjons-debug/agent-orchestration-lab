@@ -1,39 +1,55 @@
 # Validation Case 03 — Evidence
 
 ## Evidence status
-NOT YET PASSED.
+PASS for a bounded pseudo-code coordinated multi-file cluster scenario in current runtime.
 
-## Required positive evidence
-- a bounded run uses one primary source-like artifact plus two justified dependent artifacts:
+## What was executed
+- `python3 scripts/selftest.py`
+- override run used a bounded local cluster under:
   - `src/spec.json`
   - `src/generated_summary.txt`
   - `src/generated_manifest.json`
-- planner carries forward the declared local cluster without widening beyond it
-- builder creates or updates only declared artifacts inside the allowed change boundary
-- reviewer returns PASS when:
-  - each declared artifact satisfies its direct contract
-  - both dependent artifacts remain semantically aligned with the primary spec
-  - no undeclared cluster widening is detected
+- reviewer validated direct contract correctness for all three declared artifacts
+- reviewer validated coordinated cluster consistency across:
+  - `src/spec.json <-> src/generated_summary.txt`
+  - `src/spec.json <-> src/generated_manifest.json`
+- reviewer returned FAIL when the dependent summary artifact became stale relative to the primary spec
+- planner/builder restore steps returned the cluster scenario to PASS
+- post-cluster restore returned the runtime to the baseline artifact scenario without undeclared drift
 
-## Required negative evidence
-- reviewer returns FAIL when one dependent artifact is stale relative to the primary spec
-- reviewer returns FAIL when the two dependent artifacts disagree with each other
-- reviewer returns FAIL when undeclared files appear outside the declared local cluster
-- builder returns FAIL if declared writes exceed the allowed change boundary
-- builder returns FAIL if declared read boundary exceeds the current baseline Builder contract
+## Positive evidence
+- `src/spec.json` existed and satisfied declared contract
+- `src/generated_summary.txt` existed and satisfied declared contract
+- `src/generated_manifest.json` existed and satisfied declared contract
+- reviewer checked:
+  - `src/spec.json <-> src/generated_summary.txt message consistency`
+  - `src/spec.json <-> src/generated_manifest.json message consistency`
+- reviewer returned PASS when direct artifact validity and coordinated cluster consistency both held
+- no undeclared widening was detected inside the declared cluster scenario
 
-## What a future PASS would prove
-- the current runtime can validate a bounded coordinated multi-file local cluster
-- widening can be justified and still remain explicit and falsifiable
+## Negative evidence
+- reviewer returned FAIL when the dependent summary artifact became stale relative to `src/spec.json`
+- builder still returned FAIL when declared artifact paths fell outside `allowed_change_set`
+- builder still returned FAIL when `allowed_read_set` exceeded the baseline Builder read contract
+- reviewer still returned FAIL on undeclared output drift in the baseline artifact scenario
+- reviewer still returned FAIL on stale adjacent summary inconsistency in the Case 02 scenario
+
+## What this PASS proves
+- current runtime can validate a bounded coordinated multi-file local cluster
+- widening can be justified and remain explicit inside a declared local cluster
 - reviewer can distinguish direct primary correctness from incomplete coordinated local updates
-- Case 03 would extend the validation ladder beyond adjacent-pair consistency into bounded coordinated-cluster consistency
+- current runtime now supports a bounded bridge from Case 02 to Case 03
+- Case 03 extends validation beyond adjacent-pair consistency into bounded coordinated-cluster consistency
 
-## What a future PASS would still not prove
+## What this PASS does not prove
 - real repository-scale code dependency analysis
 - automatic discovery of the correct cluster without scenario structure
 - planner-side read-boundary enforcement
 - general runtime read sandboxing
 - tester-backed regression execution for real code changes
+- real multi-file source patch orchestration on a live repository
 
 ## Final judgment
-Do not mark this case PASS until both positive and negative evidence are recorded from runnable runtime behavior.
+Validation Case 03 is passed only as a bounded pseudo-code coordinated-cluster scenario in the current runtime.
+
+It is not yet passed as a real repository-scale code-patch orchestration scenario.
