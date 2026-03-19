@@ -40,6 +40,7 @@ def main() -> int:
     consistency_checks = []
     verify_only_checks = []
     security_checks = []
+    hardening_checks = []
     undeclared_files = []
     ok = False
 
@@ -166,6 +167,29 @@ def main() -> int:
                 security_checks.append(("security trigger linked to declared surface", trigger_link_ok))
                 security_checks.append(("blocking security reason is not optional hardening", blocking_reason_ok))
 
+            hardening_posix = "output/hardening_note.json"
+            if hardening_posix in declared_paths_set:
+                hardening_file = base / hardening_posix
+
+                hardening_scope_ok = False
+                hardening_reason_ok = False
+                refactoring_ok = False
+
+                try:
+                    if hardening_file.exists():
+                        hardening_data = json.loads(hardening_file.read_text(encoding="utf-8"))
+                        hardening_scope_ok = hardening_data.get("hardening_scope") == "local"
+                        hardening_reason_ok = hardening_data.get("hardening_reason") == "prevents same nearby failure mode"
+                        refactoring_ok = hardening_data.get("refactoring_detected") is False
+                except Exception:
+                    hardening_scope_ok = False
+                    hardening_reason_ok = False
+                    refactoring_ok = False
+
+                hardening_checks.append(("hardening scope is local", hardening_scope_ok))
+                hardening_checks.append(("hardening reason is evidence-linked", hardening_reason_ok))
+                hardening_checks.append(("refactoring is not disguised as hardening", refactoring_ok))
+
             summary_candidates = sorted(
                 path for path in declared_artifact_paths
                 if path == "summary.txt" or path.endswith("/summary.txt")
@@ -240,6 +264,7 @@ def main() -> int:
             and all(same for _, same in consistency_checks)
             and all(same for _, same in verify_only_checks)
             and all(same for _, same in security_checks)
+            and all(same for _, same in hardening_checks)
             and not undeclared_files
         )
 
@@ -262,6 +287,8 @@ def main() -> int:
     for path, same in verify_only_checks:
         lines.append(f"- [{'x' if same else ' '}] verify-only surface satisfied: {path}")
     for label, same in security_checks:
+        lines.append(f"- [{'x' if same else ' '}] {label}")
+    for label, same in hardening_checks:
         lines.append(f"- [{'x' if same else ' '}] {label}")
     lines.append(f"- [{'x' if not undeclared_files else ' '}] No undeclared output drift detected")
     if undeclared_files:
