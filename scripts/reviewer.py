@@ -25,6 +25,11 @@ CONTRACT_FIELDS = [
     "allowed_read_set",
     "allowed_change_set",
     "verify_only_surfaces",
+    "source_of_truth_node",
+    "stale_defect_node",
+    "adjacent_consistency_node",
+    "expansion_trigger",
+    "retriage_required_when_actual_blocker_differs",
     "excluded_neighbors",
     "forbidden_zone",
     "acceptance_criteria",
@@ -48,6 +53,8 @@ def main() -> int:
     artifact_results = []
     consistency_checks = []
     verify_only_checks = []
+    cluster_role_checks = []
+    retriage_checks = []
     security_checks = []
     hardening_checks = []
     undeclared_files = []
@@ -65,6 +72,10 @@ def main() -> int:
         plan_artifacts = plan.get("artifacts") if isinstance(plan, dict) else None
         policy = manifest.get("review_policy", {}) if isinstance(manifest, dict) else {}
         verify_only_surfaces = plan.get("verify_only_surfaces", []) if isinstance(plan, dict) else []
+        source_of_truth_node = plan.get("source_of_truth_node") if isinstance(plan, dict) else None
+        stale_defect_node = plan.get("stale_defect_node") if isinstance(plan, dict) else None
+        adjacent_consistency_node = plan.get("adjacent_consistency_node") if isinstance(plan, dict) else None
+        retriage_required = plan.get("retriage_required_when_actual_blocker_differs") if isinstance(plan, dict) else None
 
         require_valid_json = policy.get("require_valid_json", True)
         require_exact_text = policy.get("require_exact_text", True)
@@ -132,6 +143,31 @@ def main() -> int:
                     except Exception:
                         verify_ok = False
                 verify_only_checks.append((verify_path, verify_ok))
+
+            cluster_roles_declared = any(
+                value is not None for value in [source_of_truth_node, stale_defect_node, adjacent_consistency_node]
+            )
+            if cluster_roles_declared:
+                cluster_role_checks.append((
+                    "cluster role completeness",
+                    all(isinstance(value, str) and value.strip() for value in [
+                        source_of_truth_node, stale_defect_node, adjacent_consistency_node
+                    ]),
+                ))
+                if (
+                    isinstance(source_of_truth_node, str) and source_of_truth_node.strip()
+                    and isinstance(stale_defect_node, str) and stale_defect_node.strip()
+                ):
+                    cluster_role_checks.append((
+                        "source_of_truth_node distinct from stale_defect_node",
+                        source_of_truth_node != stale_defect_node,
+                    ))
+
+            if retriage_required is not None:
+                retriage_checks.append((
+                    "explicit retriage policy declared when required",
+                    isinstance(retriage_required, bool),
+                ))
 
             security_input_posix = "output/security_input.json"
             security_review_posix = "output/security_review.json"
@@ -272,6 +308,8 @@ def main() -> int:
             and all(artifact_results)
             and all(same for _, same in consistency_checks)
             and all(same for _, same in verify_only_checks)
+            and all(same for _, same in cluster_role_checks)
+            and all(same for _, same in retriage_checks)
             and all(same for _, same in security_checks)
             and all(same for _, same in hardening_checks)
             and not undeclared_files
@@ -295,6 +333,10 @@ def main() -> int:
         lines.append(f"- [{'x' if same else ' '}] {label}")
     for path, same in verify_only_checks:
         lines.append(f"- [{'x' if same else ' '}] verify-only surface satisfied: {path}")
+    for label, same in cluster_role_checks:
+        lines.append(f"- [{'x' if same else ' '}] {label}")
+    for label, same in retriage_checks:
+        lines.append(f"- [{'x' if same else ' '}] {label}")
     for label, same in security_checks:
         lines.append(f"- [{'x' if same else ' '}] {label}")
     for label, same in hardening_checks:
