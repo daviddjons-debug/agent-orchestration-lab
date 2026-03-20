@@ -9,9 +9,9 @@ USER_GOAL = (
     "executed as separate role scripts.\n"
 )
 
-ORCHESTRATOR_HANDOFF = (
+ORCHESTRATOR_HANDOFF_TEMPLATE = (
     "# Orchestrator Handoff\n\n"
-    "Role: triage gate for the current runnable baseline.\n\n"
+    "Role: triage gate for the current runnable {profile} path.\n\n"
     "Assigned workflow:\n"
     "1. Planner must read only this handoff and run_manifest.json, then create 02_plan.json and 02_planner.md.\n"
     "2. Builder must read only 02_plan.json and create all declared output files plus 03_builder.md.\n"
@@ -21,7 +21,15 @@ ORCHESTRATOR_HANDOFF = (
 )
 
 def main() -> int:
-    root = Path(sys.argv[1]) if len(sys.argv) == 2 else Path("docs/runs")
+    if len(sys.argv) > 3:
+        print("Usage: python3 scripts/orchestrator.py [run_root] [baseline|lite|heavy]")
+        return 2
+
+    root = Path(sys.argv[1]) if len(sys.argv) >= 2 else Path("docs/runs")
+    profile = sys.argv[2] if len(sys.argv) == 3 else "baseline"
+    if profile not in {"baseline", "lite", "heavy"}:
+        print("ERROR: profile must be one of baseline, lite, heavy")
+        return 1
     run = "orchestrated-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     base = root / run
     base.mkdir(parents=True, exist_ok=True)
@@ -36,7 +44,7 @@ def main() -> int:
         "problem_locus": "run contract files and declared outputs",
         "locus_confidence": "high",
         "false_locality_risk": "low",
-        "path_decision": "baseline",
+        "path_decision": profile,
         "dependency_ring": [
             "01_orchestrator.md",
             "run_manifest.json",
@@ -104,7 +112,8 @@ def main() -> int:
     }
 
     (base / "00_user_goal.md").write_text(USER_GOAL, encoding="utf-8")
-    (base / "01_orchestrator.md").write_text(ORCHESTRATOR_HANDOFF, encoding="utf-8")
+    orchestrator_handoff = ORCHESTRATOR_HANDOFF_TEMPLATE.format(profile=profile)
+    (base / "01_orchestrator.md").write_text(orchestrator_handoff, encoding="utf-8")
     (base / "run_manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
     print(base)
