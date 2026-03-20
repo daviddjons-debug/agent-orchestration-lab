@@ -85,13 +85,12 @@ Currently implemented and evidenced at bounded runtime level:
 - Case 01: narrow single-node fix
 - Case 02: local fix with adjacent dependency risk
 - Case 03: bounded pseudo-code multi-file coordinated change
-
-Not yet implemented as runnable validation classes:
-- Case 04: regression-sensitive change
+- Case 04: false-local change with omitted adjacent verification
 - Case 05: security-relevant task
 - Case 06: task with justified local hardening
 
 Current boundary:
-- Cases 01-03 are proven only in bounded lab-runtime form
+- Cases 01-06 are proven only in bounded lab-runtime form
 - this is still not evidence of repository-scale code orchestration
+- baseline runtime still propagates `dependency_ring` as a flat list rather than enforcing a structured ring object
 - planner-side read-boundary enforcement and general runtime read sandboxing remain unproven

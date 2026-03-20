@@ -40,6 +40,11 @@ The repository does **not** yet prove:
 
 - real surgical triage on live engineering tasks;
 - real dependency-aware planning over code graphs;
+- structured runtime use of `dependency_ring` as a true ring object with:
+  - `primary_target`
+  - `adjacent_read_nodes`
+  - `adjacent_verify_only_nodes`
+  - `excluded_neighbors`;
 - enforced `allowed_read_set` or equivalent hard read boundaries;
 - minimal patch-zone discipline on real source files;
 - runnable Tester stage with execution-backed validation;
