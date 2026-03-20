@@ -34,5 +34,5 @@ The system should:
 A superficially successful local fix in `src/parser.py` must not be accepted as trustworthy completion when verify-only status is still pending.
 
 ## Status
-Runnable scenario drafted.
-Execution contract not yet bound into runtime.
+Runnable scenario is now bound into automated `scripts/selftest.py` coverage.
+It is not yet expressed as a generic `docs/runs/*` manifest-driven runtime case.

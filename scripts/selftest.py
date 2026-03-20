@@ -538,6 +538,79 @@ def main() -> int:
         return 1
     print("Expected builder failure observed.")
 
+
+    print("== CASE 07: live bounded code with verify-only gate ==")
+    case07_src = Path("lab_cases/case_07_live_bounded_code/src")
+    parser_file = case07_src / "parser.py"
+    adjacent_file = case07_src / "adjacent_contract.py"
+    verify_file = case07_src / "verify_only_status.txt"
+
+    parser_original = parser_file.read_text(encoding="utf-8")
+    adjacent_original = adjacent_file.read_text(encoding="utf-8")
+    verify_original = verify_file.read_text(encoding="utf-8")
+
+    case07_code = """import sys
+from pathlib import Path
+sys.path.insert(0, "lab_cases/case_07_live_bounded_code/src")
+from parser import parse_setting
+from adjacent_contract import render_setting
+
+assert parse_setting("  alpha  ") == "alpha"
+
+parse_ok = False
+render_ok = False
+
+try:
+    parse_setting("   ")
+except ValueError:
+    parse_ok = True
+
+try:
+    render_setting("   ")
+except ValueError:
+    render_ok = True
+
+assert parse_ok, "expected ValueError for whitespace-only parse_setting input"
+assert render_ok, "expected ValueError for whitespace-only render_setting input"
+
+status = Path("lab_cases/case_07_live_bounded_code/src/verify_only_status.txt").read_text(encoding="utf-8").strip()
+sys.exit(0 if status == "adjacent verified" else 1)
+"""
+    case07_cmd = ["python3", "-c", case07_code]
+
+    try:
+        verify_file.write_text("adjacent verification pending\n", encoding="utf-8")
+
+        case07_fail = sh(case07_cmd, allow_fail=True)
+        if case07_fail.returncode == 0:
+            print("SELFTEST ERROR: expected FAIL on Case 07 when verify-only gate is pending")
+            return 1
+
+        if parser_file.read_text(encoding="utf-8") != parser_original:
+            print("SELFTEST ERROR: parser.py changed during Case 07 fail path")
+            return 1
+        if adjacent_file.read_text(encoding="utf-8") != adjacent_original:
+            print("SELFTEST ERROR: adjacent_contract.py changed during Case 07 fail path")
+            return 1
+
+        verify_file.write_text("adjacent verified\n", encoding="utf-8")
+
+        case07_pass = sh(case07_cmd)
+        if case07_pass.returncode != 0:
+            print("SELFTEST ERROR: expected PASS on Case 07 after verify-only gate is satisfied")
+            return 1
+
+        if parser_file.read_text(encoding="utf-8") != parser_original:
+            print("SELFTEST ERROR: parser.py changed during Case 07 pass path")
+            return 1
+        if adjacent_file.read_text(encoding="utf-8") != adjacent_original:
+            print("SELFTEST ERROR: adjacent_contract.py changed during Case 07 pass path")
+            return 1
+    finally:
+        parser_file.write_text(parser_original, encoding="utf-8")
+        adjacent_file.write_text(adjacent_original, encoding="utf-8")
+        verify_file.write_text(verify_original, encoding="utf-8")
+
     print("== PIPELINE ACTIVATION CHECK: baseline vs lite reviewer behavior ==")
     baseline_pipeline = sh(["python3", "scripts/run_pipeline.py", str(base), "baseline"])
     baseline_runs = sorted(base.glob("orchestrated-*"))
