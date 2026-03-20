@@ -34,6 +34,12 @@ def main() -> int:
     base = root / run
     base.mkdir(parents=True, exist_ok=True)
 
+    allowed_read_set_by_profile = {
+        "baseline": ["02_plan.json"],
+        "lite": ["02_plan.json"],
+        "heavy": ["02_plan.json", "run_manifest.json"],
+    }
+
     manifest = {
         "run_id": run,
         "task_class": "narrow_bugfix",
@@ -51,9 +57,7 @@ def main() -> int:
             "02_plan.json",
             "output/",
         ],
-        "allowed_read_set": [
-            "02_plan.json",
-        ],
+        "allowed_read_set": allowed_read_set_by_profile[profile],
         "allowed_change_set": [
             "02_plan.json",
             "02_planner.md",

@@ -126,11 +126,25 @@ def main() -> int:
 
     builder_read_boundary = sh(["python3", "scripts/builder.py", str(run_dir)], allow_fail=True)
     if builder_read_boundary.returncode == 0:
-        print("SELFTEST ERROR: expected builder FAIL when allowed_read_set exceeds current builder read contract")
+        print("SELFTEST ERROR: expected builder FAIL when allowed_read_set mismatches baseline builder read contract")
         return 1
     read_boundary_text = (builder_read_boundary.stdout or "") + (builder_read_boundary.stderr or "")
-    if "allowed_read_set exceeds current builder read contract" not in read_boundary_text:
-        print("SELFTEST ERROR: expected explicit builder evidence for allowed_read_set enforcement")
+    if "allowed_read_set does not match builder read contract for path_decision=baseline" not in read_boundary_text:
+        print("SELFTEST ERROR: expected explicit builder evidence for baseline allowed_read_set enforcement")
+        return 1
+
+    read_boundary_plan = json.loads((run_dir / "02_plan.json").read_text(encoding="utf-8"))
+    read_boundary_plan["path_decision"] = "heavy"
+    read_boundary_plan["allowed_read_set"] = ["02_plan.json"]
+    (run_dir / "02_plan.json").write_text(json.dumps(read_boundary_plan, indent=2) + "\n", encoding="utf-8")
+
+    builder_heavy_read_boundary = sh(["python3", "scripts/builder.py", str(run_dir)], allow_fail=True)
+    if builder_heavy_read_boundary.returncode == 0:
+        print("SELFTEST ERROR: expected builder FAIL when heavy builder read contract is under-declared")
+        return 1
+    heavy_read_boundary_text = (builder_heavy_read_boundary.stdout or "") + (builder_heavy_read_boundary.stderr or "")
+    if "allowed_read_set does not match builder read contract for path_decision=heavy" not in heavy_read_boundary_text:
+        print("SELFTEST ERROR: expected explicit builder evidence for heavy allowed_read_set enforcement")
         return 1
 
     sh(["python3", "scripts/planner.py", str(run_dir)])

@@ -79,11 +79,23 @@ def main() -> int:
     allowed_change_set = plan["allowed_change_set"]
     verify_only_surfaces = plan["verify_only_surfaces"]
 
+    path_decision = plan["path_decision"].strip()
+    expected_read_sets = {
+        "baseline": ["02_plan.json"],
+        "lite": ["02_plan.json"],
+        "heavy": ["02_plan.json", "run_manifest.json"],
+    }
+    if path_decision not in expected_read_sets:
+        return fail(f"unsupported path_decision for builder read contract: {path_decision}")
+
     normalized_read_set = [item.strip() for item in allowed_read_set]
-    if "02_plan.json" not in normalized_read_set:
-        return fail("allowed_read_set must include 02_plan.json for current builder read contract")
-    if any(item != "02_plan.json" for item in normalized_read_set):
-        return fail("allowed_read_set exceeds current builder read contract")
+    expected_read_set = expected_read_sets[path_decision]
+
+    if normalized_read_set != expected_read_set:
+        return fail(
+            "allowed_read_set does not match builder read contract for "
+            f"path_decision={path_decision}: expected {expected_read_set}, got {normalized_read_set}"
+        )
 
     artifacts = plan.get("artifacts")
     if not isinstance(artifacts, list) or not artifacts:
