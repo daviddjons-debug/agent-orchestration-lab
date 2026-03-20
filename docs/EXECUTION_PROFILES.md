@@ -1,60 +1,90 @@
 # Execution Profiles
 
 ## Purpose
-Define when the system should stay lightweight and when it should use the heavier surgical flow.
+Summarize the execution profiles used by Surgical Edition.
 
-## Lite profile
+`docs/ACTIVATION_MATRIX.md` is the canonical source of truth for activation logic, trigger logic, and role/profile behavior.
+This file is a compact profile summary only.
 
-### Use when
+## Profiles
+
+### Baseline
+Baseline is the current runtime compatibility label for the Direct execution profile.
+
+Use when:
 - the task is narrow and localized;
 - the problem locus is already obvious;
-- the dependency ring is small;
+- false-locality risk is low;
 - the change surface is low-risk;
-- no explicit security dimension is present;
-- no meaningful regression surface is expected beyond the nearest node.
+- no verify-only or adjacent consistency surface is already load-bearing;
+- no explicit security dimension is present.
 
-### Expected flow
-- Orchestrator
-- Planner
+Expected flow:
+- Orchestrator in compressed form
 - Builder
-- Reviewer
+- targeted validation
+- Reviewer only when trigger evidence requires a separate check
 
-### Rules
+Rules:
 - keep read scope narrow;
 - keep change scope narrow;
+- do not invoke Planner as a separate lane by default;
 - do not invoke Tester by default;
 - do not invoke Security by default;
 - do not widen the task unless evidence forces it.
 
-## Heavy profile
+### Lite
+Use when:
+- a local fix is still plausible;
+- bounded adjacent reading or verification is needed;
+- the task remains narrow enough for disciplined execution;
+- drift or adjacent-risk control still matters.
 
-### Use when
-- the problem locus is unclear;
-- the dependency ring is wider than one immediate node;
-- multiple files or surfaces are likely involved;
+Expected flow:
+- Orchestrator
+- Planner in bounded/mini-plan form
+- Builder
+- Reviewer
+- Tester only when trigger evidence requires behavior validation
+
+Rules:
+- keep the execution graph bounded;
+- make adjacent verification explicit when load-bearing;
+- do not invoke Security unless the task has a real security dimension;
+- do not widen the task unless evidence forces it.
+
+### Heavy
+Use when:
+- the problem locus is unclear or disputed;
+- the dependency ring is non-trivial;
+- multiple surfaces or coordinated consistency may be involved;
+- blocker uncertainty is material;
 - regression risk is non-trivial;
 - the task has a real security dimension;
-- local hardening may be justified;
 - failure cost is high enough that shallow verification is not credible.
 
-### Expected flow
+Expected flow:
 - Orchestrator
 - Planner
 - Builder
 - Reviewer
 - Tester when verification depth is required
 - Security when risk dimension is real
+- retriage/escalation loop when evidence requires it
 
-### Rules
+Rules:
 - triage must be explicit before implementation;
 - dependency ring must be stated;
 - allowed read and change sets must be explicit;
 - verification targets must be explicit;
-- Tester and Security are invoked by evidence, not by ritual.
+- Tester and Security are invoked by evidence, not by ritual;
+- widening beyond the minimum justified contour must be evidence-driven.
 
 ## Selection rule
-Orchestrator must choose Lite by default only when the task is clearly narrow and low-risk.
-If that cannot be justified, the task must be treated as Heavy.
+- Start in Baseline.
+- Escalate to Lite only when bounded evidence shows that Baseline would under-control locality, adjacent validation, or drift risk.
+- Escalate to Heavy only when bounded evidence shows that Baseline or Lite would under-control locality, consistency, security, or blocker uncertainty.
+- Do not escalate by task-size narrative alone.
 
 ## Current status
 Profiles are currently defined primarily at the policy and documentation layer.
