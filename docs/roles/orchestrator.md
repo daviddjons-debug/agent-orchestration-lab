@@ -47,7 +47,6 @@ The orchestrator output must make all of the following explicit:
 - evidence_required;
 - blockers_or_uncertainties;
 - escalation_trigger;
-- routing_reason.
 
 ## Routing rules
 

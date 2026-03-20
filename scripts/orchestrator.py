@@ -37,7 +37,6 @@ def main() -> int:
         "locus_confidence": "high",
         "false_locality_risk": "low",
         "path_decision": "baseline",
-        "routing_reason": "Current runnable runtime supports bounded artifact-contract execution but not full heavy-path orchestration.",
         "dependency_ring": [
             "01_orchestrator.md",
             "run_manifest.json",
