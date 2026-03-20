@@ -389,6 +389,48 @@ def main() -> int:
         return 1
 
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    manifest["retriage_required_when_actual_blocker_differs"] = True
+    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+    sh(["python3", "scripts/planner.py", str(run_dir)])
+
+    retriage_plan = run_dir / "02_plan.json"
+    retriage_data = json.loads(retriage_plan.read_text(encoding="utf-8"))
+    retriage_data["allowed_change_set"] = ["BROKEN_SCOPE/"]
+    retriage_plan.write_text(json.dumps(retriage_data, indent=2) + "\n", encoding="utf-8")
+
+    retriage_fail = sh(["python3", "scripts/reviewer.py", str(run_dir)], allow_fail=True)
+    if retriage_fail.returncode == 0:
+        print("SELFTEST ERROR: expected FAIL when actual blocker differs under explicit re-triage requirement")
+        return 1
+    retriage_fail_text = (retriage_fail.stdout or "") + (retriage_fail.stderr or "")
+    if "allowed_change_set matches between manifest and plan" not in retriage_fail_text:
+        print("SELFTEST ERROR: expected reviewer evidence for actual blocker drift under re-triage branch")
+        return 1
+
+    retriage_data.pop("retriage_required_when_actual_blocker_differs", None)
+    retriage_plan.write_text(json.dumps(retriage_data, indent=2) + "\n", encoding="utf-8")
+
+    retriage_policy_missing = sh(["python3", "scripts/reviewer.py", str(run_dir)], allow_fail=True)
+    if retriage_policy_missing.returncode == 0:
+        print("SELFTEST ERROR: expected FAIL when re-triage policy is omitted from drifted plan")
+        return 1
+    retriage_policy_missing_text = (retriage_policy_missing.stdout or "") + (retriage_policy_missing.stderr or "")
+    if "retriage_required_when_actual_blocker_differs matches between manifest and plan" not in retriage_policy_missing_text:
+        print("SELFTEST ERROR: expected reviewer evidence for missing re-triage field alignment")
+        return 1
+
+    retriage_data["retriage_required_when_actual_blocker_differs"] = True
+    retriage_plan.write_text(json.dumps(retriage_data, indent=2) + "\n", encoding="utf-8")
+
+    retriage_policy_restored = sh(["python3", "scripts/reviewer.py", str(run_dir)], allow_fail=True)
+    if retriage_policy_restored.returncode == 0:
+        print("SELFTEST ERROR: expected FAIL to remain because actual blocker drift is still present after restoring re-triage policy")
+        return 1
+
+    sh(["python3", "scripts/planner.py", str(run_dir)])
+
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
     manifest["objective"] = "Produce declared artifacts for the current run contract"
     manifest["problem_locus"] = "run contract files and declared outputs"
     manifest["dependency_ring"] = ["01_orchestrator.md", "run_manifest.json", "02_plan.json", "output/"]
