@@ -57,5 +57,8 @@ Orchestrator must choose Lite by default only when the task is clearly narrow an
 If that cannot be justified, the task must be treated as Heavy.
 
 ## Current status
-Profiles are defined at the documentation layer first.
+Profiles are currently defined primarily at the policy and documentation layer.
+
+They guide routing and expected discipline, but they do not yet constitute a fully enforced runtime stage graph.
+
 Runtime/profile enforcement can be expanded later if justified.

@@ -104,11 +104,13 @@ Allowed values:
 ### dependency_ring
 Nearest dependency contour around the locus.
 
-Must distinguish:
+The contract should distinguish, conceptually, between:
 - primary_target
 - adjacent_read_nodes
 - adjacent_verify_only_nodes
 - excluded_neighbors
+
+In the current runnable baseline, this structure may still be carried in compatibility form rather than as a fully enforced structured runtime object.
 
 Do not dump broad repo context into this field.
 

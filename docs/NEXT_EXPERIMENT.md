@@ -31,20 +31,31 @@ It does not yet prove or enforce:
 Preserve the runnable 4-role harness, keep the current bounded proof honest, and redefine the role contracts so the system can move from a generic artifact emitter toward a surgical orchestration baseline.
 
 ## Immediate upgrade path
-### Phase 1 — Rewrite the existing 4 roles
-Transform:
+### Phase 1 — Normalize and finish the existing 4-role contract layer
+This rewrite is already substantially in progress at the documentation and contract layer.
+
+Continue aligning:
 - orchestrator -> triage, routing, boundary control
 - planner -> locus refinement, dependency ring, execution plan, allowed zones
 - builder -> narrow execution within declared change zone
 - reviewer -> contract audit, scope-drift detection, falsifiable verdict
 
-### Phase 2 — Introduce missing roles only after Phase 1 is coherent
+The next step is not to restart this rewrite rhetorically, but to close remaining gaps between canonical wording and current runnable reality.
+
+### Phase 2 — Prove one additional runtime control gap
+Before expanding the stage graph, prove one more falsifiable runtime control, preferably:
+- stricter read-boundary enforcement; or
+- one bounded live code-level mini-task beyond declared-artifact scenarios.
+
+### Phase 3 — Introduce missing roles only after the current runtime boundary hardens further
 Add:
 - tester -> behavior verification and regression-focused validation
 - security -> risk-gated inspection for security-relevant tasks
 
-### Phase 3 — Re-evaluate runtime
-Only after the role contracts are coherent:
+Only after that should runtime expansion be reconsidered explicitly.
+
+### Phase 4 — Re-evaluate runtime
+Only after the contract layer and at least one additional runtime control are coherent:
 - decide whether `scripts/` should remain a 4-stage runner;
 - or whether the runtime should expand to support tester/security explicitly.
 

@@ -36,13 +36,15 @@ The reviewer output must make all of the following explicit:
 - blocking_review_reason: `none` or explicit reason.
 
 ## Verdict classes
-Reviewer should reason using the following verdict classes:
+Reviewer should reason using the following verdict classes conceptually:
 - `PASS`
 - `FAIL`
 - `INSUFFICIENT_EVIDENCE`
 - `OVERSCOPED_SUCCESS`
 
-If the runnable runtime still collapses these operationally, the reasoning layer must still preserve the richer distinction.
+In the current runnable baseline, the executable gate still operates primarily as `PASS` / `FAIL`.
+
+The richer verdict classes remain an interpretive reasoning layer unless and until runtime support is expanded explicitly.
 
 ## Review standard
 The reviewer must behave as a falsification role, not as a courtesy checker.
