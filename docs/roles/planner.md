@@ -17,6 +17,13 @@ Purpose: turn orchestrator triage into an executable narrow contract, refine the
 - define the smallest justified allowed read set for downstream execution;
 - define the smallest justified allowed change set for downstream execution;
 - define verify-only surfaces that must be checked but must not be modified;
+- when the task is a bounded cluster or coordinated-consistency case, explicitly distinguish:
+  - `source_of_truth_node`
+  - `stale_defect_node`
+  - `adjacent_consistency_node`
+- define the minimum initial change set rather than the maximal imaginable cluster set;
+- define `expansion_trigger` as concrete evidence required before widening beyond the minimum initial change set;
+- define whether `retriage_required_when_actual_blocker_differs` must be explicit;
 - define excluded neighbors where adjacent nodes are near enough to matter but deliberately out of scope;
 - define acceptance criteria that are falsifiable rather than narrative;
 - define verification targets that reviewer or tester can actually inspect;
@@ -45,6 +52,11 @@ The planner output must make all of the following explicit:
 - allowed_read_set;
 - allowed_change_set;
 - verify_only_surfaces;
+- source_of_truth_node;
+- stale_defect_node;
+- adjacent_consistency_node;
+- expansion_trigger;
+- retriage_required_when_actual_blocker_differs;
 - excluded_neighbors;
 - forbidden_zone;
 - acceptance_criteria;
@@ -71,6 +83,7 @@ The resulting plan should answer:
 In the current runnable baseline, this intent is only partially realized:
 - `dependency_ring` is still carried as a flat compatibility list;
 - `excluded_neighbors` is propagated separately;
+- the newer node-role fields for bounded clusters may be present contractually before they are fully enforced mechanically in runtime;
 - full structured ring semantics remain target behavior, not current runtime fact.
 
 ## Must not do
@@ -78,8 +91,11 @@ In the current runnable baseline, this intent is only partially realized:
 - must not perform builder work;
 - must not perform reviewer work;
 - must not widen scope just because more context exists nearby;
+- must not widen a bounded cluster task to the whole cluster without evidence;
 - must not leave the dependency ring implicit;
-- must not omit excluded neighbors where false-locality risk is material;
+- must not conflate source-of-truth with the immediate stale defect node;
+- must not continue with the assumed scenario when actual blocking evidence requires explicit re-triage;
+- must not omit excluded_neighbors where false-locality risk is material;
 - must not confuse planner input scope with downstream execution read scope;
 - must not replace falsifiable acceptance criteria with vague success language;
 - must not hide uncertainty behind confident prose;

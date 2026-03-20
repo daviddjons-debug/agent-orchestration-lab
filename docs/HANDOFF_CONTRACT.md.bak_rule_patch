@@ -42,11 +42,6 @@ No role may silently widen scope.
 
 ## Conditional fields
 - excluded_neighbors
-- source_of_truth_node
-- stale_defect_node
-- adjacent_consistency_node
-- expansion_trigger
-- retriage_required_when_actual_blocker_differs
 - patch_strategy
 - change_rationale
 - reviewer_focus
@@ -115,8 +110,6 @@ The contract should distinguish, conceptually, between:
 - adjacent_verify_only_nodes
 - excluded_neighbors
 
-In bounded cluster or coordinated-consistency tasks, the domain dependency ring should be described first. Execution/report artifacts must not be mixed into the domain ring unless explicitly justified as execution context.
-
 In the current runnable baseline, this structure may still be carried in compatibility form rather than as a fully enforced structured runtime object.
 
 Do not dump broad repo context into this field.
@@ -127,14 +120,10 @@ Smallest justified set of artifacts that may be read for the current stage.
 ### allowed_change_set
 Exact set of artifacts approved for modification.
 
-This must begin at the smallest sufficient repair surface for the current pass, not the maximal imaginable cluster or neighborhood.
-
 No file may be edited unless explicitly inside this set.
 
 ### verify_only_surfaces
 Artifacts allowed for inspection and validation but not for modification in the current pass.
-
-If declared, these surfaces are load-bearing for completion and may not be ignored merely because the primary target appears fixed.
 
 ### forbidden_zone
 Explicit no-go zone.
@@ -198,35 +187,6 @@ Examples:
 ### excluded_neighbors
 Nearby nodes explicitly ruled out for the current pass.
 
-### source_of_truth_node
-Optional explicit declaration of the node that defines intended content or intended behavior for a bounded cluster or generated-artifact task.
-
-This must not be automatically conflated with the immediate stale defect node.
-
-### stale_defect_node
-Optional explicit declaration of the node that is currently stale, inconsistent, or most directly broken in the present fail mode.
-
-Use this when the source-of-truth and immediate repair locus differ.
-
-### adjacent_consistency_node
-Optional explicit declaration of the nearest non-primary node whose consistency must still hold after the repair.
-
-Use this when bounded validation depends on more than one load-bearing cluster node.
-
-### expansion_trigger
-Concrete evidence required before widening beyond the initial minimum change set.
-
-Examples:
-- summary-only restore does not recover declared cluster consistency
-- verify-only surface reveals remaining mismatch
-- adjacent node proves stale after primary repair
-- source-of-truth itself is shown to be incorrect
-
-### retriage_required_when_actual_blocker_differs
-Whether the assumed failure mode must yield to a newly discovered actual blocking defect.
-
-Use this when reviewer or validation evidence may override the original scenario narrative.
-
 ### patch_strategy
 Shape of the intended intervention, not implementation detail.
 
@@ -259,7 +219,6 @@ Threat surface, trust-boundary relevance, auth/data-exposure implications, and w
 - If allowed_read_set is undefined, execution must stop.
 - If allowed_change_set is undefined, execution must stop.
 - If verify_only_surfaces are declared, Reviewer must require evidence instead of assuming they were checked.
-- If actual blocking evidence contradicts the assumed scenario and re-triage is not made explicit, success must not be assumed.
 - If excluded_neighbors are omitted where adjacent risk is material, Reviewer must treat scope control as incomplete.
 - If verification_targets are missing, success must not be assumed.
 - If evidence_required is missing, completion confidence must not be inflated.

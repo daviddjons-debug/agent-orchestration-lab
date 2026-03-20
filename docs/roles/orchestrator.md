@@ -42,6 +42,11 @@ The orchestrator output must make all of the following explicit:
 - allowed_read_set;
 - allowed_change_set;
 - verify_only_surfaces;
+- source_of_truth_node;
+- stale_defect_node;
+- adjacent_consistency_node;
+- expansion_trigger;
+- retriage_required_when_actual_blocker_differs;
 - forbidden_zone;
 - verification_targets;
 - evidence_required;
@@ -49,6 +54,15 @@ The orchestrator output must make all of the following explicit:
 - escalation_trigger;
 
 ## Routing rules
+
+### bounded cluster routing note
+When the task is a bounded cluster or generated-artifact consistency task, the orchestrator must not conflate:
+- source-of-truth node,
+- stale defect node,
+- adjacent consistency node.
+
+The initial contract must start from the smallest justified repair surface.
+If the assumed failure mode may be overridden by reviewer or validation evidence, `retriage_required_when_actual_blocker_differs` must be made explicit.
 
 ### lite
 Use only when:
