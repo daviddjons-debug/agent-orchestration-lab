@@ -97,6 +97,19 @@ def main() -> int:
             f"path_decision={path_decision}: expected {expected_read_set}, got {normalized_read_set}"
         )
 
+    actual_read_sources = ["02_plan.json"]
+    if path_decision == "heavy":
+        manifest_file = base / "run_manifest.json"
+        if not manifest_file.exists():
+            return fail("missing run_manifest.json for heavy builder read contract")
+        try:
+            manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+        except Exception:
+            return fail("run_manifest.json is not valid JSON for heavy builder read contract")
+        if not isinstance(manifest, dict):
+            return fail("run_manifest.json root must be an object for heavy builder read contract")
+        actual_read_sources.append("run_manifest.json")
+
     artifacts = plan.get("artifacts")
     if not isinstance(artifacts, list) or not artifacts:
         return fail("02_plan.json missing non-empty list field: artifacts")
@@ -140,7 +153,7 @@ def main() -> int:
 
     builder_report = (
         "# Builder Output\n\n"
-        "Actual read source: 02_plan.json only\n"
+        f"Actual read sources: {', '.join(actual_read_sources)}\n"
         f"Path decision: {path_decision}\n"
         f"Declared allowed read set: {', '.join(expected_read_set)}\n\n"
         f"Task class: {plan['task_class']}\n"
