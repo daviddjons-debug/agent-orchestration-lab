@@ -46,6 +46,7 @@ def main() -> int:
             return 1
 
     required_list_fields = [
+        "profile_selection_basis",
         "dependency_ring",
         "allowed_read_set",
         "allowed_change_set",
@@ -74,6 +75,7 @@ def main() -> int:
         "problem_locus": manifest.get("problem_locus"),
         "locus_confidence": manifest.get("locus_confidence"),
         "false_locality_risk": manifest.get("false_locality_risk"),
+        "profile_selection_basis": manifest.get("profile_selection_basis", []),
         "path_decision": manifest.get("path_decision"),
         "dependency_ring": manifest.get("dependency_ring", []),
         "allowed_read_set": manifest.get("allowed_read_set", []),

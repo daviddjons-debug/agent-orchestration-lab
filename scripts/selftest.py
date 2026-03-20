@@ -538,6 +538,35 @@ def main() -> int:
         return 1
     print("Expected builder failure observed.")
 
+    print("== PIPELINE ACTIVATION CHECK: baseline vs lite reviewer behavior ==")
+    baseline_pipeline = sh(["python3", "scripts/run_pipeline.py", str(base), "baseline"])
+    baseline_runs = sorted(base.glob("orchestrated-*"))
+    if not baseline_runs:
+        print("SELFTEST ERROR: expected baseline pipeline run directory")
+        return 1
+    baseline_run = baseline_runs[-1]
+    baseline_output = (baseline_pipeline.stdout or "") + (baseline_pipeline.stderr or "")
+    if "REVIEWER_SKIPPED=baseline compressed path (no declared review trigger)" not in baseline_output:
+        print("SELFTEST ERROR: expected baseline pipeline to skip reviewer on compressed path")
+        return 1
+    if (baseline_run / "04_reviewer.md").exists():
+        print("SELFTEST ERROR: baseline compressed pipeline must not emit 04_reviewer.md")
+        return 1
+
+    lite_pipeline = sh(["python3", "scripts/run_pipeline.py", str(base), "lite"])
+    lite_runs = sorted(base.glob("orchestrated-*"))
+    if len(lite_runs) < 2:
+        print("SELFTEST ERROR: expected lite pipeline run directory")
+        return 1
+    lite_run = lite_runs[-1]
+    lite_output = (lite_pipeline.stdout or "") + (lite_pipeline.stderr or "")
+    if "Final verdict: PASS" not in lite_output:
+        print("SELFTEST ERROR: expected lite pipeline reviewer PASS")
+        return 1
+    if not (lite_run / "04_reviewer.md").exists():
+        print("SELFTEST ERROR: lite pipeline must emit 04_reviewer.md")
+        return 1
+
     print("SELFTEST RESULT: PASS")
     return 0
 

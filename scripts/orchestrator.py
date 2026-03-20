@@ -30,7 +30,7 @@ def main() -> int:
     if profile not in {"baseline", "lite", "heavy"}:
         print("ERROR: profile must be one of baseline, lite, heavy")
         return 1
-    run = "orchestrated-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    run = "orchestrated-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
     base = root / run
     base.mkdir(parents=True, exist_ok=True)
 
@@ -38,6 +38,23 @@ def main() -> int:
         "baseline": ["02_plan.json"],
         "lite": ["02_plan.json", "run_manifest.json"],
         "heavy": ["02_plan.json", "run_manifest.json"],
+    }
+    profile_selection_basis_by_profile = {
+        "baseline": [
+            "locus is clear",
+            "false locality risk is low",
+            "no declared review trigger",
+        ],
+        "lite": [
+            "bounded adjacent discipline is required",
+            "reviewer is active by profile",
+            "manifest read is required for builder evidence",
+        ],
+        "heavy": [
+            "full review lane is active by profile",
+            "manifest read is required for builder evidence",
+            "task is routed to the widest current runtime path",
+        ],
     }
 
     manifest = {
@@ -50,6 +67,7 @@ def main() -> int:
         "problem_locus": "run contract files and declared outputs",
         "locus_confidence": "high",
         "false_locality_risk": "low",
+        "profile_selection_basis": profile_selection_basis_by_profile[profile],
         "path_decision": profile,
         "dependency_ring": [
             "01_orchestrator.md",

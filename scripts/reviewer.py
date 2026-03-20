@@ -20,6 +20,7 @@ CONTRACT_FIELDS = [
     "problem_locus",
     "locus_confidence",
     "false_locality_risk",
+    "profile_selection_basis",
     "path_decision",
     "dependency_ring",
     "allowed_read_set",
