@@ -90,7 +90,8 @@ Currently implemented and evidenced at bounded runtime level:
 - Case 06: task with justified local hardening
 
 Current boundary:
-- Cases 01-06 are proven only in bounded lab-runtime form
+- Cases 01-06 are proven in bounded lab-runtime form
+- Case 07 adds a persistent bounded live code-level validation case outside `docs/runs/`, but is not yet a first-class automated `selftest.py` scenario
 - this is still not evidence of repository-scale code orchestration
 - baseline runtime still propagates `dependency_ring` as a flat list rather than enforcing a structured ring object
 - planner-side read-boundary enforcement and general runtime read sandboxing remain unproven
