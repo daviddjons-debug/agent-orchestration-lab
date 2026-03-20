@@ -29,6 +29,12 @@ The tester output must make all of the following explicit:
 - residual_behavior_risk;
 - blocking_test_reason.
 
+## Activation by profile
+- In `baseline` runtime terms (Direct execution profile in `docs/ACTIVATION_MATRIX.md`), tester is normally off and should activate only when direct execution still requires explicit runnable behavior evidence.
+- In `lite`, tester is trigger-based and should activate only when executable symptom validation or nearby justified regression checking is actually needed.
+- In `heavy`, tester remains trigger-based but is expected whenever behavior change or regression-sensitive evidence is load-bearing for completion.
+- Tester activation must follow declared verification need, not ritual stage sequencing.
+
 ## Testing standard
 The tester must behave as a bounded validation role, not as a second builder and not as a broad QA sweep.
 
