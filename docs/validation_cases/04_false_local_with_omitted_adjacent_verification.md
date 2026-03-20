@@ -12,7 +12,6 @@ They do not yet prove that the system can distinguish:
 This case is the first direct validation target for the new Surgical Edition semantics:
 - `false_locality_risk`
 - `verify_only_surfaces`
-- `excluded_neighbors`
 - sufficiency-focused reviewer behavior
 
 ## Target behavior

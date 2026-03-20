@@ -33,9 +33,7 @@ Observed reviewer evidence:
 - final verdict -> `PASS`
 
 ## What this now proves
-- manifest -> plan propagation for:
-  - `verify_only_surfaces`
-  - `excluded_neighbors`
+- manifest -> plan propagation for `verify_only_surfaces`
 - reviewer can reject false-local success when adjacent verify-only validation is missing
 - reviewer can accept the same run once the verify-only adjacent condition is satisfied
 - current bounded runtime now has real executable evidence for Case 04
@@ -43,6 +41,7 @@ Observed reviewer evidence:
 ## What this still does not prove
 - repository-scale dependency discovery
 - tester-stage execution
+- meaningful runtime use of `excluded_neighbors`
 - full runtime enforcement of all Surgical Edition extension semantics
 - code-level blast-radius control
 
