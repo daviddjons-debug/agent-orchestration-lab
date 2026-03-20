@@ -172,10 +172,12 @@ Allowed values:
 - baseline
 - heavy
 
-#### lite
-Use only when locus is clear, change is narrow, false locality risk is low, and adjacent blast radius is minimal.
-
 #### baseline
+Use only when locus is clear, change is narrow, false locality risk is low, adjacent blast radius is minimal, and no verify-only or adjacent consistency surface is already load-bearing.
+
+In Activation Matrix terms, `baseline` is the current runtime compatibility label for the Direct execution profile.
+
+#### lite
 Use when a local patch is plausible but bounded adjacent reading or verification is still needed.
 
 #### heavy

@@ -10,8 +10,8 @@ Purpose: act as the triage gate of Surgical Edition, classify the task before pl
 - identify the best current problem locus and assign locus confidence;
 - state false-locality risk explicitly;
 - choose `path_decision`:
-  - `lite`
   - `baseline`
+  - `lite`
   - `heavy`
 - decide whether narrow execution is justified or whether escalation is required;
 - define the initial dependency ring hypothesis at triage level;
@@ -64,15 +64,19 @@ When the task is a bounded cluster or generated-artifact consistency task, the o
 The initial contract must start from the smallest justified repair surface.
 If the assumed failure mode may be overridden by reviewer or validation evidence, `retriage_required_when_actual_blocker_differs` must be made explicit.
 
-### lite
+### baseline
 Use only when:
 - locus is already clear;
 - change is likely truly local;
 - false-locality risk is low;
 - adjacent blast radius is minimal;
+- no verify-only or adjacent consistency surface is load-bearing;
 - no meaningful security or regression contour is visible at triage.
 
-### baseline
+In Activation Matrix terms, this runtime path corresponds to the Direct execution profile.
+The runtime keeps `baseline` as the compatibility path label until a deliberate rename is justified.
+
+### lite
 Use when:
 - a local fix is plausible;
 - bounded adjacent reading or verification is likely needed;
@@ -87,6 +91,14 @@ Use when:
 - likely change set is not honestly narrow;
 - security or regression sensitivity is materially elevated;
 - the task is drifting toward redesign, architecture, or broad repo reasoning.
+
+## Profile selection rule
+- start in `baseline`;
+- treat `baseline` as the runtime compatibility label for the Direct execution profile in `docs/ACTIVATION_MATRIX.md`;
+- escalate to `lite` only when bounded evidence shows that baseline execution would under-control locality, adjacent validation, or drift risk;
+- escalate to `heavy` only when bounded evidence shows that baseline or lite execution would under-control locality, consistency, security, or blocker uncertainty;
+- must not escalate by task-size narrative alone;
+- must not activate broader routing merely because more roles exist in the pack.
 
 ## Must not do
 - must not perform planner work in place of triage;
