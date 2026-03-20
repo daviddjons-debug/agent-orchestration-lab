@@ -140,7 +140,9 @@ def main() -> int:
 
     builder_report = (
         "# Builder Output\n\n"
-        "Source: 02_plan.json only\n\n"
+        "Actual read source: 02_plan.json only\n"
+        f"Path decision: {path_decision}\n"
+        f"Declared allowed read set: {', '.join(expected_read_set)}\n\n"
         f"Task class: {plan['task_class']}\n"
         f"Objective: {plan['objective']}\n"
         f"Problem locus: {plan['problem_locus']}\n"
