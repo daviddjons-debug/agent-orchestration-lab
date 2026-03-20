@@ -439,14 +439,28 @@ def main() -> int:
         json.dumps(
             {
                 "source": ["01_orchestrator.md", "run_manifest.json"],
+                "task_class": "narrow_bugfix",
                 "objective": "Produce declared artifacts for the current run contract",
+                "expected_end_state": "Declared artifacts exist and satisfy the runnable contract checks.",
+                "symptom": "Need a visible bounded multi-role run with falsifiable artifact validation.",
+                "root_cause_hypothesis": "A small declared artifact contract can prove bounded orchestration behavior in the current runtime.",
                 "problem_locus": "run contract files and declared outputs",
+                "locus_confidence": "high",
+                "false_locality_risk": "low",
+                "path_decision": "baseline",
                 "dependency_ring": ["01_orchestrator.md", "run_manifest.json", "02_plan.json", "output/"],
                 "allowed_read_set": ["02_plan.json"],
                 "allowed_change_set": ["02_plan.json", "02_planner.md", "output/", "03_builder.md"],
+                "verify_only_surfaces": [],
+                "excluded_neighbors": [],
                 "forbidden_zone": ["scripts/", "docs/baseline_v1/"],
+                "acceptance_criteria": ["broken"],
                 "verification_targets": ["manifest-plan alignment", "declared artifact existence", "declared artifact content checks"],
-                "blockers_or_uncertainties": ["current runtime does not enforce read boundaries mechanically"],
+                "evidence_required": ["reviewer verdict"],
+                "blockers_or_uncertainties": ["current runtime does not enforce full mechanical read sandboxing"],
+                "escalation_trigger": ["required edit exceeds allowed_change_set"],
+                "patch_strategy": "declared-artifact bounded update",
+                "change_rationale": "Broken schema fixture for selftest.",
                 "steps": ["broken"],
                 "artifacts": [
                     {
@@ -454,7 +468,6 @@ def main() -> int:
                         "type": "json"
                     }
                 ],
-                "acceptance_criteria": ["broken"],
             },
             indent=2,
         ) + "\n",

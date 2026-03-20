@@ -12,17 +12,26 @@ REQUIRED = [
 ]
 
 CONTRACT_FIELDS = [
+    "task_class",
     "objective",
+    "expected_end_state",
+    "symptom",
+    "root_cause_hypothesis",
     "problem_locus",
+    "locus_confidence",
+    "false_locality_risk",
+    "path_decision",
     "dependency_ring",
     "allowed_read_set",
     "allowed_change_set",
     "verify_only_surfaces",
     "excluded_neighbors",
     "forbidden_zone",
-    "review_strictness",
+    "acceptance_criteria",
     "verification_targets",
+    "evidence_required",
     "blockers_or_uncertainties",
+    "escalation_trigger",
 ]
 
 def main() -> int:

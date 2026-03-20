@@ -40,8 +40,17 @@ def main() -> int:
         return fail("02_plan.json root must be an object")
 
     required_string_fields = [
+        "task_class",
         "objective",
+        "expected_end_state",
+        "symptom",
+        "root_cause_hypothesis",
         "problem_locus",
+        "locus_confidence",
+        "false_locality_risk",
+        "path_decision",
+        "patch_strategy",
+        "change_rationale",
     ]
     for field in required_string_fields:
         value = plan.get(field)
@@ -52,17 +61,23 @@ def main() -> int:
         "dependency_ring",
         "allowed_read_set",
         "allowed_change_set",
+        "verify_only_surfaces",
+        "excluded_neighbors",
         "forbidden_zone",
+        "acceptance_criteria",
         "verification_targets",
+        "evidence_required",
         "blockers_or_uncertainties",
+        "escalation_trigger",
     ]
     for field in required_list_fields:
         value = plan.get(field)
-        if not isinstance(value, list) or not value or not all(isinstance(x, str) and x.strip() for x in value):
-            return fail(f"02_plan.json missing non-empty string-list field: {field}")
+        if not isinstance(value, list):
+            return fail(f"02_plan.json missing list field: {field}")
 
     allowed_read_set = plan["allowed_read_set"]
     allowed_change_set = plan["allowed_change_set"]
+    verify_only_surfaces = plan["verify_only_surfaces"]
 
     normalized_read_set = [item.strip() for item in allowed_read_set]
     if "02_plan.json" not in normalized_read_set:
@@ -86,6 +101,8 @@ def main() -> int:
             return fail("artifact spec missing non-empty string field: path")
         if artifact_type not in {"json", "text"}:
             return fail(f"artifact spec has unsupported type: {artifact_type}")
+        if artifact_rel in verify_only_surfaces:
+            return fail(f"artifact path declared as verify-only surface: {artifact_rel}")
         if not is_allowed_target(artifact_rel, allowed_change_set):
             return fail(f"artifact path outside allowed_change_set: {artifact_rel}")
 
@@ -112,11 +129,17 @@ def main() -> int:
     builder_report = (
         "# Builder Output\n\n"
         "Source: 02_plan.json only\n\n"
-        "Actions completed:\n"
+        f"Task class: {plan['task_class']}\n"
+        f"Objective: {plan['objective']}\n"
+        f"Problem locus: {plan['problem_locus']}\n"
+        f"Patch strategy: {plan['patch_strategy']}\n\n"
+        "Executed change set:\n"
         + "\n".join(created)
-        + "\n\nArtifact paths:\n"
-        + "\n".join(f"- {a['path']}" for a in artifacts)
-        + "\n"
+        + "\n\nUntouched but adjacent surfaces:\n"
+        + (("\n".join(f"- {x}" for x in verify_only_surfaces)) if verify_only_surfaces else "- none")
+        + "\n\nContract deviation detected: no\n"
+        "Direct build blocker: none\n"
+        "Execution summary: declared artifacts created within allowed_change_set.\n"
     )
     (base / builder_report_rel).write_text(builder_report, encoding="utf-8")
     print(builder_report)

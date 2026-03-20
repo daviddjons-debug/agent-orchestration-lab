@@ -11,13 +11,13 @@ USER_GOAL = (
 
 ORCHESTRATOR_HANDOFF = (
     "# Orchestrator Handoff\n\n"
+    "Role: triage gate for the current runnable baseline.\n\n"
     "Assigned workflow:\n"
     "1. Planner must read only this handoff and run_manifest.json, then create 02_plan.json and 02_planner.md.\n"
     "2. Builder must read only 02_plan.json and create all declared output files plus 03_builder.md.\n"
     "3. Reviewer must evaluate files on disk and write 04_reviewer.md.\n\n"
-    "Constraints:\n"
-    "- Expected artifact files are declared in run_manifest.json\n"
-    "- Any missing file or content mismatch = FAIL\n"
+    "Triage decisions declared in run_manifest.json are the contract source of truth for this run.\n"
+    "No downstream role may silently widen scope.\n"
 )
 
 def main() -> int:
@@ -28,8 +28,16 @@ def main() -> int:
 
     manifest = {
         "run_id": run,
+        "task_class": "narrow_bugfix",
         "objective": "Produce declared artifacts for the current run contract",
+        "expected_end_state": "Declared artifacts exist and satisfy the runnable contract checks.",
+        "symptom": "Need a visible bounded multi-role run with falsifiable artifact validation.",
+        "root_cause_hypothesis": "A small declared artifact contract can prove bounded orchestration behavior in the current runtime.",
         "problem_locus": "run contract files and declared outputs",
+        "locus_confidence": "high",
+        "false_locality_risk": "low",
+        "path_decision": "baseline",
+        "routing_reason": "Current runnable runtime supports bounded artifact-contract execution but not full heavy-path orchestration.",
         "dependency_ring": [
             "01_orchestrator.md",
             "run_manifest.json",
@@ -52,13 +60,29 @@ def main() -> int:
             "scripts/",
             "docs/baseline_v1/",
         ],
+        "acceptance_criteria": [
+            "every declared artifact exists",
+            "every JSON artifact satisfies required_fields",
+            "every text artifact satisfies exact_content when required",
+            "any missing file or content mismatch must cause reviewer FAIL",
+        ],
         "verification_targets": [
             "manifest-plan alignment",
             "declared artifact existence",
             "declared artifact content checks",
         ],
+        "evidence_required": [
+            "reviewer verdict",
+            "artifact existence checks",
+            "artifact content checks",
+        ],
         "blockers_or_uncertainties": [
-            "current runtime does not enforce read boundaries mechanically",
+            "current runtime does not enforce full mechanical read sandboxing",
+        ],
+        "escalation_trigger": [
+            "required read exceeds allowed_read_set",
+            "required edit exceeds allowed_change_set",
+            "declared artifact contract becomes internally inconsistent",
         ],
         "artifacts": [
             {

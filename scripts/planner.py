@@ -24,19 +24,67 @@ def main() -> int:
         print("ERROR: run_manifest.json missing non-empty artifacts list")
         return 1
 
+    required_string_fields = [
+        "task_class",
+        "objective",
+        "expected_end_state",
+        "symptom",
+        "root_cause_hypothesis",
+        "problem_locus",
+        "locus_confidence",
+        "false_locality_risk",
+        "path_decision",
+    ]
+    for field in required_string_fields:
+        value = manifest.get(field)
+        if not isinstance(value, str) or not value.strip():
+            print(f"ERROR: run_manifest.json missing non-empty string field: {field}")
+            return 1
+
+    required_list_fields = [
+        "dependency_ring",
+        "allowed_read_set",
+        "allowed_change_set",
+        "verify_only_surfaces",
+        "excluded_neighbors",
+        "forbidden_zone",
+        "acceptance_criteria",
+        "verification_targets",
+        "evidence_required",
+        "blockers_or_uncertainties",
+        "escalation_trigger",
+    ]
+    for field in required_list_fields:
+        value = manifest.get(field)
+        if not isinstance(value, list):
+            print(f"ERROR: run_manifest.json missing list field: {field}")
+            return 1
+
     plan = {
         "source": ["01_orchestrator.md", "run_manifest.json"],
-        "objective": manifest.get("objective", ""),
-        "problem_locus": manifest.get("problem_locus", ""),
+        "task_class": manifest.get("task_class"),
+        "objective": manifest.get("objective"),
+        "expected_end_state": manifest.get("expected_end_state"),
+        "symptom": manifest.get("symptom"),
+        "root_cause_hypothesis": manifest.get("root_cause_hypothesis"),
+        "problem_locus": manifest.get("problem_locus"),
+        "locus_confidence": manifest.get("locus_confidence"),
+        "false_locality_risk": manifest.get("false_locality_risk"),
+        "path_decision": manifest.get("path_decision"),
         "dependency_ring": manifest.get("dependency_ring", []),
         "allowed_read_set": manifest.get("allowed_read_set", []),
         "allowed_change_set": manifest.get("allowed_change_set", []),
         "verify_only_surfaces": manifest.get("verify_only_surfaces", []),
         "excluded_neighbors": manifest.get("excluded_neighbors", []),
-        "forbidden_zone": manifest.get("forbidden_zone", []),
         "review_strictness": manifest.get("review_strictness", "standard"),
+        "forbidden_zone": manifest.get("forbidden_zone", []),
+        "acceptance_criteria": manifest.get("acceptance_criteria", []),
         "verification_targets": manifest.get("verification_targets", []),
+        "evidence_required": manifest.get("evidence_required", []),
         "blockers_or_uncertainties": manifest.get("blockers_or_uncertainties", []),
+        "escalation_trigger": manifest.get("escalation_trigger", []),
+        "patch_strategy": "declared-artifact bounded update",
+        "change_rationale": "Current runnable planner preserves the orchestrator contract and keeps execution bounded to declared artifacts and report files.",
         "steps": [
             "Create output directories if missing.",
             "Create all files declared in manifest artifacts.",
@@ -44,12 +92,6 @@ def main() -> int:
             "Record completion in 03_builder.md.",
         ],
         "artifacts": artifacts,
-        "acceptance_criteria": [
-            "every declared artifact exists",
-            "every JSON artifact satisfies required_fields",
-            "every text artifact satisfies exact_content when required",
-            "any missing file or content mismatch must cause reviewer FAIL",
-        ],
     }
 
     lines = [
@@ -57,12 +99,23 @@ def main() -> int:
         "",
         "Planner input scope: 01_orchestrator.md and run_manifest.json only",
         "",
+        f"Task class: {plan['task_class']}",
         f"Objective: {plan['objective']}",
+        f"Expected end state: {plan['expected_end_state']}",
+        f"Symptom: {plan['symptom']}",
+        f"Root-cause hypothesis: {plan['root_cause_hypothesis']}",
         f"Problem locus: {plan['problem_locus']}",
+        f"Locus confidence: {plan['locus_confidence']}",
+        f"False locality risk: {plan['false_locality_risk']}",
+        f"Path decision: {plan['path_decision']}",
         f"Dependency ring: {', '.join(plan['dependency_ring'])}",
         f"Execution-stage allowed read set: {', '.join(plan['allowed_read_set'])}",
         f"Allowed change set: {', '.join(plan['allowed_change_set'])}",
+        f"Verify-only surfaces: {', '.join(plan['verify_only_surfaces']) if plan['verify_only_surfaces'] else '(none)'}",
+        f"Excluded neighbors: {', '.join(plan['excluded_neighbors']) if plan['excluded_neighbors'] else '(none)'}",
         f"Forbidden zone: {', '.join(plan['forbidden_zone'])}",
+        f"Patch strategy: {plan['patch_strategy']}",
+        f"Change rationale: {plan['change_rationale']}",
         "",
         "Plan:",
         "1. Create output directories if missing.",
@@ -75,10 +128,10 @@ def main() -> int:
     lines.extend([
         "",
         "Acceptance criteria:",
-        "- every declared artifact exists",
-        "- every JSON artifact satisfies required_fields",
-        "- every text artifact satisfies exact_content when required",
-        "- any missing file or content mismatch must cause reviewer FAIL",
+    ])
+    for item in plan["acceptance_criteria"]:
+        lines.append(f"- {item}")
+    lines.extend([
         "",
         "Verification targets:",
     ])
@@ -86,9 +139,21 @@ def main() -> int:
         lines.append(f"- {item}")
     lines.extend([
         "",
+        "Evidence required:",
+    ])
+    for item in plan["evidence_required"]:
+        lines.append(f"- {item}")
+    lines.extend([
+        "",
         "Blockers or uncertainties:",
     ])
     for item in plan["blockers_or_uncertainties"]:
+        lines.append(f"- {item}")
+    lines.extend([
+        "",
+        "Escalation triggers:",
+    ])
+    for item in plan["escalation_trigger"]:
         lines.append(f"- {item}")
     lines.append("")
     plan_text = "\n".join(lines)
