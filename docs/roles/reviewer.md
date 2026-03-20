@@ -46,6 +46,12 @@ In the current runnable baseline, the executable gate still operates primarily a
 
 The richer verdict classes remain an interpretive reasoning layer unless and until runtime support is expanded explicitly.
 
+## Activation by profile
+- In `baseline` runtime terms (Direct execution profile in `docs/ACTIVATION_MATRIX.md`), reviewer may stay compressed and need not always appear as a separate full review lane.
+- In `lite`, reviewer is expected to run as a light bounded audit focused on contract adherence, adjacent verification, and undeclared drift.
+- In `heavy`, reviewer is expected to run as a full falsification lane.
+- Reviewer activation must follow trigger evidence, not role-count ceremony.
+
 ## Review standard
 The reviewer must behave as a falsification role, not as a courtesy checker.
 
