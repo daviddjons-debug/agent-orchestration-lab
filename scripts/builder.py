@@ -81,9 +81,9 @@ def main() -> int:
 
     normalized_read_set = [item.strip() for item in allowed_read_set]
     if "02_plan.json" not in normalized_read_set:
-        return fail("allowed_read_set must include 02_plan.json for baseline builder contract")
+        return fail("allowed_read_set must include 02_plan.json for current builder read contract")
     if any(item != "02_plan.json" for item in normalized_read_set):
-        return fail("allowed_read_set exceeds baseline builder read contract")
+        return fail("allowed_read_set exceeds current builder read contract")
 
     artifacts = plan.get("artifacts")
     if not isinstance(artifacts, list) or not artifacts:
