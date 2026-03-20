@@ -36,7 +36,6 @@ Observed reviewer evidence:
 - manifest -> plan propagation for:
   - `verify_only_surfaces`
   - `excluded_neighbors`
-  - `review_strictness`
 - reviewer can reject false-local success when adjacent verify-only validation is missing
 - reviewer can accept the same run once the verify-only adjacent condition is satisfied
 - current bounded runtime now has real executable evidence for Case 04

@@ -343,7 +343,6 @@ def main() -> int:
     ]
     manifest["verify_only_surfaces"] = ["output/adjacent_status.txt"]
     manifest["excluded_neighbors"] = []
-    manifest["review_strictness"] = "strict"
     manifest["verification_targets"] = [
         "manifest-plan alignment",
         "primary artifact contract",
@@ -397,7 +396,6 @@ def main() -> int:
     manifest["allowed_change_set"] = ["02_plan.json", "02_planner.md", "output/", "03_builder.md"]
     manifest["verify_only_surfaces"] = []
     manifest["excluded_neighbors"] = []
-    manifest["review_strictness"] = "standard"
     manifest["verification_targets"] = ["manifest-plan alignment", "declared artifact existence", "declared artifact content checks"]
     manifest["artifacts"] = [
         {

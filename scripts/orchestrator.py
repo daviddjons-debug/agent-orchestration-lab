@@ -54,7 +54,6 @@ def main() -> int:
         ],
         "verify_only_surfaces": [],
         "excluded_neighbors": [],
-        "review_strictness": "standard",
         "forbidden_zone": [
             "scripts/",
             "docs/baseline_v1/",

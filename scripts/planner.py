@@ -76,7 +76,6 @@ def main() -> int:
         "allowed_change_set": manifest.get("allowed_change_set", []),
         "verify_only_surfaces": manifest.get("verify_only_surfaces", []),
         "excluded_neighbors": manifest.get("excluded_neighbors", []),
-        "review_strictness": manifest.get("review_strictness", "standard"),
         "forbidden_zone": manifest.get("forbidden_zone", []),
         "acceptance_criteria": manifest.get("acceptance_criteria", []),
         "verification_targets": manifest.get("verification_targets", []),
