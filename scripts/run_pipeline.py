@@ -8,9 +8,14 @@ def run(cmd: list[str]) -> int:
     return completed.returncode
 
 def main() -> int:
-    base_dir = sys.argv[1] if len(sys.argv) == 2 else "docs/runs"
+    if len(sys.argv) > 3:
+        print("Usage: python3 scripts/run_pipeline.py [run_root] [baseline|lite|heavy]")
+        return 2
 
-    rc = run(["python3", "scripts/orchestrator.py", base_dir])
+    base_dir = sys.argv[1] if len(sys.argv) >= 2 else "docs/runs"
+    profile = sys.argv[2] if len(sys.argv) == 3 else "baseline"
+
+    rc = run(["python3", "scripts/orchestrator.py", base_dir, profile])
     if rc != 0:
         return rc
 
