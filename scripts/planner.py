@@ -97,6 +97,14 @@ def main() -> int:
         "artifacts": artifacts,
     }
 
+    primary_target = plan["problem_locus"]
+    adjacent_verify_only = plan["verify_only_surfaces"] if plan["verify_only_surfaces"] else ["(none)"]
+    excluded_neighbors = plan["excluded_neighbors"] if plan["excluded_neighbors"] else ["(none)"]
+    bounded_scope_note = (
+        "Current runnable planner preserves a bounded artifact contract. "
+        "It does not yet materialize a full structured dependency ring object in runtime JSON."
+    )
+
     lines = [
         "# Planner Output",
         "",
@@ -112,6 +120,9 @@ def main() -> int:
         f"False locality risk: {plan['false_locality_risk']}",
         f"Path decision: {plan['path_decision']}",
         f"Dependency ring (flat compatibility shape in current runtime): {', '.join(plan['dependency_ring'])}",
+        f"Primary target (trace-level narrowing signal): {primary_target}",
+        f"Adjacent verify-only nodes (trace-level): {', '.join(adjacent_verify_only)}",
+        f"Excluded neighbors (trace-level): {', '.join(excluded_neighbors)}",
         f"Execution-stage allowed read set: {', '.join(plan['allowed_read_set'])}",
         f"Allowed change set: {', '.join(plan['allowed_change_set'])}",
         f"Verify-only surfaces: {', '.join(plan['verify_only_surfaces']) if plan['verify_only_surfaces'] else '(none)'}",
@@ -119,6 +130,7 @@ def main() -> int:
         f"Forbidden zone: {', '.join(plan['forbidden_zone'])}",
         f"Patch strategy: {plan['patch_strategy']}",
         f"Change rationale: {plan['change_rationale']}",
+        f"Bounded scope note: {bounded_scope_note}",
         "",
         "Plan:",
         "1. Create output directories if missing.",
