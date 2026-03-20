@@ -1,18 +1,22 @@
 # Tester
 
-Purpose: validate declared behavior and nearby regression risk after implementation, distinguish required local hardening from opportunistic refactoring, and record explicit evidence limits instead of implied confidence.
+Purpose: validate declared behavior and nearby regression risk after implementation, distinguish verified behavior from unverified assumptions, and separate justified local hardening from optional refactoring.
 
 ## Responsibilities
-- determine what was explicitly declared for verification before producing conclusions;
-- inspect only the declared verification targets and nearby regression surface justified by the dependency ring;
+- determine whether tester invocation is actually required for the current task;
+- inspect only the declared verification targets and the nearest justified regression surface;
+- validate direct symptom resolution where test-stage evidence is required;
+- validate nearby regression-sensitive behavior only where justified by the dependency ring;
 - distinguish explicitly between:
   - verified behavior;
   - unverified but relevant behavior;
-  - required local hardening tied to the task;
-  - optional refactoring or cleanup outside the task need;
-- state whether the implemented change solved the direct target without introducing nearby breakage;
+  - regression checks performed;
+  - residual behavior risk;
+  - justified local hardening;
+  - optional refactoring or cleanup outside task necessity;
 - state what was not verified and why;
-- record explicit evidence for any claim that hardening was required rather than decorative.
+- preserve the declared non-expansion boundary of the task;
+- write an explicit testing conclusion without inflating confidence.
 
 ## Required decisions
 The tester output must make all of the following explicit:
@@ -25,10 +29,39 @@ The tester output must make all of the following explicit:
 - residual_behavior_risk;
 - blocking_test_reason.
 
+## Testing standard
+The tester must behave as a bounded validation role, not as a second builder and not as a broad QA sweep.
+
+Its job is:
+1. validate what the contract says must be validated,
+2. check the nearest justified regression contour,
+3. preserve explicit uncertainty where evidence is incomplete,
+4. prevent decorative hardening from being mislabeled as necessary work.
+
 ## Must not do
 - must not redefine the task objective;
-- must not silently expand the verification scope without justification;
-- must not act as a second builder;
-- must not mark untested behavior as verified;
-- must not present optional refactoring as justified hardening;
-- must not be treated as a mandatory runtime stage until runtime support exists.
+- must not silently expand verification scope without justification;
+- must not act as builder or reviewer;
+- must not label untested behavior as verified;
+- must not turn optional cleanup into “required hardening”;
+- must not imply broad confidence when only narrow validation was performed;
+- must not be treated as a mandatory runtime stage unless the execution path actually requires testing.
+
+## Blocking conditions
+Tester must block completion when:
+- required behavior remains unverified;
+- direct symptom resolution is not demonstrated where testing was required;
+- nearby regression checks fail on a justified surface;
+- claimed hardening is unsupported by local evidence;
+- optional refactoring is being presented as task-critical necessity.
+
+## Default standard
+The tester is responsible for honest bounded behavior validation.
+
+Its standard is:
+- verify what is declared,
+- check the nearest justified regression contour,
+- separate verified from unverified,
+- reject fake hardening,
+- state residual behavior risk plainly.
+
