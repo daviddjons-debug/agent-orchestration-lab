@@ -53,6 +53,59 @@ No role may silently widen scope.
 - tester_focus
 - security_focus
 
+## Profile-specific field requirements
+
+### baseline
+Baseline is the runtime compatibility label for the Direct execution profile.
+
+Baseline must define at minimum:
+- task_class
+- objective
+- expected_end_state
+- problem_locus
+- locus_confidence
+- symptom
+- root_cause_hypothesis
+- false_locality_risk
+- dependency_ring
+- allowed_read_set
+- allowed_change_set
+- forbidden_zone
+- acceptance_criteria
+- verification_targets
+- evidence_required
+- blockers_or_uncertainties
+- path_decision
+- escalation_trigger
+
+Baseline may omit conditional fields unless the task evidence already requires them.
+
+### lite
+Lite must define everything required by baseline, plus any field needed to control bounded adjacent verification or scope protection.
+
+Lite should make explicit when present:
+- verify_only_surfaces
+- excluded_neighbors
+- patch_strategy
+- change_rationale
+- reviewer_focus
+- tester_focus
+
+If adjacent validation is load-bearing, `verify_only_surfaces` is no longer optional in practice.
+
+### heavy
+Heavy must define everything required by lite, plus all additional fields needed to prevent ambiguity in multi-node, cluster, blocker-uncertain, or security-relevant work.
+
+Heavy should make explicit whenever applicable:
+- source_of_truth_node
+- stale_defect_node
+- adjacent_consistency_node
+- expansion_trigger
+- retriage_required_when_actual_blocker_differs
+- security_focus
+
+If the task involves bounded cluster consistency, blocker override risk, or security-sensitive reasoning, the relevant heavy fields must not be omitted.
+
 ## Field meanings
 
 ### task_class
