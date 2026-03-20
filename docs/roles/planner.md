@@ -7,11 +7,13 @@ Purpose: turn orchestrator triage into an executable narrow contract, refine the
 - refine the orchestrator's problem-locus hypothesis into a concrete execution target;
 - preserve uncertainty when the locus is not yet provable instead of pretending certainty;
 - convert triage-level routing into an executable contract;
-- define the dependency ring in executable form, distinguishing:
+- define the dependency ring in executable form;
+- target semantics require distinguishing:
   - `primary_target`
   - `adjacent_read_nodes`
   - `adjacent_verify_only_nodes`
   - `excluded_neighbors`
+- current runnable baseline still propagates `dependency_ring` in a flat compatibility shape rather than a fully structured ring object
 - define the smallest justified allowed read set for downstream execution;
 - define the smallest justified allowed change set for downstream execution;
 - define verify-only surfaces that must be checked but must not be modified;
@@ -65,6 +67,11 @@ The resulting plan should answer:
 4. what is explicitly excluded,
 5. what can be changed,
 6. what must be proven before completion can be trusted.
+
+In the current runnable baseline, this intent is only partially realized:
+- `dependency_ring` is still carried as a flat compatibility list;
+- `excluded_neighbors` is propagated separately;
+- full structured ring semantics remain target behavior, not current runtime fact.
 
 ## Must not do
 - must not generate output artifacts;

@@ -2,6 +2,10 @@ from pathlib import Path
 import json
 import sys
 
+# Current runnable baseline note:
+# dependency_ring is still propagated in a flat compatibility shape.
+# Full structured ring semantics remain target behavior, not enforced runtime shape.
+
 def main() -> int:
     if len(sys.argv) != 2:
         print("Usage: python3 scripts/planner.py <run_dir>")
@@ -107,7 +111,7 @@ def main() -> int:
         f"Locus confidence: {plan['locus_confidence']}",
         f"False locality risk: {plan['false_locality_risk']}",
         f"Path decision: {plan['path_decision']}",
-        f"Dependency ring: {', '.join(plan['dependency_ring'])}",
+        f"Dependency ring (flat compatibility shape in current runtime): {', '.join(plan['dependency_ring'])}",
         f"Execution-stage allowed read set: {', '.join(plan['allowed_read_set'])}",
         f"Allowed change set: {', '.join(plan['allowed_change_set'])}",
         f"Verify-only surfaces: {', '.join(plan['verify_only_surfaces']) if plan['verify_only_surfaces'] else '(none)'}",
