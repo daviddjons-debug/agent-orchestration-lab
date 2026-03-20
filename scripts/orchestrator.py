@@ -36,7 +36,7 @@ def main() -> int:
 
     allowed_read_set_by_profile = {
         "baseline": ["02_plan.json"],
-        "lite": ["02_plan.json"],
+        "lite": ["02_plan.json", "run_manifest.json"],
         "heavy": ["02_plan.json", "run_manifest.json"],
     }
 

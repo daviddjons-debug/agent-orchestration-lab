@@ -82,7 +82,7 @@ def main() -> int:
     path_decision = plan["path_decision"].strip()
     expected_read_sets = {
         "baseline": ["02_plan.json"],
-        "lite": ["02_plan.json"],
+        "lite": ["02_plan.json", "run_manifest.json"],
         "heavy": ["02_plan.json", "run_manifest.json"],
     }
     if path_decision not in expected_read_sets:
@@ -98,16 +98,16 @@ def main() -> int:
         )
 
     actual_read_sources = ["02_plan.json"]
-    if path_decision == "heavy":
+    if path_decision in {"lite", "heavy"}:
         manifest_file = base / "run_manifest.json"
         if not manifest_file.exists():
-            return fail("missing run_manifest.json for heavy builder read contract")
+            return fail(f"missing run_manifest.json for {path_decision} builder read contract")
         try:
             manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
         except Exception:
-            return fail("run_manifest.json is not valid JSON for heavy builder read contract")
+            return fail(f"run_manifest.json is not valid JSON for {path_decision} builder read contract")
         if not isinstance(manifest, dict):
-            return fail("run_manifest.json root must be an object for heavy builder read contract")
+            return fail(f"run_manifest.json root must be an object for {path_decision} builder read contract")
         actual_read_sources.append("run_manifest.json")
 
     artifacts = plan.get("artifacts")
