@@ -70,6 +70,16 @@ def main() -> int:
             "02_plan.json",
             "output/",
         ],
+        "dependency_ring_structured": {
+            "primary_target": "output/",
+            "adjacent_read_nodes": [
+                "01_orchestrator.md",
+                "run_manifest.json",
+                "02_plan.json",
+            ],
+            "adjacent_verify_only_nodes": [],
+            "excluded_neighbors": [],
+        },
         "allowed_read_set": allowed_read_set_by_profile[profile],
         "allowed_change_set": [
             "02_plan.json",

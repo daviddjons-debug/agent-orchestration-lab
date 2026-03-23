@@ -3,8 +3,9 @@ import json
 import sys
 
 # Current runnable baseline note:
-# dependency_ring is still propagated in a flat compatibility shape.
-# Full structured ring semantics remain target behavior, not enforced runtime shape.
+# dependency_ring remains the compatibility list for downstream runtime stability.
+# dependency_ring_structured is now propagated as the target semantic shape, but is not
+# yet mechanically enforced by all runtime stages.
 
 def main() -> int:
     if len(sys.argv) != 2:
@@ -78,6 +79,7 @@ def main() -> int:
         "profile_selection_basis": manifest.get("profile_selection_basis", []),
         "path_decision": manifest.get("path_decision"),
         "dependency_ring": manifest.get("dependency_ring", []),
+        "dependency_ring_structured": manifest.get("dependency_ring_structured"),
         "allowed_read_set": manifest.get("allowed_read_set", []),
         "allowed_change_set": manifest.get("allowed_change_set", []),
         "verify_only_surfaces": manifest.get("verify_only_surfaces", []),
@@ -104,12 +106,18 @@ def main() -> int:
         "artifacts": artifacts,
     }
 
-    primary_target = plan["problem_locus"]
-    adjacent_verify_only = plan["verify_only_surfaces"] if plan["verify_only_surfaces"] else ["(none)"]
-    excluded_neighbors = plan["excluded_neighbors"] if plan["excluded_neighbors"] else ["(none)"]
+    structured_ring = plan.get("dependency_ring_structured") or {}
+    primary_target = structured_ring.get("primary_target") or plan["problem_locus"]
+    adjacent_read_nodes = structured_ring.get("adjacent_read_nodes") or ["(none)"]
+    adjacent_verify_only = structured_ring.get("adjacent_verify_only_nodes") or (
+        plan["verify_only_surfaces"] if plan["verify_only_surfaces"] else ["(none)"]
+    )
+    excluded_neighbors = structured_ring.get("excluded_neighbors") or (
+        plan["excluded_neighbors"] if plan["excluded_neighbors"] else ["(none)"]
+    )
     bounded_scope_note = (
-        "Current runnable planner preserves a bounded artifact contract. "
-        "It does not yet materialize a full structured dependency ring object in runtime JSON."
+        "Current runnable planner preserves the flat compatibility dependency_ring for runtime stability "
+        "while also carrying dependency_ring_structured as the target semantic shape."
     )
 
     lines = [
@@ -127,6 +135,10 @@ def main() -> int:
         f"False locality risk: {plan['false_locality_risk']}",
         f"Path decision: {plan['path_decision']}",
         f"Dependency ring (flat compatibility shape in current runtime): {', '.join(plan['dependency_ring'])}",
+        f"Dependency ring structured primary target: {primary_target}",
+        f"Dependency ring structured adjacent read nodes: {', '.join(adjacent_read_nodes)}",
+        f"Dependency ring structured adjacent verify-only nodes: {', '.join(adjacent_verify_only)}",
+        f"Dependency ring structured excluded neighbors: {', '.join(excluded_neighbors)}",
         f"Primary target (trace-level narrowing signal): {primary_target}",
         f"Adjacent verify-only nodes (trace-level): {', '.join(adjacent_verify_only)}",
         f"Excluded neighbors (trace-level): {', '.join(excluded_neighbors)}",

@@ -22,6 +22,7 @@ CONTRACT_FIELDS = [
     "profile_selection_basis",
     "path_decision",
     "dependency_ring",
+    "dependency_ring_structured",
     "allowed_read_set",
     "allowed_change_set",
     "verify_only_surfaces",

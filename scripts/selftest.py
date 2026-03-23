@@ -348,6 +348,16 @@ def main() -> int:
         "output/result.json",
         "output/adjacent_status.txt",
     ]
+    manifest["dependency_ring_structured"] = {
+        "primary_target": "output/result.json",
+        "adjacent_read_nodes": [
+            "01_orchestrator.md",
+            "run_manifest.json",
+            "02_plan.json",
+        ],
+        "adjacent_verify_only_nodes": ["output/adjacent_status.txt"],
+        "excluded_neighbors": [],
+    }
     manifest["allowed_read_set"] = ["02_plan.json"]
     manifest["allowed_change_set"] = [
         "02_plan.json",
@@ -448,6 +458,16 @@ def main() -> int:
     manifest["objective"] = "Produce declared artifacts for the current run contract"
     manifest["problem_locus"] = "run contract files and declared outputs"
     manifest["dependency_ring"] = ["01_orchestrator.md", "run_manifest.json", "02_plan.json", "output/"]
+    manifest["dependency_ring_structured"] = {
+        "primary_target": "output/",
+        "adjacent_read_nodes": [
+            "01_orchestrator.md",
+            "run_manifest.json",
+            "02_plan.json",
+        ],
+        "adjacent_verify_only_nodes": [],
+        "excluded_neighbors": [],
+    }
     manifest["allowed_read_set"] = ["02_plan.json"]
     manifest["allowed_change_set"] = ["02_plan.json", "02_planner.md", "output/", "03_builder.md"]
     manifest["verify_only_surfaces"] = []
@@ -503,6 +523,16 @@ def main() -> int:
                 "false_locality_risk": "low",
                 "path_decision": "baseline",
                 "dependency_ring": ["01_orchestrator.md", "run_manifest.json", "02_plan.json", "output/"],
+                "dependency_ring_structured": {
+                    "primary_target": "output/",
+                    "adjacent_read_nodes": [
+                        "01_orchestrator.md",
+                        "run_manifest.json",
+                        "02_plan.json",
+                    ],
+                    "adjacent_verify_only_nodes": [],
+                    "excluded_neighbors": [],
+                },
                 "allowed_read_set": ["02_plan.json"],
                 "allowed_change_set": ["02_plan.json", "02_planner.md", "output/", "03_builder.md"],
                 "verify_only_surfaces": [],
