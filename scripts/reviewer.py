@@ -3,7 +3,6 @@ import json
 import sys
 
 REQUIRED = [
-    "00_user_goal.md",
     "01_orchestrator.md",
     "02_plan.json",
     "02_planner.md",
