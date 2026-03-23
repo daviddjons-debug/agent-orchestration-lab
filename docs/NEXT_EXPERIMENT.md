@@ -21,7 +21,7 @@ It already proves in bounded form:
 It does not yet prove or enforce:
 - triage-first behavior as real runtime decision logic;
 - genuine dependency discovery beyond predeclared scenario structure;
-- full mechanical runtime read sandboxing;
+- full stage-wide runtime read sandboxing beyond the current Builder-only read-boundary contract;
 - blast-radius control on live code tasks;
 - justified local hardening based on discovered evidence;
 - runnable Tester and Security stages;
