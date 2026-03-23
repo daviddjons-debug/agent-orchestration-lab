@@ -619,8 +619,8 @@ sys.exit(0 if status == "adjacent verified" else 1)
         return 1
     baseline_run = baseline_runs[-1]
     baseline_output = (baseline_pipeline.stdout or "") + (baseline_pipeline.stderr or "")
-    if "REVIEWER_SKIPPED=baseline compressed path (no declared review trigger)" not in baseline_output:
-        print("SELFTEST ERROR: expected baseline pipeline to skip reviewer on compressed path")
+    if "REVIEWER_SKIPPED=Direct policy / baseline runtime path (no declared review trigger)" not in baseline_output:
+        print("SELFTEST ERROR: expected Direct/baseline pipeline to skip reviewer on no-trigger path")
         return 1
     if (baseline_run / "04_reviewer.md").exists():
         print("SELFTEST ERROR: baseline compressed pipeline must not emit 04_reviewer.md")
