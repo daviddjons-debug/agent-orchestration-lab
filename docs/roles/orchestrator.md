@@ -92,10 +92,10 @@ Use when:
 - the task is drifting toward redesign, architecture, or broad repo reasoning.
 
 ## Profile selection rule
-- start in `baseline`;
+- start in Direct at the policy layer;
 - treat `baseline` as the runtime compatibility label for the Direct execution profile in `docs/ACTIVATION_MATRIX.md`;
-- escalate to `lite` only when bounded evidence shows that baseline execution would under-control locality, adjacent validation, or drift risk;
-- escalate to `heavy` only when bounded evidence shows that baseline or lite execution would under-control locality, consistency, security, or blocker uncertainty;
+- escalate to `lite` only when bounded evidence shows that Direct/Baseline execution would under-control locality, adjacent validation, or drift risk;
+- escalate to `heavy` only when bounded evidence shows that Direct/Baseline or lite execution would under-control locality, consistency, security, or blocker uncertainty;
 - must not escalate by task-size narrative alone;
 - must not activate broader routing merely because more roles exist in the pack.
 
