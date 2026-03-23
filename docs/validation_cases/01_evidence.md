@@ -48,13 +48,13 @@ PASS for narrow contract execution in current runtime, with verified write-bound
 ## What this PASS still does not prove
 - real problem-locus reasoning in runtime beyond propagated contract fields
 - real dependency-ring reasoning in runtime beyond propagated contract fields
-- full runtime `allowed_read_set` enforcement beyond the baseline Builder contract
+- full stage-wide runtime `allowed_read_set` enforcement beyond the current Builder-only read-boundary contract
 - tester as a runnable runtime stage
 - security as a runnable runtime stage
 - full surgical-runtime behavior on real code-patch tasks
 
 ## Final judgment
-Validation Case 01 is passed as a narrow contract-execution scenario with verified reviewer-side contract checks, builder-side write-boundary controls, and baseline Builder read-boundary validation.
+Validation Case 01 is passed as a narrow contract-execution scenario with verified reviewer-side contract checks, builder-side write-boundary controls, and current Builder-only read-boundary validation.
 
 It is still not passed as a full surgical-runtime scenario.
 
