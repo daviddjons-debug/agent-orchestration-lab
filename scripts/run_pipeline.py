@@ -9,16 +9,17 @@ def run(cmd: list[str]) -> int:
     return completed.returncode
 
 
-def should_run_reviewer(run_dir: Path, profile: str) -> bool:
-    if profile in {"lite", "heavy"}:
-        return True
-
+def should_run_reviewer(run_dir: Path) -> bool:
     manifest_file = run_dir / "run_manifest.json"
     if not manifest_file.exists():
         print("ERROR: missing run_manifest.json for reviewer activation decision")
         return False
 
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    path_decision = manifest.get("path_decision")
+    if path_decision in {"lite", "heavy"}:
+        return True
+
     if manifest.get("verify_only_surfaces"):
         return True
     if manifest.get("retriage_required_when_actual_blocker_differs") is True:
@@ -60,7 +61,7 @@ def main() -> int:
     if rc != 0:
         return rc
 
-    if should_run_reviewer(run_dir, profile):
+    if should_run_reviewer(run_dir):
         rc = run(["python3", "scripts/reviewer.py", str(run_dir)])
         if rc != 0:
             return rc
