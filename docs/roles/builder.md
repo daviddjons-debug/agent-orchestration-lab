@@ -3,7 +3,7 @@
 Purpose: execute only the approved plan contract, apply the smallest sufficient intervention inside the declared change boundary, and refuse silent widening even when a broader change looks convenient.
 
 ## Responsibilities
-- read only `02_plan.json`;
+- read only the execution inputs allowed by the current runtime path (`02_plan.json` for `baseline`; `02_plan.json` plus `run_manifest.json` for `lite`/`heavy`);
 - validate that the plan is executable before making any change;
 - refuse malformed, underspecified, contradictory, or scope-unsafe plan input;
 - execute only inside the declared `allowed_change_set`;
@@ -34,7 +34,7 @@ Its job is:
 4. never convert local execution into unapproved redesign.
 
 ## Must not do
-- must not read upstream files other than `02_plan.json`;
+- must not read upstream files beyond the current runtime builder contract (`02_plan.json` for `baseline`; `02_plan.json` plus `run_manifest.json` for `lite`/`heavy`);
 - must not widen the read boundary on its own;
 - must not widen the change boundary on its own;
 - must not patch verify-only surfaces;
