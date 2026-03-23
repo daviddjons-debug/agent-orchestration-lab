@@ -1,4 +1,4 @@
-# Next Experiment — From Artifact Pipeline to Surgical Baseline
+# Next Experiment — From Artifact Pipeline to Surgical Runtime
 
 ## Current state
 The lab already proves a structured 4-role runnable pipeline:
@@ -15,7 +15,7 @@ It already proves in bounded form:
 - structured problem locus and dependency-ring propagation through the run contract;
 - planner-to-reviewer contract alignment checks;
 - builder-side write-boundary enforcement through `allowed_change_set`;
-- baseline Builder-compatible read-boundary validation through `allowed_read_set`;
+- Direct-compatibility-path Builder read-boundary validation through `allowed_read_set` (`baseline` in current runtime naming);
 - reviewer-side falsification of content drift, undeclared output drift, and bounded adjacent consistency failures.
 
 It does not yet prove or enforce:
@@ -28,7 +28,7 @@ It does not yet prove or enforce:
 - explicit separation between simple execution and real verification logic on non-artifact engineering work.
 
 ## Next goal
-Preserve the runnable 4-role harness, keep the current bounded proof honest, and redefine the role contracts so the system can move from a generic artifact emitter toward a surgical orchestration baseline.
+Preserve the runnable 4-role harness, keep the current bounded proof honest, and redefine the role contracts so the system can move from a generic artifact emitter toward a surgical orchestration runtime that still keeps `baseline` only as the current compatibility label for the Direct profile.
 
 ## Immediate upgrade path
 ### Phase 1 — Normalize and finish the existing 4-role contract layer
@@ -61,7 +61,7 @@ Only after the contract layer and at least one additional runtime control are co
 
 ## Success criterion
 The next stage must satisfy all of the following:
-- the runnable baseline remains operational;
+- the runnable Direct-compatibility path (`baseline` in current runtime naming) remains operational;
 - the role definitions stop pretending that artifact generation alone is enough;
 - the repository clearly distinguishes proven mechanics from target behavior;
 - the transition toward a surgical system is explicit, staged, and falsifiable.

@@ -7,7 +7,7 @@ Define the minimum task set required to distinguish a real surgical orchestratio
 
 ### 1. Narrow single-node fix
 - Goal: verify that the system can stay local when the problem locus is obvious.
-- Expected profile: Lite
+- Expected profile: Direct at the policy layer; `baseline` in the current runnable runtime compatibility path
 - What must be checked: no unnecessary read expansion, no unnecessary change expansion, explicit local verification.
 
 ### 2. Local fix with adjacent dependency risk

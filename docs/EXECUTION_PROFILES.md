@@ -8,8 +8,9 @@ This file is a compact profile summary only.
 
 ## Profiles
 
-### Baseline
-Baseline is the current runtime compatibility label for the Direct execution profile.
+### Direct (`baseline` in current runnable runtime)
+Direct is the policy-layer starting profile.
+`baseline` is the current runtime compatibility label for this profile.
 
 Use when:
 - the task is narrow and localized;
@@ -81,9 +82,10 @@ Rules:
 - widening beyond the minimum justified contour must be evidence-driven.
 
 ## Selection rule
-- Start in Baseline.
-- Escalate to Lite only when bounded evidence shows that Baseline would under-control locality, adjacent validation, or drift risk.
-- Escalate to Heavy only when bounded evidence shows that Baseline or Lite would under-control locality, consistency, security, or blocker uncertainty.
+- Start in Direct at the policy layer.
+- Treat Baseline as the current runtime compatibility label for the Direct execution profile.
+- Escalate to Lite only when bounded evidence shows that Direct/Baseline would under-control locality, adjacent validation, or drift risk.
+- Escalate to Heavy only when bounded evidence shows that Direct/Baseline or Lite would under-control locality, consistency, security, or blocker uncertainty.
 - Do not escalate by task-size narrative alone.
 
 ## Current status
