@@ -232,6 +232,27 @@ def main() -> int:
             },
         },
     ]
+    manifest["dependency_ring"] = [
+        "01_orchestrator.md",
+        "run_manifest.json",
+        "02_plan.json",
+        "src/spec.json",
+        "src/generated_summary.txt",
+        "src/generated_manifest.json",
+    ]
+    manifest["dependency_ring_structured"] = {
+        "primary_target": "src/spec.json",
+        "adjacent_read_nodes": [
+            "01_orchestrator.md",
+            "run_manifest.json",
+            "02_plan.json",
+        ],
+        "adjacent_verify_only_nodes": [
+            "src/generated_summary.txt",
+            "src/generated_manifest.json",
+        ],
+        "excluded_neighbors": [],
+    }
     manifest["allowed_change_set"] = [
         "02_plan.json",
         "02_planner.md",
@@ -287,6 +308,25 @@ def main() -> int:
             "exact_content": "manifest override works\n",
         },
     ]
+    manifest["dependency_ring"] = [
+        "01_orchestrator.md",
+        "run_manifest.json",
+        "02_plan.json",
+        "output/custom/result.json",
+        "output/custom/summary.txt",
+    ]
+    manifest["dependency_ring_structured"] = {
+        "primary_target": "output/custom/result.json",
+        "adjacent_read_nodes": [
+            "01_orchestrator.md",
+            "run_manifest.json",
+            "02_plan.json",
+        ],
+        "adjacent_verify_only_nodes": [
+            "output/custom/summary.txt",
+        ],
+        "excluded_neighbors": [],
+    }
     manifest["allowed_change_set"] = [
         "02_plan.json",
         "02_planner.md",
