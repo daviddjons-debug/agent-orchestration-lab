@@ -58,6 +58,8 @@ No role may silently widen scope.
 ### baseline
 Baseline is the runtime compatibility label for the Direct execution profile.
 
+In the current runnable runtime, baseline still carries some compatibility-form contract fields that are not yet enforced uniformly across every stage.
+
 Baseline must define at minimum:
 - task_class
 - objective
@@ -175,7 +177,12 @@ In the current runnable baseline, this structure may still be carried in compati
 Do not dump broad repo context into this field.
 
 ### allowed_read_set
-Smallest justified set of artifacts that may be read for the current stage.
+Smallest justified set of artifacts that may be read for the current execution stage.
+
+Important current-runtime note:
+- in the runnable 4-role runtime, this field is only mechanically enforced as the Builder read boundary;
+- Planner currently has a separate fixed input contract: `01_orchestrator.md` and `run_manifest.json`;
+- therefore `allowed_read_set` must not yet be described as a universal mechanically enforced read sandbox for every stage.
 
 ### allowed_change_set
 Exact set of artifacts approved for modification.
@@ -312,6 +319,7 @@ Threat surface, trust-boundary relevance, auth/data-exposure implications, and w
 ## Enforcement rules
 - If triage is incomplete, Builder must not start.
 - If allowed_read_set is undefined, execution must stop.
+- In the current runnable runtime, this stop condition is mechanically enforced for Builder, not yet as a universal stage-level read sandbox.
 - If allowed_change_set is undefined, execution must stop.
 - If verify_only_surfaces are declared, Reviewer must require evidence instead of assuming they were checked.
 - If actual blocking evidence contradicts the assumed scenario and re-triage is not made explicit, success must not be assumed.
