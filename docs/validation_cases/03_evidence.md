@@ -30,7 +30,7 @@ PASS for a bounded pseudo-code coordinated multi-file cluster scenario in curren
 ## Negative evidence
 - reviewer returned FAIL when the dependent summary artifact became stale relative to `src/spec.json`
 - builder still returned FAIL when declared artifact paths fell outside `allowed_change_set`
-- builder still returned FAIL when `allowed_read_set` exceeded the baseline Builder read contract
+- builder still returned FAIL when `allowed_read_set` exceeded the current Builder-only read-boundary contract
 - reviewer still returned FAIL on undeclared output drift in the baseline artifact scenario
 - reviewer still returned FAIL on stale adjacent summary inconsistency in the Case 02 scenario
 

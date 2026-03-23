@@ -14,7 +14,7 @@ It already proves:
 - reviewer-side contract drift detection
 - reviewer-side undeclared output drift detection
 - builder-side write-boundary enforcement through `allowed_change_set`
-- baseline Builder read-boundary compatibility enforcement through `allowed_read_set`
+- current Builder-only read-boundary compatibility enforcement through `allowed_read_set`
 - bounded adjacent-consistency checking from Case 02
 
 It does not yet prove automatically:
