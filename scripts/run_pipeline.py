@@ -51,9 +51,6 @@ def main() -> int:
 
     run_dir = runs[-1]
 
-    user_goal = run_dir / "00_user_goal.md"
-    if user_goal.exists():
-        user_goal.unlink()
 
     rc = run(["python3", "scripts/planner.py", str(run_dir)])
     if rc != 0:

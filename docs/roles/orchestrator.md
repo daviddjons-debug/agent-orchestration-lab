@@ -23,7 +23,6 @@ Purpose: act as the triage gate of Surgical Edition, classify the task before pl
 - define initial verification targets;
 - define evidence required before completion may be claimed;
 - define escalation triggers that force stop-and-reassess behavior;
-- write `00_user_goal.md`;
 - write `01_orchestrator.md`;
 - write `run_manifest.json` as the runnable source of truth for the current contract.
 

@@ -3,11 +3,6 @@ from datetime import datetime
 import json
 import sys
 
-USER_GOAL = (
-    "# User Goal\n\n"
-    "Create a tiny, verifiable multi-agent run with visible handoffs, "
-    "executed as separate role scripts.\n"
-)
 
 ORCHESTRATOR_HANDOFF_TEMPLATE = (
     "# Orchestrator Handoff\n\n"
@@ -133,7 +128,6 @@ def main() -> int:
         },
     }
 
-    (base / "00_user_goal.md").write_text(USER_GOAL, encoding="utf-8")
     orchestrator_handoff = ORCHESTRATOR_HANDOFF_TEMPLATE.format(profile=profile)
     (base / "01_orchestrator.md").write_text(orchestrator_handoff, encoding="utf-8")
     (base / "run_manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
