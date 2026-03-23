@@ -15,7 +15,7 @@ It already proves:
 
 It does not yet prove in runtime:
 - true problem-locus reasoning;
-- full runtime read-boundary enforcement beyond the baseline Builder contract;
+- full stage-wide runtime read-boundary enforcement beyond the current Builder-only read-boundary contract;
 - real allowed_change_set enforcement;
 - scope-drift prevention by implementation logic alone.
 

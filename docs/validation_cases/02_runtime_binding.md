@@ -17,7 +17,7 @@ It already proves:
 
 It does not yet prove automatically:
 - genuine discovery of adjacent dependency risk
-- full runtime read-boundary enforcement beyond the baseline Builder contract
+- full stage-wide runtime read-boundary enforcement beyond the current Builder-only read-boundary contract
 - true dependency analysis beyond declared contract data
 - real behavioral verification unless the scenario makes evidence explicit
 
