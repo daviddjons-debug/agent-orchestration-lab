@@ -27,7 +27,7 @@ Purpose: act as the triage gate of Surgical Edition, classify the task before pl
 - write `run_manifest.json` as the runnable source of truth for the current contract.
 
 ## Required decisions
-The orchestrator output must make all of the following explicit:
+The orchestrator output must make the baseline-required contract fields explicit:
 - task_class;
 - objective;
 - expected_end_state;
@@ -41,16 +41,19 @@ The orchestrator output must make all of the following explicit:
 - allowed_read_set;
 - allowed_change_set;
 - verify_only_surfaces;
-- source_of_truth_node;
-- stale_defect_node;
-- adjacent_consistency_node;
-- expansion_trigger;
-- retriage_required_when_actual_blocker_differs;
 - forbidden_zone;
 - verification_targets;
 - evidence_required;
 - blockers_or_uncertainties;
 - escalation_trigger;
+
+The orchestrator must also make the following explicit when the task evidence requires them:
+- source_of_truth_node;
+- stale_defect_node;
+- adjacent_consistency_node;
+- expansion_trigger;
+- retriage_required_when_actual_blocker_differs;
+- excluded_neighbors.
 
 ## Routing rules
 

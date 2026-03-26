@@ -38,7 +38,7 @@ Purpose: turn orchestrator triage into an executable narrow contract, refine the
 - write `02_planner.md` as a human-readable execution trace.
 
 ## Required decisions
-The planner output must make all of the following explicit:
+The planner output must make the baseline-required execution-contract fields explicit:
 - task_class;
 - objective;
 - expected_end_state;
@@ -52,12 +52,6 @@ The planner output must make all of the following explicit:
 - allowed_read_set;
 - allowed_change_set;
 - verify_only_surfaces;
-- source_of_truth_node;
-- stale_defect_node;
-- adjacent_consistency_node;
-- expansion_trigger;
-- retriage_required_when_actual_blocker_differs;
-- excluded_neighbors;
 - forbidden_zone;
 - acceptance_criteria;
 - verification_targets;
@@ -66,6 +60,14 @@ The planner output must make all of the following explicit:
 - escalation_trigger;
 - patch_strategy;
 - change_rationale.
+
+The planner must also make the following explicit when the task evidence requires them:
+- source_of_truth_node;
+- stale_defect_node;
+- adjacent_consistency_node;
+- expansion_trigger;
+- retriage_required_when_actual_blocker_differs;
+- excluded_neighbors.
 
 ## Planning standard
 The planner must behave as a narrowing role, not an expansion role.
