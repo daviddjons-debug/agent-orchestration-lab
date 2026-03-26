@@ -17,10 +17,13 @@ def should_run_reviewer(run_dir: Path) -> bool:
 
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
     path_decision = manifest.get("path_decision")
+    structured_ring = manifest.get("dependency_ring_structured", {}) if isinstance(manifest, dict) else {}
     if path_decision in {"lite", "heavy"}:
         return True
 
     if manifest.get("verify_only_surfaces"):
+        return True
+    if isinstance(structured_ring, dict) and structured_ring.get("adjacent_verify_only_nodes"):
         return True
     if manifest.get("retriage_required_when_actual_blocker_differs") is True:
         return True

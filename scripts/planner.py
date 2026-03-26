@@ -66,6 +66,10 @@ def main() -> int:
             print(f"ERROR: run_manifest.json missing list field: {field}")
             return 1
 
+    structured_ring = manifest.get("dependency_ring_structured") or {}
+    structured_verify_only = structured_ring.get("adjacent_verify_only_nodes")
+    structured_excluded_neighbors = structured_ring.get("excluded_neighbors")
+
     plan = {
         "source": ["01_orchestrator.md", "run_manifest.json"],
         "task_class": manifest.get("task_class"),
@@ -79,16 +83,16 @@ def main() -> int:
         "profile_selection_basis": manifest.get("profile_selection_basis", []),
         "path_decision": manifest.get("path_decision"),
         "dependency_ring": manifest.get("dependency_ring", []),
-        "dependency_ring_structured": manifest.get("dependency_ring_structured"),
+        "dependency_ring_structured": structured_ring,
         "allowed_read_set": manifest.get("allowed_read_set", []),
         "allowed_change_set": manifest.get("allowed_change_set", []),
-        "verify_only_surfaces": manifest.get("verify_only_surfaces", []),
+        "verify_only_surfaces": structured_verify_only if isinstance(structured_verify_only, list) else manifest.get("verify_only_surfaces", []),
         "source_of_truth_node": manifest.get("source_of_truth_node"),
         "stale_defect_node": manifest.get("stale_defect_node"),
         "adjacent_consistency_node": manifest.get("adjacent_consistency_node"),
         "expansion_trigger": manifest.get("expansion_trigger"),
         "retriage_required_when_actual_blocker_differs": manifest.get("retriage_required_when_actual_blocker_differs"),
-        "excluded_neighbors": manifest.get("excluded_neighbors", []),
+        "excluded_neighbors": structured_excluded_neighbors if isinstance(structured_excluded_neighbors, list) else manifest.get("excluded_neighbors", []),
         "forbidden_zone": manifest.get("forbidden_zone", []),
         "acceptance_criteria": manifest.get("acceptance_criteria", []),
         "verification_targets": manifest.get("verification_targets", []),

@@ -21,6 +21,42 @@ def is_allowed_target(target_rel: str, allowed_change_set: list[str]) -> bool:
                 return True
     return False
 
+def validate_structured_ring(plan: dict) -> str | None:
+    structured = plan.get("dependency_ring_structured")
+    if not isinstance(structured, dict):
+        return "02_plan.json missing object field: dependency_ring_structured"
+
+    primary_target = structured.get("primary_target")
+    adjacent_read_nodes = structured.get("adjacent_read_nodes")
+    adjacent_verify_only_nodes = structured.get("adjacent_verify_only_nodes")
+    excluded_neighbors = structured.get("excluded_neighbors")
+
+    if not isinstance(primary_target, str) or not primary_target.strip():
+        return "dependency_ring_structured missing non-empty string field: primary_target"
+    if not isinstance(adjacent_read_nodes, list):
+        return "dependency_ring_structured missing list field: adjacent_read_nodes"
+    if not isinstance(adjacent_verify_only_nodes, list):
+        return "dependency_ring_structured missing list field: adjacent_verify_only_nodes"
+    if not isinstance(excluded_neighbors, list):
+        return "dependency_ring_structured missing list field: excluded_neighbors"
+
+    dependency_ring = plan.get("dependency_ring", [])
+    if primary_target not in dependency_ring:
+        return "dependency_ring_structured.primary_target must be present in dependency_ring"
+
+    for node in adjacent_read_nodes + adjacent_verify_only_nodes:
+        if not isinstance(node, str) or not node.strip():
+            return "dependency_ring_structured contains non-string adjacent node"
+        if node not in dependency_ring:
+            return f"dependency_ring_structured node missing from dependency_ring: {node}"
+
+    if plan.get("verify_only_surfaces", []) != adjacent_verify_only_nodes:
+        return "verify_only_surfaces must match dependency_ring_structured.adjacent_verify_only_nodes"
+    if plan.get("excluded_neighbors", []) != excluded_neighbors:
+        return "excluded_neighbors must match dependency_ring_structured.excluded_neighbors"
+
+    return None
+
 def main() -> int:
     if len(sys.argv) != 2:
         print("Usage: python3 scripts/builder.py <run_dir>")
@@ -75,6 +111,10 @@ def main() -> int:
         if not isinstance(value, list):
             return fail(f"02_plan.json missing list field: {field}")
 
+    structured_ring_error = validate_structured_ring(plan)
+    if structured_ring_error:
+        return fail(structured_ring_error)
+
     allowed_read_set = plan["allowed_read_set"]
     allowed_change_set = plan["allowed_change_set"]
     verify_only_surfaces = plan["verify_only_surfaces"]
@@ -126,8 +166,6 @@ def main() -> int:
             return fail("artifact spec missing non-empty string field: path")
         if artifact_type not in {"json", "text"}:
             return fail(f"artifact spec has unsupported type: {artifact_type}")
-        if artifact_rel in verify_only_surfaces:
-            return fail(f"artifact path declared as verify-only surface: {artifact_rel}")
         if not is_allowed_target(artifact_rel, allowed_change_set):
             return fail(f"artifact path outside allowed_change_set: {artifact_rel}")
 

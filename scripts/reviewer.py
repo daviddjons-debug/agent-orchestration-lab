@@ -53,6 +53,7 @@ def main() -> int:
     artifact_checks = []
     artifact_results = []
     consistency_checks = []
+    structured_ring_checks = []
     verify_only_checks = []
     cluster_role_checks = []
     retriage_checks = []
@@ -73,6 +74,7 @@ def main() -> int:
         plan_artifacts = plan.get("artifacts") if isinstance(plan, dict) else None
         policy = manifest.get("review_policy", {}) if isinstance(manifest, dict) else {}
         verify_only_surfaces = plan.get("verify_only_surfaces", []) if isinstance(plan, dict) else []
+        structured_ring = plan.get("dependency_ring_structured", {}) if isinstance(plan, dict) else {}
         source_of_truth_node = plan.get("source_of_truth_node") if isinstance(plan, dict) else None
         stale_defect_node = plan.get("stale_defect_node") if isinstance(plan, dict) else None
         adjacent_consistency_node = plan.get("adjacent_consistency_node") if isinstance(plan, dict) else None
@@ -85,6 +87,63 @@ def main() -> int:
             for field in CONTRACT_FIELDS:
                 same = manifest.get(field) == plan.get(field)
                 contract_checks.append((field, same))
+
+            dependency_ring = plan.get("dependency_ring", [])
+            primary_target = structured_ring.get("primary_target")
+            adjacent_read_nodes = structured_ring.get("adjacent_read_nodes")
+            adjacent_verify_only_nodes = structured_ring.get("adjacent_verify_only_nodes")
+            structured_excluded_neighbors = structured_ring.get("excluded_neighbors")
+
+            structured_ring_checks.append((
+                "dependency_ring_structured is an object",
+                isinstance(structured_ring, dict),
+            ))
+            structured_ring_checks.append((
+                "dependency_ring_structured.primary_target is non-empty",
+                isinstance(primary_target, str) and bool(primary_target.strip()),
+            ))
+            structured_ring_checks.append((
+                "dependency_ring_structured.adjacent_read_nodes is a list",
+                isinstance(adjacent_read_nodes, list),
+            ))
+            structured_ring_checks.append((
+                "dependency_ring_structured.adjacent_verify_only_nodes is a list",
+                isinstance(adjacent_verify_only_nodes, list),
+            ))
+            structured_ring_checks.append((
+                "dependency_ring_structured.excluded_neighbors is a list",
+                isinstance(structured_excluded_neighbors, list),
+            ))
+
+            if isinstance(primary_target, str) and isinstance(dependency_ring, list):
+                structured_ring_checks.append((
+                    "dependency_ring_structured.primary_target is present in dependency_ring",
+                    primary_target in dependency_ring,
+                ))
+
+            if isinstance(adjacent_read_nodes, list) and isinstance(dependency_ring, list):
+                structured_ring_checks.append((
+                    "dependency_ring_structured.adjacent_read_nodes stay inside dependency_ring",
+                    all(isinstance(node, str) and node in dependency_ring for node in adjacent_read_nodes),
+                ))
+
+            if isinstance(adjacent_verify_only_nodes, list) and isinstance(dependency_ring, list):
+                structured_ring_checks.append((
+                    "dependency_ring_structured.adjacent_verify_only_nodes stay inside dependency_ring",
+                    all(isinstance(node, str) and node in dependency_ring for node in adjacent_verify_only_nodes),
+                ))
+
+            if isinstance(adjacent_verify_only_nodes, list):
+                structured_ring_checks.append((
+                    "verify_only_surfaces matches dependency_ring_structured.adjacent_verify_only_nodes",
+                    verify_only_surfaces == adjacent_verify_only_nodes,
+                ))
+
+            if isinstance(structured_excluded_neighbors, list):
+                structured_ring_checks.append((
+                    "excluded_neighbors matches dependency_ring_structured.excluded_neighbors",
+                    plan.get("excluded_neighbors", []) == structured_excluded_neighbors,
+                ))
 
         artifacts_match = (
             isinstance(manifest_artifacts, list)
@@ -308,6 +367,7 @@ def main() -> int:
             and bool(artifact_results)
             and all(artifact_results)
             and all(same for _, same in consistency_checks)
+            and all(same for _, same in structured_ring_checks)
             and all(same for _, same in verify_only_checks)
             and all(same for _, same in cluster_role_checks)
             and all(same for _, same in retriage_checks)
@@ -331,6 +391,8 @@ def main() -> int:
         lines.append(f"- [{'x' if exists_ok else ' '}] {path} exists")
         lines.append(f"- [{'x' if content_ok else ' '}] {path} satisfies declared contract")
     for label, same in consistency_checks:
+        lines.append(f"- [{'x' if same else ' '}] {label}")
+    for label, same in structured_ring_checks:
         lines.append(f"- [{'x' if same else ' '}] {label}")
     for path, same in verify_only_checks:
         lines.append(f"- [{'x' if same else ' '}] verify-only surface satisfied: {path}")

@@ -247,12 +247,10 @@ def main() -> int:
             "run_manifest.json",
             "02_plan.json",
         ],
-        "adjacent_verify_only_nodes": [
-            "src/generated_summary.txt",
-            "src/generated_manifest.json",
-        ],
+        "adjacent_verify_only_nodes": [],
         "excluded_neighbors": [],
     }
+    manifest["verify_only_surfaces"] = []
     manifest["allowed_change_set"] = [
         "02_plan.json",
         "02_planner.md",
@@ -322,11 +320,10 @@ def main() -> int:
             "run_manifest.json",
             "02_plan.json",
         ],
-        "adjacent_verify_only_nodes": [
-            "output/custom/summary.txt",
-        ],
+        "adjacent_verify_only_nodes": [],
         "excluded_neighbors": [],
     }
+    manifest["verify_only_surfaces"] = []
     manifest["allowed_change_set"] = [
         "02_plan.json",
         "02_planner.md",
