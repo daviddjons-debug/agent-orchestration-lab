@@ -31,7 +31,6 @@ No role may silently widen scope.
 - dependency_ring
 - allowed_read_set
 - allowed_change_set
-- verify_only_surfaces
 - forbidden_zone
 - acceptance_criteria
 - verification_targets
@@ -41,6 +40,7 @@ No role may silently widen scope.
 - escalation_trigger
 
 ## Conditional fields
+- verify_only_surfaces
 - excluded_neighbors
 - source_of_truth_node
 - stale_defect_node
