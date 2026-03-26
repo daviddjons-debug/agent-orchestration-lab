@@ -26,7 +26,7 @@ Purpose: validate whether execution stayed inside the declared contract, determi
 - write `04_reviewer.md` with checklist and explicit verdict.
 
 ## Required decisions
-The reviewer output must make all of the following explicit:
+The reviewer output must make the review-verdict decision fields explicit:
 - contract_adherence: `pass` or `fail`;
 - output_correctness: `pass`, `fail`, or `insufficient_evidence`;
 - scope_sufficiency: `sufficient`, `insufficient`, or `unclear`;

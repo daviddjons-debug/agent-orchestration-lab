@@ -19,7 +19,7 @@ Purpose: validate declared behavior and nearby regression risk after implementat
 - write an explicit testing conclusion without inflating confidence.
 
 ## Required decisions
-The tester output must make all of the following explicit:
+The tester output must make the testing decision fields explicit:
 - tester_invocation_decision: `invoke` or `skip`;
 - verified_surfaces;
 - unverified_surfaces;

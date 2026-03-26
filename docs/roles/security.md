@@ -26,7 +26,7 @@ Typical trigger categories include:
 - externally reachable misuse path
 
 ## Required decisions
-The security output must make all of the following explicit:
+The security output must make the security decision fields explicit:
 - security_invocation_decision: `invoke` or `skip`;
 - security_trigger;
 - inspected_surfaces;

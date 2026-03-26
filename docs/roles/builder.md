@@ -17,7 +17,7 @@ Purpose: execute only the approved plan contract, apply the smallest sufficient 
 - write `03_builder.md` as an execution trace.
 
 ## Required decisions
-The builder output must make all of the following explicit:
+The builder output must make the execution-trace decision fields explicit:
 - executed_change_set;
 - untouched_but_adjacent_surfaces;
 - contract_deviation_detected: `yes` or `no`;
