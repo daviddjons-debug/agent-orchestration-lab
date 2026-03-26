@@ -118,6 +118,8 @@ def main() -> int:
     allowed_read_set = plan["allowed_read_set"]
     allowed_change_set = plan["allowed_change_set"]
     verify_only_surfaces = plan["verify_only_surfaces"]
+    structured_ring = plan["dependency_ring_structured"]
+    adjacent_read_nodes = structured_ring["adjacent_read_nodes"]
 
     path_decision = plan["path_decision"].strip()
     expected_read_sets = {
@@ -149,6 +151,13 @@ def main() -> int:
         if not isinstance(manifest, dict):
             return fail(f"run_manifest.json root must be an object for {path_decision} builder read contract")
         actual_read_sources.append("run_manifest.json")
+
+    for source in actual_read_sources:
+        if source not in adjacent_read_nodes:
+            return fail(
+                "builder actual read source is outside dependency_ring_structured.adjacent_read_nodes: "
+                f"{source}"
+            )
 
     artifacts = plan.get("artifacts")
     if not isinstance(artifacts, list) or not artifacts:

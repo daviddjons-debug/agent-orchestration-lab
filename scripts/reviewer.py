@@ -55,6 +55,7 @@ def main() -> int:
     consistency_checks = []
     structured_ring_checks = []
     verify_only_checks = []
+    adjacent_read_evidence_checks = []
     cluster_role_checks = []
     retriage_checks = []
     security_checks = []
@@ -75,6 +76,7 @@ def main() -> int:
         policy = manifest.get("review_policy", {}) if isinstance(manifest, dict) else {}
         verify_only_surfaces = plan.get("verify_only_surfaces", []) if isinstance(plan, dict) else []
         structured_ring = plan.get("dependency_ring_structured", {}) if isinstance(plan, dict) else {}
+        builder_report_text = (base / "03_builder.md").read_text(encoding="utf-8") if (base / "03_builder.md").exists() else ""
         source_of_truth_node = plan.get("source_of_truth_node") if isinstance(plan, dict) else None
         stale_defect_node = plan.get("stale_defect_node") if isinstance(plan, dict) else None
         adjacent_consistency_node = plan.get("adjacent_consistency_node") if isinstance(plan, dict) else None
@@ -138,6 +140,22 @@ def main() -> int:
                     "verify_only_surfaces matches dependency_ring_structured.adjacent_verify_only_nodes",
                     verify_only_surfaces == adjacent_verify_only_nodes,
                 ))
+
+            if isinstance(adjacent_read_nodes, list):
+                actual_read_line = next(
+                    (line for line in builder_report_text.splitlines() if line.startswith("Actual read sources: ")),
+                    None,
+                )
+                if actual_read_line is None:
+                    adjacent_read_evidence_checks.append(("builder reported actual read sources", False))
+                else:
+                    reported = actual_read_line.split(": ", 1)[1].strip()
+                    reported_sources = [] if reported == "(none)" else [x.strip() for x in reported.split(",") if x.strip()]
+                    adjacent_read_evidence_checks.append(("builder reported actual read sources", True))
+                    adjacent_read_evidence_checks.append((
+                        "builder actual read sources stay inside dependency_ring_structured.adjacent_read_nodes",
+                        all(source in adjacent_read_nodes for source in reported_sources),
+                    ))
 
             if isinstance(structured_excluded_neighbors, list):
                 structured_ring_checks.append((
@@ -369,6 +387,7 @@ def main() -> int:
             and all(same for _, same in consistency_checks)
             and all(same for _, same in structured_ring_checks)
             and all(same for _, same in verify_only_checks)
+            and all(same for _, same in adjacent_read_evidence_checks)
             and all(same for _, same in cluster_role_checks)
             and all(same for _, same in retriage_checks)
             and all(same for _, same in security_checks)
@@ -396,6 +415,8 @@ def main() -> int:
         lines.append(f"- [{'x' if same else ' '}] {label}")
     for path, same in verify_only_checks:
         lines.append(f"- [{'x' if same else ' '}] verify-only surface satisfied: {path}")
+    for label, same in adjacent_read_evidence_checks:
+        lines.append(f"- [{'x' if same else ' '}] {label}")
     for label, same in cluster_role_checks:
         lines.append(f"- [{'x' if same else ' '}] {label}")
     for label, same in retriage_checks:
