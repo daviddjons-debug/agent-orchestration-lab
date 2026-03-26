@@ -39,6 +39,7 @@ PASS for a bounded pseudo-code coordinated multi-file cluster scenario in curren
 - widening can be justified and remain explicit inside a declared local cluster
 - reviewer can distinguish direct primary correctness from incomplete coordinated local updates
 - current runtime now supports a bounded bridge from Case 02 to Case 03
+- Case 03 establishes the pseudo-code coordinated-cluster logic later extended on a persistent live substrate in Case 08
 - Case 03 extends validation beyond adjacent-pair consistency into bounded coordinated-cluster consistency
 
 ## What this PASS does not prove

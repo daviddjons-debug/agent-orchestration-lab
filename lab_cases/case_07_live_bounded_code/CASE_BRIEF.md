@@ -22,4 +22,4 @@ This case is meant to test whether the orchestration system can:
 
 ## Status
 Substrate established.
-Runnable bounded case contract not yet defined.
+Runnable bounded case contract is now established through automated selftest coverage.

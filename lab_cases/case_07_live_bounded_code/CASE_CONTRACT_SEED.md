@@ -23,5 +23,5 @@ The system must prove that it can:
 - require verify-only evidence before claiming trustworthy completion.
 
 ## Current status
-Contract seed established.
-Runnable bounded case contract still to be defined.
+Contract seed is now exercised by automated `scripts/selftest.py` coverage on a persistent live substrate.
+Runnable bounded case contract is now established and exercised by automated selftest coverage.

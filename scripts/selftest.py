@@ -678,6 +678,60 @@ sys.exit(0 if status == "adjacent verified" else 1)
         adjacent_file.write_text(adjacent_original, encoding="utf-8")
         verify_file.write_text(verify_original, encoding="utf-8")
 
+    print("== CASE 08: live bounded cluster consistency ==")
+    case08_src = Path("lab_cases/case_08_live_cluster_consistency/src")
+    case08_spec = case08_src / "spec.json"
+    case08_summary = case08_src / "generated_summary.txt"
+    case08_manifest = case08_src / "generated_manifest.json"
+
+    case08_spec_original = case08_spec.read_text(encoding="utf-8")
+    case08_summary_original = case08_summary.read_text(encoding="utf-8")
+    case08_manifest_original = case08_manifest.read_text(encoding="utf-8")
+
+    case08_code = """import json
+from pathlib import Path
+base = Path("lab_cases/case_08_live_cluster_consistency/src")
+spec = json.loads((base / "spec.json").read_text(encoding="utf-8"))
+summary = (base / "generated_summary.txt").read_text(encoding="utf-8").splitlines()[0]
+manifest = json.loads((base / "generated_manifest.json").read_text(encoding="utf-8"))
+message = spec.get("message")
+assert isinstance(message, str) and message.strip(), "expected non-empty canonical message in spec.json"
+assert summary == message, "expected generated_summary.txt to match spec.json message"
+assert manifest.get("message") == message, "expected generated_manifest.json to match spec.json message"
+"""
+    case08_cmd = ["python3", "-c", case08_code]
+
+    try:
+        case08_pass = sh(case08_cmd)
+        if case08_pass.returncode != 0:
+            print("SELFTEST ERROR: expected PASS on Case 08 baseline live cluster consistency")
+            return 1
+
+        case08_summary.write_text("STALE CLUSTER SUMMARY\n", encoding="utf-8")
+
+        case08_fail = sh(case08_cmd, allow_fail=True)
+        if case08_fail.returncode == 0:
+            print("SELFTEST ERROR: expected FAIL on Case 08 when dependent summary is stale")
+            return 1
+
+        if case08_spec.read_text(encoding="utf-8") != case08_spec_original:
+            print("SELFTEST ERROR: spec.json changed during Case 08 stale-summary path")
+            return 1
+        if case08_manifest.read_text(encoding="utf-8") != case08_manifest_original:
+            print("SELFTEST ERROR: generated_manifest.json changed during Case 08 stale-summary path")
+            return 1
+
+        case08_summary.write_text(case08_summary_original, encoding="utf-8")
+
+        case08_restored = sh(case08_cmd)
+        if case08_restored.returncode != 0:
+            print("SELFTEST ERROR: expected PASS on Case 08 after restoring cluster consistency")
+            return 1
+    finally:
+        case08_spec.write_text(case08_spec_original, encoding="utf-8")
+        case08_summary.write_text(case08_summary_original, encoding="utf-8")
+        case08_manifest.write_text(case08_manifest_original, encoding="utf-8")
+
     print("== PIPELINE ACTIVATION CHECK: baseline vs lite reviewer behavior ==")
     baseline_pipeline = sh(["python3", "scripts/run_pipeline.py", str(base), "baseline"])
     baseline_runs = sorted(base.glob("orchestrated-*"))

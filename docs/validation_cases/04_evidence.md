@@ -1,4 +1,4 @@
-# Evidence — Case 04
+# Validation Case 04 — Evidence
 
 ## Scenario status
 Executed in runtime.

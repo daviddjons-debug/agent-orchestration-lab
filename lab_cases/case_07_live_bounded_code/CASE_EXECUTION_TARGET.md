@@ -27,5 +27,4 @@ This creates a real local code fix candidate while preserving adjacent verificat
 A local parser fix may be correct, but trustworthy completion still requires explicit verify-only evidence.
 
 ## Status
-Execution target is now covered by automated `scripts/selftest.py` validation.
-Generic manifest-driven runtime binding still remains pending.
+Execution target is now exercised by automated `scripts/selftest.py` coverage on a persistent live substrate.

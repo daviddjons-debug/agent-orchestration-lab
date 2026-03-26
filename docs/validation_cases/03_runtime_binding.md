@@ -43,6 +43,16 @@ Use the current runtime to validate a bounded pseudo-code coordinated-change tas
 ## Constraint
 Do not claim Case 03 is passed until the runtime has explicit positive evidence for coordinated multi-file consistency and explicit fail evidence for partial-cluster or undeclared-cluster drift.
 
+## Explicit forward bridge to Case 08
+Case 03 should now be interpreted as the bounded pseudo-code coordinated-cluster predecessor to Case 08.
+
+The distinction is strict:
+- Case 03 = bounded pseudo-code coordinated cluster inside the runnable manifest-driven runtime
+- Case 08 = bounded live cluster-consistency substrate on persistent repository files
+
+Case 08 does not replace Case 03.
+It extends the same coordination invariant onto a persistent live substrate while keeping the cluster predeclared rather than runtime-derived.
+
 ## Current interpretation
 At this stage, Case 03 should be treated as:
 - stronger than Case 02

@@ -61,6 +61,16 @@ The semantic content declared in `src/spec.json` must remain consistent with bot
 - reviewer passes despite missing coordinated-cluster consistency evidence
 - scenario language claims justified widening without making the local cluster explicit
 
+## Forward interpretation
+This scenario now serves as the pseudo-code cluster template that is later re-expressed on a persistent live substrate in Case 08.
+
+The invariant is the same in both cases:
+- one explicit primary node
+- explicitly justified dependent nodes
+- hard FAIL on stale dependent state
+
+What changes in Case 08 is not the logic but the substrate: the cluster moves from declared run artifacts to persistent repository files under `lab_cases/`.
+
 ## Current limitation
 This is still a bounded pseudo-code dependency case, not a real repository-scale multi-file code patch.
 Its purpose is to test whether the runtime can justify and verify a local coordinated change across multiple dependent surfaces without uncontrolled spread.

@@ -1,4 +1,4 @@
-# Runnable Scenario — Case 04
+# Validation Case 04 — Runnable Scenario
 
 ## Scenario shape
 A bounded run produces one primary artifact and one adjacent verify-only artifact.

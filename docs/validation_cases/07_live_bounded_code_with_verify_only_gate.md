@@ -27,3 +27,8 @@ It therefore provides a reusable bounded code-level validation substrate rather 
 ## Current boundary
 This still does not prove repository-scale code orchestration.
 It proves only a bounded live code-level pass on a minimal persistent substrate.
+
+## Explicit bridge from Case 04
+Case 07 should be interpreted as the persistent live-substrate successor to Case 04.
+Case 04 established verify-only rejection in a bounded runtime artifact scenario.
+Case 07 carries the same completion discipline into a persistent code substrate under `lab_cases/`.

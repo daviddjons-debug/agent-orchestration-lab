@@ -1,4 +1,4 @@
-# Runtime Binding — Case 04
+# Validation Case 04 — Runtime Binding
 
 ## Bound runtime claim
 Case 04 is bound to the current runnable lab only as a bounded false-locality verification scenario.
