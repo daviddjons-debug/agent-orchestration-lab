@@ -578,7 +578,7 @@ def main() -> int:
                 "acceptance_criteria": ["broken"],
                 "verification_targets": ["manifest-plan alignment", "declared artifact existence", "declared artifact content checks"],
                 "evidence_required": ["reviewer verdict"],
-                "blockers_or_uncertainties": ["current runtime does not enforce full stage-wide read sandboxing beyond the current Builder-only read-boundary contract"],
+                "blockers_or_uncertainties": ["current runtime does not enforce full stage-wide read sandboxing beyond the current execution-stage read contract checks"],
                 "escalation_trigger": ["required edit exceeds allowed_change_set"],
                 "patch_strategy": "declared-artifact bounded update",
                 "change_rationale": "Broken schema fixture for selftest.",
