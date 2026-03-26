@@ -51,7 +51,6 @@ The planner output must make the baseline-required execution-contract fields exp
 - dependency_ring;
 - allowed_read_set;
 - allowed_change_set;
-- verify_only_surfaces;
 - forbidden_zone;
 - acceptance_criteria;
 - verification_targets;
@@ -62,6 +61,7 @@ The planner output must make the baseline-required execution-contract fields exp
 - change_rationale.
 
 The planner must also make the following explicit when the task evidence requires them:
+- verify_only_surfaces;
 - source_of_truth_node;
 - stale_defect_node;
 - adjacent_consistency_node;

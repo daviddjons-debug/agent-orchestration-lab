@@ -40,7 +40,6 @@ The orchestrator output must make the baseline-required contract fields explicit
 - dependency_ring;
 - allowed_read_set;
 - allowed_change_set;
-- verify_only_surfaces;
 - forbidden_zone;
 - verification_targets;
 - evidence_required;
@@ -48,6 +47,7 @@ The orchestrator output must make the baseline-required contract fields explicit
 - escalation_trigger;
 
 The orchestrator must also make the following explicit when the task evidence requires them:
+- verify_only_surfaces;
 - source_of_truth_node;
 - stale_defect_node;
 - adjacent_consistency_node;
