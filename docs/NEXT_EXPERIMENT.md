@@ -42,10 +42,13 @@ Continue aligning:
 
 The next step is not to restart this rewrite rhetorically, but to close remaining gaps between canonical wording and current runnable reality.
 
-### Phase 2 — Prove one additional runtime control gap
-Before expanding the stage graph, prove one more falsifiable runtime control, preferably:
-- stricter read-boundary enforcement; or
-- one bounded live code-level mini-task beyond declared-artifact scenarios.
+### Phase 2 — Prove the next unresolved runtime control gap
+Before expanding the stage graph, prove one more falsifiable runtime control that is still genuinely unclosed.
+The current priority is:
+- stricter stage-wide read-boundary enforcement beyond the current Builder-only read contract.
+
+Bounded live persistent substrates are already established through Case 07 and Case 08.
+The next step is therefore not another live mini-task, but closing a remaining runtime control gap.
 
 ### Phase 3 — Introduce missing roles only after the current runtime boundary hardens further
 Add:

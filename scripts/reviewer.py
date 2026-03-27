@@ -23,7 +23,6 @@ CONTRACT_FIELDS = [
     "path_decision",
     "dependency_ring",
     "dependency_ring_structured",
-    "allowed_read_set",
     "allowed_change_set",
     "verify_only_surfaces",
     "source_of_truth_node",

@@ -14,7 +14,7 @@ Purpose: turn orchestrator triage into an executable narrow contract, refine the
   - `adjacent_verify_only_nodes`
   - `excluded_neighbors`
 - current runnable baseline still propagates `dependency_ring` in a flat compatibility shape rather than a fully structured ring object
-- define the smallest justified allowed read set for downstream execution;
+- define the smallest justified Builder-compatible read boundary payload for downstream execution;
 - define the smallest justified allowed change set for downstream execution;
 - define verify-only surfaces that must be checked but must not be modified;
 - when the task is a bounded cluster or coordinated-consistency case, explicitly distinguish:

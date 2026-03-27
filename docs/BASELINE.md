@@ -84,7 +84,7 @@ That is stronger than a toy pipeline, but still weaker than a true surgical runt
 The honest boundary is:
 
 - artifact-level orchestration discipline: proven for bounded runtime artifacts and validation cases;
-- persistent bounded live code-level validation: now present through Case 07 on a minimal substrate under `lab_cases/`, but not yet as a first-class automated runtime scenario;
+- persistent bounded live validation on repository substrates: now present through Case 07 (verify-only gated live code substrate) and Case 08 (live bounded cluster-consistency substrate) as dedicated automated selftest scenarios under `lab_cases/`;
 - code-level surgical execution discipline at repository scale: not yet proven.
 
 ## Immediate transition principle

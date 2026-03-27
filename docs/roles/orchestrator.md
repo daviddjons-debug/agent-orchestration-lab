@@ -15,7 +15,7 @@ Purpose: act as the triage gate of Surgical Edition, classify the task before pl
   - `heavy`
 - decide whether narrow execution is justified or whether escalation is required;
 - define the initial dependency ring hypothesis at triage level;
-- define the initial allowed read set;
+- define the initial Builder-compatible read boundary payload for downstream execution;
 - define the initial allowed change set;
 - define verify-only surfaces if adjacent validation is already known to be necessary;
 - define excluded neighbors where local scope must be defended explicitly;

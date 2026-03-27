@@ -89,10 +89,12 @@ Currently implemented and evidenced at bounded runtime level:
 - Case 05: security-relevant task
 - Case 06: task with justified local hardening
 - Case 07: persistent bounded live code-level validation with verify-only completion gate
+- Case 08: persistent bounded live cluster-consistency validation on a declared repository substrate
 
 Current boundary:
 - Cases 01-06 are proven in bounded lab-runtime form
 - Case 07 is now proven as an automated selftest scenario on a persistent substrate under `lab_cases/`
+- Case 08 is now proven as an automated selftest scenario on a persistent live cluster substrate under `lab_cases/`
 - this is still not evidence of repository-scale code orchestration
 - baseline runtime still propagates `dependency_ring` as a flat list rather than enforcing a structured ring object
 - planner-side read-boundary enforcement and general runtime read sandboxing remain unproven

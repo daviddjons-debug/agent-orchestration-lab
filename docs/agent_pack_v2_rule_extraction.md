@@ -12,7 +12,7 @@ This document converts observed Codex behavior from bounded validation runs into
 - Distinguished primary parser behavior from adjacent / verify-only surfaces.
 - Confirmed the defect before patching when a break was introduced.
 - Applied a minimal local repair in `parser.py` only.
-- Used `python3 scripts/selftest_case07.py` as the minimum relevant validation.
+- Used `python3 scripts/selftest.py` as the minimum relevant validation within the dedicated Case 07 lane.
 - Preserved adjacent behavior and verify-only evidence without unnecessary widening.
 - Returned no-op when no defect was present.
 - In later runs, narrowed the read set substantially and avoided speculative edits.
@@ -134,6 +134,66 @@ This document converts observed Codex behavior from bounded validation runs into
   - actual blocking fail mode differs
   - executor must switch to evidence-driven re-triage
 
+
+## Case 08 — Live bounded cluster consistency
+
+### Observed good behavior
+- Preserved one explicit primary node: `lab_cases/case_08_live_cluster_consistency/src/spec.json`.
+- Preserved two explicit dependent surfaces:
+  - `lab_cases/case_08_live_cluster_consistency/src/generated_summary.txt`
+  - `lab_cases/case_08_live_cluster_consistency/src/generated_manifest.json`
+- Validated PASS when all three declared cluster surfaces carried the same canonical message.
+- Returned FAIL when only `generated_summary.txt` became stale while `spec.json` and `generated_manifest.json` remained unchanged.
+- Returned PASS again after restoring the stale dependent surface.
+- Kept the cluster bounded and predeclared rather than widening into unrelated repository regions.
+
+### Observed bad behavior
+- The cluster is still predeclared rather than runtime-derived.
+- The case still depends on dedicated selftest scaffolding rather than generic manifest-driven execution.
+- The current runtime still does not prove automatic cluster discovery or planner-side read-boundary enforcement.
+
+### Architecture rules to keep
+- Cluster consistency must be judged against one explicit canonical source-of-truth node.
+- Dependent surfaces must be justified explicitly, not inferred decoratively after the fact.
+- PASS requires agreement across all declared cluster surfaces, not just pairwise partial success.
+- A stale dependent node must cause hard FAIL even if the primary node remains valid.
+- Restoring one stale dependent surface is sufficient when that alone re-establishes full declared cluster consistency.
+- Persistent live substrate validation is stronger than pseudo-code cluster validation, but it does not change the invariant.
+
+### Architecture rules to forbid
+- Treating a valid primary node as sufficient while one dependent surface is stale.
+- Treating multi-surface validation as evidence of generic repository-scale dependency reasoning.
+- Widening beyond the declared cluster when the bounded cluster already explains the failure.
+- Rewriting the whole cluster by default when only one dependent surface is stale.
+
+### Contract field impact
+- Cluster tasks should preserve explicit source/dependent role separation:
+  - `source_of_truth_node`
+  - `stale_defect_node`
+  - `adjacent_consistency_node`
+- `dependency_ring` should reflect the declared live cluster directly.
+- `allowed_change_set` should allow minimum sufficient dependent repair, not automatic whole-cluster rewrite.
+- `verification_targets` should explicitly encode all required cluster links.
+- `evidence_required` should require both direct artifact validity and cluster-consistency proof.
+
+### Reviewer check impact
+- Reject PASS when any declared dependent surface diverges from the canonical node.
+- Validate:
+  - primary node contract satisfaction
+  - source-to-summary consistency
+  - source-to-manifest consistency
+- Reject claims of completion if cluster restoration is incomplete.
+- Reject undeclared widening outside the bounded live cluster.
+
+### Runtime / selftest impact
+- Keep Case 08 as the persistent live bounded cluster-consistency proof lane.
+- Preserve explicit PASS/FAIL/PASS sequencing:
+  - PASS in clean cluster state
+  - FAIL on stale dependent summary
+  - PASS after minimal restore
+- Preserve explicit proof that the stale-summary failure occurs while the other two cluster nodes remain unchanged.
+- Keep Case 08 separate from generic manifest-driven runtime claims.
+
 ---
 
 ## Candidate cross-case hard requirements
@@ -144,11 +204,13 @@ This document converts observed Codex behavior from bounded validation runs into
 - Prefer minimum relevant validation.
 - Accept no-op when evidence shows no defect.
 - Treat verify-only and adjacent consistency surfaces as load-bearing where applicable.
+- Treat persistent live substrates as stronger evidence than pseudo-code artifact simulations, without overstating them as generic repository-scale orchestration.
 - Require explicit re-triage when actual blocking evidence overrides the assumed scenario.
 
 ## Candidate cross-case reviewer hard failures
 - Unjustified widening of read or change set.
 - Primary-only success while verify-only / adjacent consistency surfaces remain broken.
+- Declaring cluster success while any declared dependent live surface diverges from the canonical node.
 - Whole-cluster or multi-file repair without evidence.
 - Skipping defect confirmation on a claimed defect path.
 - Declaring success while undeclared drift remains.
@@ -177,6 +239,20 @@ This document converts observed Codex behavior from bounded validation runs into
   - Contract field(s): `problem_locus`, `allowed_change_set`, `verification_targets`
   - Reviewer enforcement: accept no-op only with positive bounded evidence
   - Runtime/selftest enforcement: retain Case 07 no-op validation path
+
+### Case 08 mapping seeds
+- One canonical live node stayed correct while one dependent live surface became stale
+  - Derived rule: cluster completion requires all declared dependent live surfaces to remain aligned with the canonical node
+  - Contract field(s): `source_of_truth_node`, `stale_defect_node`, `adjacent_consistency_node`, `verification_targets`
+  - Reviewer enforcement: fail if any declared live dependent surface diverges from the canonical message
+  - Runtime/selftest enforcement: retain Case 08 stale-summary fail path
+
+- Minimal dependent restore returned the live cluster to PASS
+  - Derived rule: bounded cluster restoration should begin with the minimum sufficient stale dependent repair
+  - Contract field(s): `allowed_change_set`, `expansion_trigger`, `evidence_required`
+  - Reviewer enforcement: reject whole-cluster rewrite when single-node restoration is sufficient
+  - Runtime/selftest enforcement: retain Case 08 minimal-restore pass path
+
 
 ### Case 03 mapping seeds
 - Source-of-truth node differed from the stale defect node

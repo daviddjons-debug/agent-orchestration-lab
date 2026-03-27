@@ -177,7 +177,7 @@ In the current runnable baseline, this structure may still be carried in compati
 Do not dump broad repo context into this field.
 
 ### allowed_read_set
-Smallest justified set of artifacts that may be read for the current execution stage.
+Current Builder-compatible read-boundary payload carried in the contract.
 
 Important current-runtime note:
 - in the runnable 4-role runtime, this field is only mechanically enforced as the Builder read boundary;
@@ -318,7 +318,7 @@ Threat surface, trust-boundary relevance, auth/data-exposure implications, and w
 
 ## Enforcement rules
 - If triage is incomplete, Builder must not start.
-- If allowed_read_set is undefined, execution must stop.
+- If allowed_read_set is undefined, Builder execution must stop.
 - In the current runnable runtime, this stop condition is mechanically enforced for Builder, not yet as a universal stage-level read sandbox.
 - If allowed_change_set is undefined, execution must stop.
 - If verify_only_surfaces are declared, Reviewer must require evidence instead of assuming they were checked.
