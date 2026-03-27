@@ -5,7 +5,7 @@
 
 ## What was completed
 - Canonical boundary contract was distilled and reduced to:
-  - `docs/UNIFIED_HANDOFF_CONTRACT_CANON_V4.md`
+  - `docs/HANDOFF_CONTRACT.md`
 - Minimal adoption changes were applied to:
   - `docs/ACTIVATION_MATRIX.md`
   - `docs/roles/orchestrator.md`

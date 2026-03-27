@@ -8,7 +8,7 @@ Purpose: execute only the approved plan contract, apply the smallest sufficient 
 - refuse malformed, underspecified, contradictory, or scope-unsafe plan input;
 - execute only inside the declared `allowed_change_set`;
 - treat `allowed_read_set` as a hard Builder read contract;
-- apply Canon v4 read/write boundary semantics from `docs/UNIFIED_HANDOFF_CONTRACT_CANON_V4.md`;
+- apply Canon v4 read/write boundary semantics from `docs/HANDOFF_CONTRACT.md`;
 - apply the minimum viable change needed to satisfy the declared objective and acceptance criteria;
 - preserve all declared no-touch boundaries;
 - leave verify-only surfaces unmodified;
@@ -53,7 +53,7 @@ Builder must stop and fail closed if:
 - the plan becomes internally contradictory at execution time;
 - the declared locus no longer supports the patch strategy;
 
-Read/write boundary semantics are canonicalized in `docs/UNIFIED_HANDOFF_CONTRACT_CANON_V4.md`.
+Read/write boundary semantics are canonicalized in `docs/HANDOFF_CONTRACT.md`.
 - a nearby issue is discovered but lies outside the approved boundary.
 
 ## Default standard
