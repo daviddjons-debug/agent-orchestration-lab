@@ -14,7 +14,7 @@
 - `docs/roles/builder.md` correctly reflects reality: Builder is the enforcement owner.
 - `docs/HANDOFF_CONTRACT.md` contains the core contradiction:
   - it lists `allowed_read_set` as a required contract field;
-  - it simultaneously states that the field is only mechanically enforced for Builder in the current runtime.
+  - it simultaneously states that the field is only mechanically enforced for Builder in the runnable runtime.
 
 ## Precise diagnosis
 The system currently conflates two different concepts:
@@ -41,7 +41,7 @@ That conflation begins at the orchestrator/contract layer, is propagated by plan
 ## Proven doc anchors
 - `docs/HANDOFF_CONTRACT.md`
   - says `allowed_read_set` is required
-  - also says it is only Builder-enforced in current runtime
+  - also says it is only Builder-enforced in the runnable runtime
 - `docs/roles/orchestrator.md`
   - declares `allowed_read_set` as baseline-required contract field
 - `docs/roles/planner.md`
@@ -64,12 +64,12 @@ The next unresolved load-bearing control gap is:
 The next patch should be surgical and should likely:
 1. rename or specialize the current field semantics so Builder ownership is explicit;
 2. stop reviewer from pretending the field is a universal parity invariant unless that is truly intended;
-3. align orchestrator/planner docs and trace wording to the actual current runtime;
+3. align orchestrator/planner docs and trace wording to the actual runnable runtime;
 4. preserve selftest proof for current Builder enforcement while removing false stage-wide implications.
 
 ## What must not be claimed
 - Do not claim that `allowed_read_set` is already a true stage-wide runtime read sandbox.
-- Do not claim that planner/reviewer/orchestrator are mechanically governed by the same read-boundary field in current runtime.
+- Do not claim that planner/reviewer/orchestrator are mechanically governed by the same read-boundary field in the runnable runtime.
 - Do not claim that the current manifest semantics are already clean. They are not.
 
 ## Honest project-state conclusion

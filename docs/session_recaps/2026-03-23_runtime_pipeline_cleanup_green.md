@@ -15,7 +15,7 @@ That created a false failure mode:
 - failure was caused by stale runtime expectations, not by a real orchestration defect.
 
 ### 2) Pipeline entry behavior was cleaned up
-`scripts/run_pipeline.py` was aligned with the current runtime shape:
+`scripts/run_pipeline.py` was aligned with the runnable runtime shape:
 - argument validation now expects exactly `2` or `3` argv items;
 - `base_dir` is handled as `Path(sys.argv[1])`;
 - orchestrator is invoked with `str(base_dir)`;
@@ -84,7 +84,7 @@ A heavy run was executed and produced:
 - reviewer full PASS
 - full contract alignment and artifact checks passed
 
-This proves the widest current runtime path remains green after cleanup.
+This proves the widest runnable runtime path remains green after cleanup.
 
 ### D. Falsifiability checks still work
 The session also re-exercised failure modes, not just green paths.
