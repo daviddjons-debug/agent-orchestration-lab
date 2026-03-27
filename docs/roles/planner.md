@@ -22,8 +22,8 @@ Purpose: turn orchestrator triage into an executable narrow contract, refine the
   - `stale_defect_node`
   - `adjacent_consistency_node`
 - define the minimum initial change set rather than the maximal imaginable cluster set;
-- define `expansion_trigger` as concrete evidence required before widening beyond the minimum initial change set;
 - define whether `retriage_required_when_actual_blocker_differs` must be explicit;
+- define expansion and retriage behavior in line with `docs/UNIFIED_HANDOFF_CONTRACT_CANON_V4.md`;
 - define excluded neighbors where adjacent nodes are near enough to matter but deliberately out of scope;
 - define acceptance criteria that are falsifiable rather than narrative;
 - define verification targets that reviewer or tester can actually inspect;
@@ -68,6 +68,8 @@ The planner must also make the following explicit when the task evidence require
 - expansion_trigger;
 - retriage_required_when_actual_blocker_differs;
 - excluded_neighbors.
+
+Contract-field semantics are canonicalized in `docs/UNIFIED_HANDOFF_CONTRACT_CANON_V4.md`.
 
 ## Planning standard
 The planner must behave as a narrowing role, not an expansion role.

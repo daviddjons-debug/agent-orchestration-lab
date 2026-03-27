@@ -55,6 +55,10 @@ The orchestrator must also make the following explicit when the task evidence re
 - retriage_required_when_actual_blocker_differs;
 - excluded_neighbors.
 
+If the assumed failure mode may be overridden by reviewer or validation evidence, `retriage_required_when_actual_blocker_differs` must be made explicit.
+
+Contract-field semantics are canonicalized in `docs/UNIFIED_HANDOFF_CONTRACT_CANON_V4.md`.
+
 ## Routing rules
 
 ### bounded cluster routing note
@@ -64,7 +68,7 @@ When the task is a bounded cluster or generated-artifact consistency task, the o
 - adjacent consistency node.
 
 The initial contract must start from the smallest justified repair surface.
-If the assumed failure mode may be overridden by reviewer or validation evidence, `retriage_required_when_actual_blocker_differs` must be made explicit.
+Contract semantics for retriage and boundary fields follow `docs/UNIFIED_HANDOFF_CONTRACT_CANON_V4.md`.
 
 ### baseline
 Use only when:

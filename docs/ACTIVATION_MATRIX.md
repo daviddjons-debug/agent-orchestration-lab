@@ -136,6 +136,7 @@ It constrains when each role should activate and how much behavior it should exp
 - verify_only_surfaces is non-empty
 - adjacent consistency must be preserved
 - allowed_change_set would otherwise widen speculatively
+- contract boundary pressure exists; see `docs/UNIFIED_HANDOFF_CONTRACT_CANON_V4.md`
 - task is bounded cluster or generated-artifact consistency work
 
 ### Reviewer triggers
@@ -143,6 +144,7 @@ It constrains when each role should activate and how much behavior it should exp
 - verify_only_surfaces is non-empty
 - adjacent consistency link exists
 - undeclared drift risk is non-zero
+- contract completion semantics follow `docs/UNIFIED_HANDOFF_CONTRACT_CANON_V4.md`
 - task is not trivial direct no-op
 
 ### Tester triggers
