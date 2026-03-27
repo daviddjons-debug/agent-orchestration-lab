@@ -25,15 +25,15 @@ Use when:
 
 Active by profile:
 - triage/localize
+- planner via the current runnable compatibility path
 - bounded execution
 - one targeted validation
 
 Inactive by profile:
-- planner
 - tester
 - security pass
 - retriage loop
-- reviewer as separate full lane
+- reviewer as separate full lane unless a declared review trigger is present
 
 ### Lite
 Use when:
@@ -94,7 +94,7 @@ Active by profile:
 | Function | Primary responsibility | Risk reduced | Direct | Lite | Heavy | Must activate when | Must stay off when |
 |---|---|---|---|---|---|---|---|
 | Triage / Orchestrator | Localize problem and choose execution profile | false locality, scope drift | yes | yes | yes | task begins | never skipped |
-| Planner | Convert triage into explicit bounded contract | premature widening, sloppy patch surface | off | trigger-based | on | locus uncertainty, cluster task, verify-only surface, multi-node dependency | trivial single-node low-risk task |
+| Planner | Convert triage into explicit bounded contract | premature widening, sloppy patch surface | compatibility-on, policy-compressed | trigger-based mini-plan | on | locus uncertainty, cluster task, verify-only surface, multi-node dependency | fully collapsed future Direct runtime |
 | Builder | Apply bounded patch or no-op | uncontrolled edits | yes | yes | yes | any execution path | never skipped |
 | Reviewer | Check contract alignment, bounded completion, undeclared drift | false success, drift, unjustified widening | trigger-based | on | on | any non-trivial patch, verify-only load, cluster consistency | trivial direct no-op with explicit bounded proof |
 | Tester | Validate executable symptom or regression surface | behavior regression | off | trigger-based | trigger-based | executable behavior changed or symptom-level test exists | data/text-only task with no runnable behavior |
@@ -112,7 +112,7 @@ It constrains when each role should activate and how much behavior it should exp
 | Current role | Load-bearing function | Direct | Lite | Heavy |
 |---|---|---|---|---|
 | Orchestrator | triage, locus selection, profile choice | compressed | on | on |
-| Planner | bounded contract shaping | off | trigger-based mini-plan | on |
+| Planner | bounded contract shaping | compatibility-on, policy-compressed | trigger-based mini-plan | on |
 | Builder | bounded patch or no-op execution | on | on | on |
 | Reviewer | bounded audit, drift detection, completion check | trigger-based light check | on | on |
 | Tester | executable symptom / regression validation | off | trigger-based | trigger-based |
@@ -120,6 +120,7 @@ It constrains when each role should activate and how much behavior it should exp
 
 ### Interpretation
 - Direct does not mean no discipline; it means the minimum graph.
+- In the current runnable compatibility path, Planner still executes in Direct even though policy-level Direct treats it as compressed rather than truly optional.
 - Lite keeps the same pack but compresses non-essential roles.
 - Heavy activates the full bounded surgical graph only on evidence.
 - A role being present in the pack does not mean it should always appear as a separate expensive lane.
@@ -177,6 +178,7 @@ It constrains when each role should activate and how much behavior it should exp
 ---
 
 ## Open decisions
+- when Planner can be removed from Direct at runtime rather than only compressed at the policy layer
 - which functions collapse together in Lite
 - when Direct may skip separate Reviewer safely
 - whether Tester remains a separate role or a Heavy-only lane

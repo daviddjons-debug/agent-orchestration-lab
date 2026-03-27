@@ -22,6 +22,7 @@ Use when:
 
 Expected flow:
 - Orchestrator in compressed form
+- Planner via the current runnable compatibility path
 - Builder
 - targeted validation
 - Reviewer only when trigger evidence requires a separate check
@@ -29,7 +30,7 @@ Expected flow:
 Rules:
 - keep read scope narrow;
 - keep change scope narrow;
-- do not invoke Planner as a separate lane by default;
+- treat Planner as policy-compressed in Direct, even though the current runnable compatibility path still executes it;
 - do not invoke Tester by default;
 - do not invoke Security by default;
 - do not widen the task unless evidence forces it.
@@ -92,5 +93,6 @@ Rules:
 Profiles are currently defined primarily at the policy and documentation layer.
 
 They guide routing and expected discipline, but they do not yet constitute a fully enforced runtime stage graph.
+In the current runnable compatibility path, Direct still executes Planner, while Reviewer remains trigger-based for Direct and always-on for Lite/Heavy.
 
 Runtime/profile enforcement can be expanded later if justified.
