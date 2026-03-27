@@ -2,40 +2,13 @@ from pathlib import Path
 import json
 import sys
 
+from runtime_contract import CONTRACT_FIELDS, planner_trace_expected
+
 REQUIRED = [
     "01_orchestrator.md",
     "02_plan.json",
     "03_builder.md",
     "run_manifest.json",
-]
-
-CONTRACT_FIELDS = [
-    "task_class",
-    "objective",
-    "expected_end_state",
-    "symptom",
-    "root_cause_hypothesis",
-    "problem_locus",
-    "locus_confidence",
-    "false_locality_risk",
-    "profile_selection_basis",
-    "path_decision",
-    "dependency_ring",
-    "dependency_ring_structured",
-    "allowed_change_set",
-    "verify_only_surfaces",
-    "source_of_truth_node",
-    "stale_defect_node",
-    "adjacent_consistency_node",
-    "expansion_trigger",
-    "retriage_required_when_actual_blocker_differs",
-    "excluded_neighbors",
-    "forbidden_zone",
-    "acceptance_criteria",
-    "verification_targets",
-    "evidence_required",
-    "blockers_or_uncertainties",
-    "escalation_trigger",
 ]
 
 def main() -> int:
@@ -83,7 +56,7 @@ def main() -> int:
         require_valid_json = policy.get("require_valid_json", True)
         require_exact_text = policy.get("require_exact_text", True)
         path_decision = plan.get("path_decision") if isinstance(plan, dict) else None
-        planner_trace_expected = path_decision in {"lite", "heavy"}
+        planner_trace_needed = planner_trace_expected(path_decision)
 
         if isinstance(manifest, dict) and isinstance(plan, dict):
             for field in CONTRACT_FIELDS:
@@ -203,7 +176,7 @@ def main() -> int:
                 artifact_results.append(exists_ok and content_ok)
 
             allowed_files = set(REQUIRED + ["04_reviewer.md"] + declared_artifact_paths + verify_only_surfaces)
-            if planner_trace_expected:
+            if planner_trace_needed:
                 allowed_files.add("02_planner.md")
             for p in sorted(base.rglob("*")):
                 if p.is_file():

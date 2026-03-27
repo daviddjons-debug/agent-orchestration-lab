@@ -2,6 +2,8 @@ from pathlib import Path
 import json
 import sys
 
+from runtime_contract import PLAN_REQUIRED_LIST_FIELDS, PLAN_REQUIRED_STRING_FIELDS, expected_builder_read_set
+
 def fail(msg: str) -> int:
     print(f"ERROR: {msg}")
     return 1
@@ -75,38 +77,12 @@ def main() -> int:
     if not isinstance(plan, dict):
         return fail("02_plan.json root must be an object")
 
-    required_string_fields = [
-        "task_class",
-        "objective",
-        "expected_end_state",
-        "symptom",
-        "root_cause_hypothesis",
-        "problem_locus",
-        "locus_confidence",
-        "false_locality_risk",
-        "path_decision",
-        "patch_strategy",
-        "change_rationale",
-    ]
-    for field in required_string_fields:
+    for field in PLAN_REQUIRED_STRING_FIELDS:
         value = plan.get(field)
         if not isinstance(value, str) or not value.strip():
             return fail(f"02_plan.json missing non-empty string field: {field}")
 
-    required_list_fields = [
-        "dependency_ring",
-        "allowed_read_set",
-        "allowed_change_set",
-        "verify_only_surfaces",
-        "excluded_neighbors",
-        "forbidden_zone",
-        "acceptance_criteria",
-        "verification_targets",
-        "evidence_required",
-        "blockers_or_uncertainties",
-        "escalation_trigger",
-    ]
-    for field in required_list_fields:
+    for field in PLAN_REQUIRED_LIST_FIELDS:
         value = plan.get(field)
         if not isinstance(value, list):
             return fail(f"02_plan.json missing list field: {field}")
@@ -122,16 +98,11 @@ def main() -> int:
     adjacent_read_nodes = structured_ring["adjacent_read_nodes"]
 
     path_decision = plan["path_decision"].strip()
-    expected_read_sets = {
-        "baseline": ["02_plan.json"],
-        "lite": ["02_plan.json", "run_manifest.json"],
-        "heavy": ["02_plan.json", "run_manifest.json"],
-    }
-    if path_decision not in expected_read_sets:
+    expected_read_set = expected_builder_read_set(path_decision)
+    if expected_read_set is None:
         return fail(f"unsupported path_decision for builder read contract: {path_decision}")
 
     normalized_read_set = [item.strip() for item in allowed_read_set]
-    expected_read_set = expected_read_sets[path_decision]
 
     if normalized_read_set != expected_read_set:
         return fail(

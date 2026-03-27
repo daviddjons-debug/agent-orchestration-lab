@@ -3,6 +3,8 @@ from datetime import datetime
 import json
 import sys
 
+from runtime_contract import ALLOWED_READ_SET_BY_PROFILE, PROFILE_SELECTION_BASIS_BY_PROFILE, PROFILES
+
 
 ORCHESTRATOR_HANDOFF_TEMPLATE = (
     "# Orchestrator Handoff\n\n"
@@ -22,35 +24,12 @@ def main() -> int:
 
     root = Path(sys.argv[1]) if len(sys.argv) >= 2 else Path("docs/runs")
     profile = sys.argv[2] if len(sys.argv) == 3 else "baseline"
-    if profile not in {"baseline", "lite", "heavy"}:
+    if profile not in PROFILES:
         print("ERROR: profile must be one of baseline, lite, heavy")
         return 1
     run = "orchestrated-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
     base = root / run
     base.mkdir(parents=True, exist_ok=True)
-
-    allowed_read_set_by_profile = {
-        "baseline": ["02_plan.json"],
-        "lite": ["02_plan.json", "run_manifest.json"],
-        "heavy": ["02_plan.json", "run_manifest.json"],
-    }
-    profile_selection_basis_by_profile = {
-        "baseline": [
-            "locus is clear",
-            "false locality risk is low",
-            "no declared review trigger",
-        ],
-        "lite": [
-            "bounded adjacent discipline is required",
-            "reviewer is active by profile",
-            "manifest read is required for builder evidence",
-        ],
-        "heavy": [
-            "full review lane is active by profile",
-            "manifest read is required for builder evidence",
-            "task is routed to the widest active profile contract",
-        ],
-    }
 
     manifest = {
         "run_id": run,
@@ -62,7 +41,7 @@ def main() -> int:
         "problem_locus": "run contract files and declared outputs",
         "locus_confidence": "high",
         "false_locality_risk": "low",
-        "profile_selection_basis": profile_selection_basis_by_profile[profile],
+        "profile_selection_basis": PROFILE_SELECTION_BASIS_BY_PROFILE[profile],
         "path_decision": profile,
         "dependency_ring": [
             "01_orchestrator.md",
@@ -80,7 +59,7 @@ def main() -> int:
             "adjacent_verify_only_nodes": [],
             "excluded_neighbors": [],
         },
-        "allowed_read_set": allowed_read_set_by_profile[profile],
+        "allowed_read_set": ALLOWED_READ_SET_BY_PROFILE[profile],
         "allowed_change_set": [
             "02_plan.json",
             "02_planner.md",

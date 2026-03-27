@@ -2,6 +2,8 @@ from pathlib import Path
 import json
 import sys
 
+from runtime_contract import MANIFEST_REQUIRED_LIST_FIELDS, MANIFEST_REQUIRED_STRING_FIELDS, planner_trace_expected
+
 # Current runnable baseline note:
 # dependency_ring remains the compatibility list for downstream runtime stability.
 # dependency_ring_structured is now propagated as the target semantic shape, but is not
@@ -29,38 +31,13 @@ def main() -> int:
         print("ERROR: run_manifest.json missing non-empty artifacts list")
         return 1
 
-    required_string_fields = [
-        "task_class",
-        "objective",
-        "expected_end_state",
-        "symptom",
-        "root_cause_hypothesis",
-        "problem_locus",
-        "locus_confidence",
-        "false_locality_risk",
-        "path_decision",
-    ]
-    for field in required_string_fields:
+    for field in MANIFEST_REQUIRED_STRING_FIELDS:
         value = manifest.get(field)
         if not isinstance(value, str) or not value.strip():
             print(f"ERROR: run_manifest.json missing non-empty string field: {field}")
             return 1
 
-    required_list_fields = [
-        "profile_selection_basis",
-        "dependency_ring",
-        "allowed_read_set",
-        "allowed_change_set",
-        "verify_only_surfaces",
-        "excluded_neighbors",
-        "forbidden_zone",
-        "acceptance_criteria",
-        "verification_targets",
-        "evidence_required",
-        "blockers_or_uncertainties",
-        "escalation_trigger",
-    ]
-    for field in required_list_fields:
+    for field in MANIFEST_REQUIRED_LIST_FIELDS:
         value = manifest.get(field)
         if not isinstance(value, list):
             print(f"ERROR: run_manifest.json missing list field: {field}")
@@ -204,7 +181,7 @@ def main() -> int:
 
     (base / "02_plan.json").write_text(json.dumps(plan, indent=2) + "\n", encoding="utf-8")
     planner_trace = base / "02_planner.md"
-    if plan["path_decision"] in {"lite", "heavy"}:
+    if planner_trace_expected(plan["path_decision"]):
         planner_trace.write_text(plan_text, encoding="utf-8")
     elif planner_trace.exists():
         planner_trace.unlink()
