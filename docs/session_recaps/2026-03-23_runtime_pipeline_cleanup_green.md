@@ -154,7 +154,7 @@ Current state:
 - working tree is clean;
 - commit and tag are recorded.
 
-## Recommended next step
+## Recommended next step (historical)
 Do not jump to broad new architecture yet.
 
 The correct next move is:

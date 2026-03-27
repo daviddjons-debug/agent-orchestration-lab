@@ -61,37 +61,35 @@ It is trying to become a disciplined orchestration system that:
 - Baseline v1 is no longer the conceptual target.
 - Agent Pack v2 / Surgical Edition remains the real target.
 - The system is now stronger at the contract-definition layer than before.
-- But the runtime still has an important limitation:
-  - the unified handoff contract is canonized in docs,
-  - yet not fully elevated into a single runtime-native contract authority across the whole orchestration path.
+- At that session boundary, the remaining concern was runtime/doc divergence risk.
+- Current repo state has since tightened this materially through centralized runtime contract helpers and passing selftest coverage, so this note is historical rather than current blocking truth.
 
 ## Remaining gap to final
-Main remaining gap:
-- move from “doc-canonical contract semantics” to “single enforced runtime contract model”.
+Main remaining gap at that session boundary was:
+- reduce residual doc/runtime interpretation drift and prove the same contract semantics through runnable behavior.
 
-That means the final system still needs:
-1. unified handoff contract wired as the practical contract spine,
-2. stronger contract propagation through runtime surfaces,
-3. proof that runtime behavior follows the same canonical contract without doc/runtime divergence,
-4. then Lite/Heavy validation on more realistic task classes.
+What still remained after that session:
+1. tighten runtime contract reuse,
+2. prove contract propagation through runtime surfaces,
+3. reduce recap/doc drift after canonization,
+4. continue Lite/Heavy validation on realistic task classes.
 
-## Recommended next step
-Next best move:
-- build the runtime integration plan for Canon v4:
-  - which current files become thin views/adapters,
-  - which file becomes the actual single handoff authority,
-  - what minimal runtime diffs are required,
-  - what must stay unchanged to avoid unnecessary project growth.
+Historical note:
+- items (1) and much of (2) were strengthened later by centralized runtime helpers and expanded passing selftest coverage.
+
+## Recommended next step (historical)
+Next best move at that session boundary was:
+- build the runtime integration plan for the canonized handoff contract with minimal runtime diffs and no scope inflation.
+
+Historical note:
+- that direction was later partially realized via centralized runtime contract helpers; remaining work is now mostly final-state consolidation rather than first-pass integration design.
 
 ## Progress estimate
-Approximate completion toward intended final:
-- 84%
+Approximate completion toward intended final at that session boundary:
+- historical estimate only; superseded by later runtime/selftest consolidation
 
-Reason:
-- core philosophy is stable,
-- contract boundary semantics are now canonized,
-- runnable proofs exist,
-- but runtime unification is still incomplete.
+Historical note:
+- this percentage is not the current project percentage; it reflects only the repository state at the time of that session.
 
 ## Anti-drift note
 Do not lose this:
