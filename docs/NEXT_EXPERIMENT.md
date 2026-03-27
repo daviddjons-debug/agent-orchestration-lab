@@ -9,69 +9,72 @@ The lab already proves a structured 4-role runnable pipeline:
 - selftest covers valid, broken, restored, relaxed, and invalid-schema cases.
 
 ## Problem with the current state
-The current lab proves bounded execution mechanics and contract discipline, but it is still too close to a toy artifact pipeline.
+The current lab proves bounded execution mechanics and contract discipline, but it still risks optimizing for validation expansion instead of operating compression.
 
 It already proves in bounded form:
 - structured problem locus and dependency-ring propagation through the run contract;
 - planner-to-reviewer contract alignment checks;
 - builder-side write-boundary enforcement through `allowed_change_set`;
 - Direct-path Builder read-boundary validation through `allowed_read_set` (`baseline` as the compatibility label);
-- reviewer-side falsification of content drift, undeclared output drift, and bounded adjacent consistency failures.
+- reviewer-side falsification of content drift, undeclared output drift, bounded adjacent consistency failures, and verify-only false-local success.
 
 It does not yet prove or enforce:
-- triage-first behavior as real runtime decision logic;
+- profile compression as a real operating rule for cheap tasks;
+- a crisp always-on vs trigger-based activation boundary;
+- triage-first behavior as real runtime decision logic outside bounded artifact scenarios;
 - genuine dependency discovery beyond predeclared scenario structure;
-- full stage-wide runtime read sandboxing beyond the current Builder-enforced read-boundary payload;
 - blast-radius control on live code tasks;
 - justified local hardening based on discovered evidence;
-- runnable Tester and Security stages;
-- explicit separation between simple execution and real verification logic on non-artifact engineering work.
+- runnable Tester and Security stages as evidence-triggered lanes rather than default ceremony.
 
 ## Next goal
-Preserve the runnable 4-role harness, keep the current bounded proof honest, and redefine the role contracts so the system can move from a generic artifact emitter toward a surgical orchestration runtime that still keeps `baseline` only as the compatibility label for the Direct profile.
+Preserve the runnable 4-role harness, keep the current bounded proof honest, and compress the operating model so the system defaults to the cheapest credible path and escalates only on bounded evidence.
 
 ## Immediate upgrade path
-### Phase 1 — Normalize and finish the existing 4-role contract layer
-This rewrite is already substantially in progress at the documentation and contract layer.
+### Phase 1 — Freeze the proven bounded core
+Treat the existing falsification lanes and bounded live substrates as proof artifacts, not as an endlessly expanding validation matrix.
 
-Continue aligning:
-- orchestrator -> triage, routing, boundary control
-- planner -> locus refinement, dependency ring, execution plan, allowed zones
-- builder -> narrow execution within declared change zone
-- reviewer -> contract audit, scope-drift detection, falsifiable verdict
+Preserve:
+- baseline/Direct compatibility behavior;
+- Builder-enforced read boundary semantics;
+- reviewer falsification of drift, inconsistency, and verify-only failures;
+- bounded persistent substrates already established through Case 07 and Case 08.
 
-The next step is not to restart this rewrite rhetorically, but to close remaining gaps between canonical wording and current runnable reality.
+### Phase 2 — Compress activation logic into an operating rule
+Before expanding the stage graph, define the minimal execution model that should survive into real use.
 
-### Phase 2 — Prove the next unresolved runtime control gap
-Before expanding the stage graph, prove one more falsifiable runtime control that is still genuinely unclosed.
 The current priority is:
-- stricter stage-wide read-boundary enforcement beyond the current Builder-only read-boundary compatibility contract.
+- specify what is always-on in Direct;
+- specify what is trigger-based in Lite;
+- specify what evidence actually forces Heavy;
+- prevent escalation by task-size narrative alone.
 
-Bounded live persistent substrates are already established through Case 07 and Case 08.
-The next step is therefore not another live mini-task, but closing a remaining runtime control gap.
+The next step is therefore not another validation case by default, but a stricter activation/dispatch contract that keeps simple tasks cheap.
 
-### Phase 3 — Introduce missing roles only after the runnable 4-role boundary hardens further
+### Phase 3 — Introduce missing roles only after compression is coherent
 Add:
-- tester -> behavior verification and regression-focused validation
-- security -> risk-gated inspection for security-relevant tasks
+- tester -> behavior verification and regression-focused validation when executable behavior exists;
+- security -> risk-gated inspection only when a real trust boundary is involved.
 
 Only after that should runtime expansion be reconsidered explicitly.
 
 ### Phase 4 — Re-evaluate runtime
-Only after the contract layer and at least one additional runtime control are coherent:
+Only after the activation model is coherent:
 - decide whether `scripts/` should remain a 4-stage runner;
 - or whether the runtime should expand to support tester/security explicitly.
 
 ## Success criterion
 The next stage must satisfy all of the following:
 - the runnable Direct path (`baseline` as the compatibility label) remains operational;
-- the role definitions stop pretending that artifact generation alone is enough;
+- simple tasks stay on the minimum credible path;
+- escalation happens only on bounded evidence;
 - the repository clearly distinguishes proven mechanics from target behavior;
-- the transition toward a surgical system is explicit, staged, and falsifiable.
+- the transition toward a surgical system is explicit, staged, falsifiable, and cost-aware.
 
 ## Failure condition
 This next step fails if:
 - new roles are added only cosmetically;
-- runtime is expanded before the contract model is coherent;
+- runtime is expanded before the activation model is coherent;
+- simple tasks still pay Heavy-style ceremony by default;
 - the repository starts claiming a 6-role system without real execution support;
 - “surgical” language is added without actual boundary discipline.
