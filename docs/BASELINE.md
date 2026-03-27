@@ -45,7 +45,7 @@ The repository does **not** yet prove:
   - `adjacent_read_nodes`
   - `adjacent_verify_only_nodes`
   - `excluded_neighbors`;
-- full stage-wide runtime read sandboxing beyond the current Builder-enforced `allowed_read_set` contract;
+- full stage-wide runtime read sandboxing beyond the current Builder-compatible read-boundary contract (`allowed_read_set` / `builder_read_boundary`);
 - minimal patch-zone discipline on real source files;
 - runnable Tester stage with execution-backed validation;
 - runnable Security stage with real policy enforcement;
@@ -99,7 +99,7 @@ The next load-bearing milestone is not a vague role rewrite.
 
 It is to prove one missing hard control in runtime behavior, preferably one of:
 
-- stricter stage-wide read-boundary enforcement beyond the current Builder-only `allowed_read_set` runtime contract;
-- a new validation case that moves from artifact-only consistency into bounded code-level dependency behavior.
+- stricter stage-wide read-boundary enforcement beyond the current Builder-only read-boundary compatibility contract;
+- a new falsifiable runtime control beyond the already-proven bounded live validation substrates.
 
 Only after that should additional runnable stages or profile layers be treated as meaningful progress.

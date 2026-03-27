@@ -49,7 +49,7 @@ The planner output must make the baseline-required execution-contract fields exp
 - false_locality_risk;
 - path_decision;
 - dependency_ring;
-- allowed_read_set;
+- allowed_read_set (Builder-compatible read-boundary payload);
 - allowed_change_set;
 - forbidden_zone;
 - acceptance_criteria;

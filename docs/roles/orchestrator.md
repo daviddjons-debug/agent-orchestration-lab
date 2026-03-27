@@ -38,7 +38,7 @@ The orchestrator output must make the baseline-required contract fields explicit
 - false_locality_risk;
 - path_decision;
 - dependency_ring;
-- allowed_read_set;
+- allowed_read_set (Builder-compatible read-boundary payload);
 - allowed_change_set;
 - forbidden_zone;
 - verification_targets;

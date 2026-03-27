@@ -21,7 +21,7 @@ It already proves in bounded form:
 It does not yet prove or enforce:
 - triage-first behavior as real runtime decision logic;
 - genuine dependency discovery beyond predeclared scenario structure;
-- full stage-wide runtime read sandboxing beyond the current Builder-only read-boundary contract;
+- full stage-wide runtime read sandboxing beyond the current Builder-compatible read-boundary contract;
 - blast-radius control on live code tasks;
 - justified local hardening based on discovered evidence;
 - runnable Tester and Security stages;
@@ -45,7 +45,7 @@ The next step is not to restart this rewrite rhetorically, but to close remainin
 ### Phase 2 — Prove the next unresolved runtime control gap
 Before expanding the stage graph, prove one more falsifiable runtime control that is still genuinely unclosed.
 The current priority is:
-- stricter stage-wide read-boundary enforcement beyond the current Builder-only read contract.
+- stricter stage-wide read-boundary enforcement beyond the current Builder-only read-boundary compatibility contract.
 
 Bounded live persistent substrates are already established through Case 07 and Case 08.
 The next step is therefore not another live mini-task, but closing a remaining runtime control gap.

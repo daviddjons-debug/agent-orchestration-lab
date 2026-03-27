@@ -36,7 +36,7 @@ PASS for a bounded adjacent-dependency-risk scenario in current runtime.
 ## What this PASS does not prove
 - real source-code dependency analysis
 - genuine discovery of adjacent dependency risk without predeclared scenario structure
-- full stage-wide runtime `allowed_read_set` enforcement beyond the current Builder-only read-boundary contract
+- full stage-wide runtime read-boundary enforcement beyond the current Builder-only compatibility contract
 - tester as a runnable stage for adjacent-risk cases
 - full behavioral dependency validation on non-artifact engineering tasks
 

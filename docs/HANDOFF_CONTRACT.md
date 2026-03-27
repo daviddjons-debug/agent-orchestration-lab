@@ -29,7 +29,7 @@ No role may silently widen scope.
 - root_cause_hypothesis
 - false_locality_risk
 - dependency_ring
-- allowed_read_set
+- allowed_read_set (Builder-compatible read-boundary payload)
 - allowed_change_set
 - forbidden_zone
 - acceptance_criteria
@@ -70,7 +70,7 @@ Baseline must define at minimum:
 - root_cause_hypothesis
 - false_locality_risk
 - dependency_ring
-- allowed_read_set
+- allowed_read_set (Builder-compatible read-boundary payload)
 - allowed_change_set
 - forbidden_zone
 - acceptance_criteria
@@ -182,7 +182,7 @@ Current Builder-compatible read-boundary payload carried in the contract.
 Important current-runtime note:
 - in the runnable 4-role runtime, this field is only mechanically enforced as the Builder read boundary;
 - Planner currently has a separate fixed input contract: `01_orchestrator.md` and `run_manifest.json`;
-- therefore `allowed_read_set` must not yet be described as a universal mechanically enforced read sandbox for every stage.
+- therefore `allowed_read_set` must not yet be described as a stage-wide mechanically enforced read control across all runtime stages.
 
 ### allowed_change_set
 Exact set of artifacts approved for modification.
@@ -248,7 +248,7 @@ Concrete conditions that force stop-and-escalate behavior.
 
 Examples:
 - locus confidence drops
-- required read exceeds allowed_read_set
+- required Builder read exceeds allowed_read_set
 - required edit exceeds allowed_change_set
 - verify-only surface reveals contract mismatch
 - local patch causes adjacent inconsistency

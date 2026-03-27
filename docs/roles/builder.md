@@ -7,7 +7,7 @@ Purpose: execute only the approved plan contract, apply the smallest sufficient 
 - validate that the plan is executable before making any change;
 - refuse malformed, underspecified, contradictory, or scope-unsafe plan input;
 - execute only inside the declared `allowed_change_set`;
-- treat `allowed_read_set` as a hard execution-stage read boundary;
+- treat `allowed_read_set` as a hard Builder read contract;
 - apply the minimum viable change needed to satisfy the declared objective and acceptance criteria;
 - preserve all declared no-touch boundaries;
 - leave verify-only surfaces unmodified;

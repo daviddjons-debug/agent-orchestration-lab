@@ -19,8 +19,8 @@ It already proves:
 
 It does not yet prove automatically:
 - real repository-scale code dependency analysis
-- planner-side read-boundary enforcement
-- general runtime read sandboxing
+- planner-side Builder-boundary payload propagation only
+- stage-level runtime read sandboxing
 - genuine discovery of required widening without scenario structure
 - tester-backed regression execution for coordinated multi-file changes
 

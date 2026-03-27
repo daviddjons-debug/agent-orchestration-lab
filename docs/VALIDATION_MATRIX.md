@@ -97,4 +97,4 @@ Current boundary:
 - Case 08 is now proven as an automated selftest scenario on a persistent live cluster substrate under `lab_cases/`
 - this is still not evidence of repository-scale code orchestration
 - baseline runtime still propagates `dependency_ring` as a flat list rather than enforcing a structured ring object
-- planner-side read-boundary enforcement and general runtime read sandboxing remain unproven
+- planner-side contract propagation beyond the fixed planner input scope and stage-wide runtime read sandboxing remain unproven

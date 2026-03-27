@@ -68,7 +68,7 @@ After this checkpoint, the strongest next move is:
 - define and enforce the next runtime control gap rather than adding decorative architecture.
 
 Most likely candidates:
-1. planner-side read-boundary enforcement;
+1. planner-side Builder-boundary payload propagation only;
 2. stronger structured dependency-ring runtime semantics;
 3. explicit Lite vs Heavy behavioral divergence beyond current builder-read compatibility.
 

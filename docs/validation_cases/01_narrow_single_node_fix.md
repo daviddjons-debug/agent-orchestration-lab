@@ -19,7 +19,7 @@ Lite
 ## Required orchestration behavior
 - Orchestrator states a concrete problem_locus
 - Planner defines a minimal dependency_ring
-- Planner defines narrow allowed_read_set
+- Planner defines narrow Builder-compatible read-boundary payload (`allowed_read_set`)
 - Planner defines narrow allowed_change_set
 - Builder stays inside the declared change zone
 - Reviewer checks both correctness and boundary adherence

@@ -37,8 +37,8 @@ PASS for a bounded live cluster-consistency scenario on a persistent substrate i
 ## What this PASS does not prove
 - generic repository-scale dependency discovery
 - automatic cluster discovery without scenario structure
-- planner-side read-boundary enforcement
-- general runtime read sandboxing
+- planner-side Builder-boundary payload propagation only
+- stage-level runtime read sandboxing
 - full real-world multi-file patch orchestration across arbitrary source trees
 
 ## Final judgment

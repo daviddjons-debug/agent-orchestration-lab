@@ -110,10 +110,10 @@ def main() -> int:
             "artifact content checks",
         ],
         "blockers_or_uncertainties": [
-            "current runtime does not enforce full stage-wide read sandboxing beyond the current execution-stage read contract checks",
+            "current runtime does not enforce any stage-wide mechanically enforced read control beyond the current Builder-compatible read-boundary contract",
         ],
         "escalation_trigger": [
-            "required read exceeds allowed_read_set",
+            "required Builder read exceeds allowed_read_set",
             "required edit exceeds allowed_change_set",
             "declared artifact contract becomes internally inconsistent",
         ],

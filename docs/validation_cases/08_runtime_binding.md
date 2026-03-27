@@ -38,8 +38,8 @@ It is a dedicated automated selftest scenario on a persistent live substrate.
 What is still not proven:
 - generic repository-scale dependency discovery;
 - automatic cluster discovery from runtime analysis alone;
-- planner-side read-boundary enforcement;
-- general runtime read sandboxing;
+- planner-side Builder-boundary payload propagation only;
+- stage-level runtime read sandboxing;
 - arbitrary multi-file patch orchestration across unrelated repository regions.
 
 The cluster in Case 08 is still predeclared, not runtime-derived.
