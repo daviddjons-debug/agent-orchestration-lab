@@ -54,7 +54,7 @@ The current priority is:
 - keep the bounded validation corpus as proof, not as a substitute for operating compression;
 - only expand runtime after tester/security activation rules are operationally coherent.
 
-The next step is therefore alignment and compression discipline first, not fresh validation expansion by default.
+The repository should preserve alignment and compression discipline as a standing rule, not treat validation expansion as a default move.
 
 ### Phase 3 — Introduce missing roles only after compression is coherent
 Add:
@@ -77,7 +77,7 @@ The next stage must satisfy all of the following:
 - the transition toward a surgical system is explicit, staged, falsifiable, and cost-aware.
 
 ## Failure condition
-This next step fails if:
+This discipline fails if:
 - new roles are added only cosmetically;
 - runtime is expanded before the activation model is coherent;
 - simple tasks still pay Heavy-style ceremony by default;

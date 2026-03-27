@@ -20,7 +20,7 @@ This document converts observed Codex behavior from bounded validation runs into
 ### Observed bad behavior
 - Early runs read more files than strictly necessary.
 - Early runs used slightly inflated false-locality language.
-- Staged discipline was initially narrative-only and not yet converted into explicit architecture rules.
+- Staged discipline began as narrative guidance and was later converted into explicit architecture rules.
 
 ### Architecture rules to keep
 - Primary locus must be identified before repair.
