@@ -15,7 +15,7 @@ It already proves in bounded form:
 - structured problem locus and dependency-ring propagation through the run contract;
 - planner-to-reviewer contract alignment checks;
 - builder-side write-boundary enforcement through `allowed_change_set`;
-- Direct-path Builder read-boundary validation through `allowed_read_set` (`baseline` as the compatibility label);
+- Direct-path Builder read-boundary validation through `allowed_read_set` under runnable `baseline` compatibility behavior;
 - reviewer-side falsification of content drift, undeclared output drift, bounded adjacent consistency failures, and verify-only false-local success.
 
 It does not yet prove or enforce:
@@ -70,7 +70,7 @@ Only after the activation model is coherent:
 
 ## Success criterion
 The next stage must satisfy all of the following:
-- the runnable Direct path (`baseline` as the compatibility label) remains operational;
+- the runnable `baseline` compatibility path remains operational;
 - simple tasks stay on the minimum credible path;
 - escalation happens only on bounded evidence;
 - the repository clearly distinguishes proven mechanics from target behavior;

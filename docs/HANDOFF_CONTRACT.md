@@ -56,7 +56,7 @@ No role may silently widen scope.
 ## Profile-specific field requirements
 
 ### baseline
-Baseline is the compatibility label for the Direct execution profile.
+`baseline` is the runnable compatibility label for the Direct profile.
 
 In the runnable 4-role runtime, baseline still carries some compatibility-form contract fields that are not yet enforced uniformly across every stage.
 
@@ -235,7 +235,7 @@ Allowed values:
 #### baseline
 Use only when locus is clear, change is narrow, false locality risk is low, adjacent blast radius is minimal, and no verify-only or adjacent consistency surface is already load-bearing.
 
-In Activation Matrix terms, `baseline` is the compatibility label for the Direct execution profile.
+In Activation Matrix terms, `baseline` is the runnable compatibility label for the Direct profile.
 
 #### lite
 Use when a local patch is plausible but bounded adjacent reading or verification is still needed.
