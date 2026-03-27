@@ -94,6 +94,7 @@ Lite should make explicit when present:
 - tester_focus
 
 If adjacent validation is load-bearing, `verify_only_surfaces` is no longer optional in practice.
+If executable behavior or bounded regression validation is load-bearing, `tester_focus` is no longer optional in practice.
 
 ### heavy
 Heavy must define everything required by lite, plus all additional fields needed to prevent ambiguity in multi-node, cluster, blocker-uncertain, or security-relevant work.
@@ -105,8 +106,11 @@ Heavy should make explicit whenever applicable:
 - expansion_trigger
 - retriage_required_when_actual_blocker_differs
 - security_focus
+- tester_focus
 
 If the task involves bounded cluster consistency, blocker override risk, or security-sensitive reasoning, the relevant heavy fields must not be omitted.
+If executable behavior or bounded regression validation is load-bearing, `tester_focus` must not be omitted.
+If a genuine security dimension is present, `security_focus` must not be omitted.
 
 ## Field meanings
 
@@ -328,6 +332,8 @@ Threat surface, trust-boundary relevance, auth/data-exposure implications, and w
 - If evidence_required is missing, completion confidence must not be inflated.
 - If path_decision is missing, routing is incomplete.
 - If escalation_trigger is missing, narrow execution discipline is incomplete.
+- If executable behavior or bounded regression validation is load-bearing and `tester_focus` is absent, completion confidence is incomplete.
+- If a genuine security dimension is present and `security_focus` is absent, completion confidence is incomplete.
 - Tester is invoked only when explicit behavior or regression validation is needed.
 - Security is invoked only when the task has a genuine security dimension.
 

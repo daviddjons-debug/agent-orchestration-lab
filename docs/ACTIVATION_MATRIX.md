@@ -151,6 +151,7 @@ It constrains when each role should activate and how much behavior it should exp
 - symptom can be checked directly
 - patch changes runtime behavior
 - regression surface is meaningful
+- `tester_focus` must be explicit in the contract when tester evidence is load-bearing
 
 ### Security triggers
 - auth or permission logic
@@ -158,6 +159,7 @@ It constrains when each role should activate and how much behavior it should exp
 - secrets or credentials
 - network-facing behavior
 - trust-boundary crossing
+- `security_focus` must be explicit in the contract when security evidence is load-bearing
 
 ### Retriage triggers
 - reviewer-blocking evidence contradicts assumed defect path
