@@ -15,7 +15,7 @@ It already proves in bounded form:
 - structured problem locus and dependency-ring propagation through the run contract;
 - planner-to-reviewer contract alignment checks;
 - builder-side write-boundary enforcement through `allowed_change_set`;
-- Direct-path Builder read-boundary validation through `allowed_read_set` under runnable `baseline` compatibility behavior;
+- Direct-path Builder read-boundary validation through `allowed_read_set` under current Direct compatibility behavior;
 - reviewer-side falsification of content drift, undeclared output drift, bounded adjacent consistency failures, and verify-only false-local success.
 
 It does not yet prove or enforce:
@@ -50,7 +50,7 @@ The activation/dispatch contract is now defined at the policy layer in:
 
 The current priority is:
 - remove remaining documentation contradictions against the activation model;
-- distinguish policy-level Direct from runnable `baseline` compatibility behavior consistently;
+- distinguish policy-level Direct from current Direct compatibility behavior consistently;
 - keep the bounded validation corpus as proof, not as a substitute for operating compression;
 - only expand runtime after tester/security activation rules are operationally coherent.
 
@@ -70,10 +70,10 @@ Only after the activation model is coherent:
 
 ## Success criterion
 The next stage must satisfy all of the following:
-- the runnable `baseline` compatibility path remains operational;
+- the runtime `baseline` path remains operational;
 - simple tasks stay on the minimum credible path;
 - escalation happens only on bounded evidence;
-- the repository clearly distinguishes proven mechanics from target behavior;
+- the repository clearly distinguishes proven mechanics from declared target state;
 - the transition toward a surgical system is explicit, staged, falsifiable, and cost-aware.
 
 ## Failure condition

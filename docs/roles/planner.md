@@ -13,7 +13,7 @@ Purpose: turn orchestrator triage into an executable narrow contract, refine the
   - `adjacent_read_nodes`
   - `adjacent_verify_only_nodes`
   - `excluded_neighbors`
-- current runnable baseline still propagates `dependency_ring` in a flat compatibility shape rather than a fully structured ring object
+- current runtime baseline still propagates `dependency_ring` in a flat compatibility shape rather than a fully structured ring object
 - define the smallest justified Builder-compatible read boundary payload for downstream execution;
 - define the smallest justified allowed change set for downstream execution;
 - define verify-only surfaces that must be checked but must not be modified;
@@ -84,11 +84,11 @@ The resulting plan should answer:
 5. what can be changed,
 6. what must be proven before completion can be trusted.
 
-In the current runnable baseline, this intent is only partially realized:
+In the current runtime baseline, this intent is only partially realized:
 - `dependency_ring` is still carried as a flat compatibility list;
 - `excluded_neighbors` is propagated separately;
 - the newer node-role fields for bounded clusters may be present contractually before they are fully enforced mechanically in runtime;
-- full structured ring semantics remain target behavior, not a uniformly enforced runtime fact.
+- full structured ring semantics remain declared target state, not a uniformly enforced runtime fact.
 
 ## Must not do
 - must not generate output artifacts;

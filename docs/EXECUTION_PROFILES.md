@@ -22,7 +22,7 @@ Use when:
 
 Expected flow:
 - Orchestrator in compressed form
-- Planner via the current runnable compatibility path
+- Planner via the current runtime path
 - Builder
 - targeted validation
 - Reviewer only when trigger evidence requires a separate check
@@ -30,7 +30,7 @@ Expected flow:
 Rules:
 - keep read scope narrow;
 - keep change scope narrow;
-- treat Planner as policy-compressed in Direct, even though the current runnable compatibility path still executes it;
+- treat Planner as policy-compressed in Direct, even though the current runtime path still executes it;
 - do not invoke Tester by default;
 - do not invoke Security by default;
 - do not widen the task unless evidence forces it.
@@ -84,14 +84,14 @@ Rules:
 
 ## Selection rule
 - Start in Direct at the policy layer.
-- Escalate to Lite only when bounded evidence shows that Direct policy / runnable `baseline` compatibility path would under-control locality, adjacent validation, or drift risk.
-- Escalate to Heavy only when bounded evidence shows that Direct policy / runnable `baseline` compatibility path or Lite would under-control locality, consistency, security, or blocker uncertainty.
+- Escalate to Lite only when bounded evidence shows that Direct policy / runtime `baseline` path would under-control locality, adjacent validation, or drift risk.
+- Escalate to Heavy only when bounded evidence shows that Direct policy / runtime `baseline` path or Lite would under-control locality, consistency, security, or blocker uncertainty.
 - Do not escalate by task-size narrative alone.
 
 ## Current status
 Profiles are currently defined primarily at the policy and documentation layer.
 
 They guide routing and expected discipline, but they do not yet constitute a fully enforced runtime stage graph.
-In the current runnable compatibility path, Direct still executes Planner, while Reviewer remains trigger-based for Direct and always-on for Lite/Heavy.
+In the current runtime path, Direct still executes Planner, while Reviewer remains trigger-based for Direct and always-on for Lite/Heavy.
 
 Runtime/profile enforcement can be expanded later if justified.

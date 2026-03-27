@@ -12,7 +12,7 @@ Purpose: execute only the approved plan contract, apply the smallest sufficient 
 - apply the minimum viable change needed to satisfy the declared objective and acceptance criteria;
 - preserve all declared no-touch boundaries;
 - leave verify-only surfaces unmodified;
-- create only the declared output artifacts required by the plan under the active compatibility path;
+- create only the declared output artifacts required by the plan under the active runtime path;
 - record what was changed, what was intentionally not changed, and why;
 - make any attempted deviation explicit instead of silently widening scope;
 - write `03_builder.md` as an execution trace.

@@ -1,7 +1,7 @@
 # Session Recap — 2026-03-27 — docs_alignment_green
 
 ## What was completed
-- normalized Direct vs runnable `baseline` compatibility wording across:
+- normalized Direct compatibility wording across:
   - `docs/ACTIVATION_MATRIX.md`
   - `docs/EXECUTION_PROFILES.md`
   - `docs/HANDOFF_CONTRACT.md`
@@ -21,7 +21,7 @@
 - bounded falsification corpus still works
 - docs now distinguish:
   - policy-layer Direct
-  - runnable `baseline` compatibility path
+  - current Direct path
 - no dirty working tree remained at checkpoint time
 
 ## Why this mattered

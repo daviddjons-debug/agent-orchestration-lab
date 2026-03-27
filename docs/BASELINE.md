@@ -88,7 +88,7 @@ The honest boundary is:
 - code-level surgical execution discipline at repository scale: not yet proven.
 
 ## Immediate transition principle
-Do not replace the runnable baseline.
+Do not replace the current runnable pipeline.
 
 Preserve the working runtime and continue hardening it by closing falsifiable gaps one at a time.
 

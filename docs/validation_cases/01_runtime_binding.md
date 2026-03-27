@@ -29,7 +29,7 @@ Use the runnable 4-role runtime to validate the narrowest credible scenario:
 ## What must be implemented next
 1. define a concrete runnable scenario for Case 01;
 2. map that scenario to current run artifacts;
-3. state what counts as localization evidence in the current runnable lab/runtime compatibility path;
+3. state what counts as localization evidence in the current runnable lab/runtime path;
 4. state what counts as fake surgical language without runtime backing.
 
 ## Constraint

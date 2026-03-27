@@ -80,7 +80,7 @@ Use only when:
 - no meaningful security or regression contour is visible at triage.
 
 In Activation Matrix terms, this runtime path corresponds to the Direct execution profile.
-The runtime keeps `baseline` as the compatibility path label until a deliberate rename is justified.
+The runtime keeps `baseline` as the current path label until a deliberate rename is justified.
 
 ### lite
 Use when:
@@ -100,8 +100,8 @@ Use when:
 
 ## Profile selection rule
 - start in Direct at the policy layer;
-- escalate to `lite` only when bounded evidence shows that Direct policy / runnable `baseline` compatibility path execution would under-control locality, adjacent validation, or drift risk;
-- escalate to `heavy` only when bounded evidence shows that Direct policy / runnable `baseline` compatibility path or `lite` execution would under-control locality, consistency, security, or blocker uncertainty;
+- escalate to `lite` only when bounded evidence shows that Direct policy / runtime `baseline` path execution would under-control locality, adjacent validation, or drift risk;
+- escalate to `heavy` only when bounded evidence shows that Direct policy / runtime `baseline` path or `lite` execution would under-control locality, consistency, security, or blocker uncertainty;
 - must not escalate by task-size narrative alone;
 - must not activate broader routing merely because more roles exist in the pack.
 

@@ -42,7 +42,7 @@ Reviewer should reason using the following verdict classes conceptually:
 - `INSUFFICIENT_EVIDENCE`
 - `OVERSCOPED_SUCCESS`
 
-In the current runnable baseline, the executable gate still operates primarily as `PASS` / `FAIL`.
+In the current runtime baseline, the executable gate still operates primarily as `PASS` / `FAIL`.
 
 The richer verdict classes remain an interpretive reasoning layer unless and until runtime support is expanded explicitly.
 
