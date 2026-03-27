@@ -7,7 +7,7 @@ Prove that the system can stay local when the problem locus is obvious and does 
 Narrow single-node fix
 
 ## Expected profile
-Lite
+Direct at the policy layer; `baseline` as the current compatibility label for that path.
 
 ## Scenario shape
 - one obvious locus

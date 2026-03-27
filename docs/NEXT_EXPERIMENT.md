@@ -43,13 +43,18 @@ Preserve:
 ### Phase 2 — Compress activation logic into an operating rule
 Before expanding the stage graph, define the minimal execution model that should survive into real use.
 
-The current priority is:
-- specify what is always-on in Direct;
-- specify what is trigger-based in Lite;
-- specify what evidence actually forces Heavy;
-- prevent escalation by task-size narrative alone.
+The activation/dispatch contract is now defined at the policy layer in:
+- `docs/ACTIVATION_MATRIX.md`
+- `docs/EXECUTION_PROFILES.md`
+- `docs/HANDOFF_CONTRACT.md`
 
-The next step is therefore not another validation case by default, but a stricter activation/dispatch contract that keeps simple tasks cheap.
+The current priority is:
+- remove remaining documentation contradictions against the activation model;
+- distinguish policy-level Direct from runnable `baseline` compatibility behavior consistently;
+- keep the bounded validation corpus as proof, not as a substitute for operating compression;
+- only expand runtime after tester/security activation rules are operationally coherent.
+
+The next step is therefore alignment and compression discipline first, not fresh validation expansion by default.
 
 ### Phase 3 — Introduce missing roles only after compression is coherent
 Add:
