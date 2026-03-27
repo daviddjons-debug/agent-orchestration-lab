@@ -3,7 +3,7 @@ from datetime import datetime
 import json
 import sys
 
-from runtime_contract import ALLOWED_READ_SET_BY_PROFILE, PROFILE_SELECTION_BASIS_BY_PROFILE, PROFILES
+from runtime_contract import PROFILES, default_manifest
 
 
 ORCHESTRATOR_HANDOFF_TEMPLATE = (
@@ -31,91 +31,7 @@ def main() -> int:
     base = root / run
     base.mkdir(parents=True, exist_ok=True)
 
-    manifest = {
-        "run_id": run,
-        "task_class": "narrow_bugfix",
-        "objective": "Produce declared artifacts for the current run contract",
-        "expected_end_state": "Declared artifacts exist and satisfy the runnable contract checks.",
-        "symptom": "Need a visible bounded multi-role run with falsifiable artifact validation.",
-        "root_cause_hypothesis": "A small declared artifact contract can prove bounded orchestration behavior in the runnable lab.",
-        "problem_locus": "run contract files and declared outputs",
-        "locus_confidence": "high",
-        "false_locality_risk": "low",
-        "profile_selection_basis": PROFILE_SELECTION_BASIS_BY_PROFILE[profile],
-        "path_decision": profile,
-        "dependency_ring": [
-            "01_orchestrator.md",
-            "run_manifest.json",
-            "02_plan.json",
-            "output/",
-        ],
-        "dependency_ring_structured": {
-            "primary_target": "output/",
-            "adjacent_read_nodes": [
-                "01_orchestrator.md",
-                "run_manifest.json",
-                "02_plan.json",
-            ],
-            "adjacent_verify_only_nodes": [],
-            "excluded_neighbors": [],
-        },
-        "allowed_read_set": ALLOWED_READ_SET_BY_PROFILE[profile],
-        "allowed_change_set": [
-            "02_plan.json",
-            "02_planner.md",
-            "output/",
-            "03_builder.md",
-        ],
-        "verify_only_surfaces": [],
-        "excluded_neighbors": [],
-        "forbidden_zone": [
-            "scripts/",
-            "docs/baseline_v1/",
-        ],
-        "acceptance_criteria": [
-            "every declared artifact exists",
-            "every JSON artifact satisfies required_fields",
-            "every text artifact satisfies exact_content when required",
-            "any missing file or content mismatch must cause reviewer FAIL",
-        ],
-        "verification_targets": [
-            "manifest-plan alignment",
-            "declared artifact existence",
-            "declared artifact content checks",
-        ],
-        "evidence_required": [
-            "reviewer verdict",
-            "artifact existence checks",
-            "artifact content checks",
-        ],
-        "blockers_or_uncertainties": [
-            "the runnable lab does not enforce any stage-wide mechanically enforced read control beyond the current Builder-enforced read-boundary payload",
-        ],
-        "escalation_trigger": [
-            "required Builder read exceeds allowed_read_set",
-            "required edit exceeds allowed_change_set",
-            "declared artifact contract becomes internally inconsistent",
-        ],
-        "artifacts": [
-            {
-                "path": "output/result.json",
-                "type": "json",
-                "required_fields": {
-                    "status": "ok",
-                    "message": "multi-agent orchestration check passed",
-                },
-            },
-            {
-                "path": "output/summary.txt",
-                "type": "text",
-                "exact_content": "multi-agent orchestration check passed\n",
-            },
-        ],
-        "review_policy": {
-            "require_valid_json": True,
-            "require_exact_text": True,
-        },
-    }
+    manifest = default_manifest(run, profile)
 
     orchestrator_handoff = ORCHESTRATOR_HANDOFF_TEMPLATE.format(profile=profile)
     (base / "01_orchestrator.md").write_text(orchestrator_handoff, encoding="utf-8")
