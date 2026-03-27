@@ -20,6 +20,20 @@ def latest_run(base: Path) -> Path:
         raise SystemExit("ERROR: no orchestrated run found")
     return runs[-1]
 
+def write_json(path: Path, data: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+
+def write_text(path: Path, content: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content, encoding="utf-8")
+
+def unlink_existing(root: Path, rel_paths: list[str]) -> None:
+    for rel in rel_paths:
+        target = root / rel
+        if target.exists():
+            target.unlink()
+
 def main() -> int:
     base = Path("docs/runs")
 
@@ -46,12 +60,9 @@ def main() -> int:
             "exact_content": "manifest override works\n",
         },
     ]
-    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    write_json(manifest_file, manifest)
 
-    for rel in previous_artifacts:
-        target = run_dir / rel
-        if target.exists():
-            target.unlink()
+    unlink_existing(run_dir, previous_artifacts)
 
     sh(["python3", "scripts/planner.py", str(run_dir)])
     sh(["python3", "scripts/builder.py", str(run_dir)])
@@ -206,10 +217,7 @@ def main() -> int:
         for a in manifest.get("artifacts", [])
         if isinstance(a, dict) and isinstance(a.get("path"), str)
     ]
-    for rel in previous_artifacts:
-        target = run_dir / rel
-        if target.exists():
-            target.unlink()
+    unlink_existing(run_dir, previous_artifacts)
 
     manifest["artifacts"] = [
         {
@@ -257,7 +265,7 @@ def main() -> int:
         "03_builder.md",
         "src/",
     ]
-    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    write_json(manifest_file, manifest)
 
     sh(["python3", "scripts/planner.py", str(run_dir)])
     sh(["python3", "scripts/builder.py", str(run_dir)])
@@ -330,7 +338,7 @@ def main() -> int:
         "output/",
         "03_builder.md",
     ]
-    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    write_json(manifest_file, manifest)
 
     src_dir = run_dir / "src"
     if src_dir.exists():
@@ -357,7 +365,7 @@ def main() -> int:
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
     manifest["review_policy"]["require_valid_json"] = False
     manifest["review_policy"]["require_exact_text"] = False
-    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    write_json(manifest_file, manifest)
 
     artifact_json = run_dir / json_artifact["path"]
     artifact_json.parent.mkdir(parents=True, exist_ok=True)
@@ -421,7 +429,7 @@ def main() -> int:
     ]
     manifest["review_policy"]["require_valid_json"] = True
     manifest["review_policy"]["require_exact_text"] = True
-    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    write_json(manifest_file, manifest)
 
     for rel in ["output/result.json", "output/custom/result.json", "output/custom/summary.txt", "output/summary.txt", "output/adjacent_status.txt"]:
         target = run_dir / rel
@@ -451,7 +459,7 @@ def main() -> int:
 
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
     manifest["retriage_required_when_actual_blocker_differs"] = True
-    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    write_json(manifest_file, manifest)
 
     sh(["python3", "scripts/planner.py", str(run_dir)])
 
@@ -548,18 +556,18 @@ def main() -> int:
             },
         },
     ]
-    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    write_json(manifest_file, manifest)
 
-    for rel in [
-        "output/result.json",
-        "output/adjacent_status.txt",
-        "output/security_input.json",
-        "output/security_review.json",
-        "output/hardening_note.json",
-    ]:
-        target = run_dir / rel
-        if target.exists():
-            target.unlink()
+    unlink_existing(
+        run_dir,
+        [
+            "output/result.json",
+            "output/adjacent_status.txt",
+            "output/security_input.json",
+            "output/security_review.json",
+            "output/hardening_note.json",
+        ],
+    )
 
     sh(["python3", "scripts/planner.py", str(run_dir)])
     sh(["python3", "scripts/builder.py", str(run_dir)])
@@ -575,7 +583,7 @@ def main() -> int:
 
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
     manifest["artifacts"][1]["required_fields"]["blocking_security_reason"] = "unsafe file parsing remains reachable"
-    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    write_json(manifest_file, manifest)
 
     sh(["python3", "scripts/planner.py", str(run_dir)])
 
@@ -620,16 +628,13 @@ def main() -> int:
             },
         },
     ]
-    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    write_json(manifest_file, manifest)
 
-    for rel in [
+    unlink_existing(run_dir, [
         "output/security_input.json",
         "output/security_review.json",
         "output/hardening_note.json",
-    ]:
-        target = run_dir / rel
-        if target.exists():
-            target.unlink()
+    ])
 
     sh(["python3", "scripts/planner.py", str(run_dir)])
     sh(["python3", "scripts/builder.py", str(run_dir)])
@@ -711,12 +716,9 @@ def main() -> int:
     ]
     manifest["review_policy"]["require_valid_json"] = False
     manifest["review_policy"]["require_exact_text"] = False
-    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    write_json(manifest_file, manifest)
 
-    for rel in ["output/result.json", "output/adjacent_status.txt"]:
-        target = run_dir / rel
-        if target.exists():
-            target.unlink()
+    unlink_existing(run_dir, ["output/result.json", "output/adjacent_status.txt"])
 
     artifact_json = run_dir / json_artifact["path"]
     artifact_json.parent.mkdir(parents=True, exist_ok=True)
@@ -830,7 +832,7 @@ sys.exit(0 if status == "adjacent verified" else 1)
     case07_cmd = ["python3", "-c", case07_code]
 
     try:
-        verify_file.write_text("adjacent verification pending\n", encoding="utf-8")
+        write_text(verify_file, "adjacent verification pending\n")
 
         case07_fail = sh(case07_cmd, allow_fail=True)
         if case07_fail.returncode == 0:
