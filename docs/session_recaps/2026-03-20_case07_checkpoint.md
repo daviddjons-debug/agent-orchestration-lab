@@ -1,5 +1,8 @@
 # Session Recap — 2026-03-20 — Case 07 automated checkpoint
 
+> Historical note: this recap reflects the repository state at the time of that session only. Current authoritative activation/profile direction lives in `docs/ACTIVATION_MATRIX.md`, `docs/EXECUTION_PROFILES.md`, `docs/HANDOFF_CONTRACT.md`, `docs/VALIDATION_MATRIX.md`, and `docs/NEXT_EXPERIMENT.md`.
+
+
 ## What was completed
 - Confirmed stable runtime checkpoint before further expansion.
 - Automated Case 07 inside `scripts/selftest.py`.

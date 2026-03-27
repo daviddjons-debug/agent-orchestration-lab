@@ -1,5 +1,8 @@
 # Session Recap — 2026-03-27 — Unified Handoff Contract canonization
 
+> Historical note: this recap reflects the repository state at the time of that session only. Current authoritative activation/profile direction lives in `docs/ACTIVATION_MATRIX.md`, `docs/EXECUTION_PROFILES.md`, `docs/HANDOFF_CONTRACT.md`, `docs/VALIDATION_MATRIX.md`, and `docs/NEXT_EXPERIMENT.md`.
+
+
 ## What was completed
 - Canonical boundary contract was distilled and reduced to:
   - `docs/UNIFIED_HANDOFF_CONTRACT_CANON_V4.md`

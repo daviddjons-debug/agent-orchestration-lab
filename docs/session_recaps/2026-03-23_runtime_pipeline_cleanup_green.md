@@ -1,5 +1,8 @@
 # Session Recap — 2026-03-23 — runtime_pipeline_cleanup_green
 
+> Historical note: this recap reflects the repository state at the time of that session only. Current authoritative activation/profile direction lives in `docs/ACTIVATION_MATRIX.md`, `docs/EXECUTION_PROFILES.md`, `docs/HANDOFF_CONTRACT.md`, `docs/VALIDATION_MATRIX.md`, and `docs/NEXT_EXPERIMENT.md`.
+
+
 ## Session goal
 Stabilize the runnable pipeline after the pipeline-side cleanup of `00_user_goal.md`, restore green reviewer behavior for lite/heavy profiles, preserve compressed baseline behavior, and prove the runtime is still falsifiable rather than cosmetically “passing”.
 
