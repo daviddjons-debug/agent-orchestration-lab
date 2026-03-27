@@ -1,7 +1,7 @@
 # Validation Case 08 — Runtime Binding
 
 ## Goal
-Bind live bounded cluster consistency to the current runtime without pretending that the lab already performs generic repository-scale multi-file reasoning.
+Bind live bounded cluster consistency to the runnable 4-role runtime without pretending that the lab already performs generic repository-scale multi-file reasoning.
 
 ## Current runtime reality
 The runnable pipeline and selftest now prove:

@@ -40,7 +40,7 @@ This document converts observed Codex behavior from bounded validation runs into
 - `problem_locus` must identify the primary repair node.
 - `dependency_ring` must include adjacent / verify-only surfaces when they are validation-bearing.
 - `false_locality_risk` must be explicitly assessed.
-- `allowed_read_set` should remain minimal-first as Builder-compatible read-boundary payload, not as a claimed stage-wide sandbox.
+- `allowed_read_set` should remain minimal-first as a Builder-enforced read-boundary payload, not as a claimed stage-wide sandbox.
 - `allowed_change_set` should begin at the smallest sufficient repair surface.
 - `verify_only_surfaces` must be explicit when present.
 - Add or strengthen `expansion_trigger` semantics: widening requires concrete evidence.
@@ -150,7 +150,7 @@ This document converts observed Codex behavior from bounded validation runs into
 ### Observed bad behavior
 - The cluster is still predeclared rather than runtime-derived.
 - The case still depends on dedicated selftest scaffolding rather than generic manifest-driven execution.
-- The current runtime still does not prove automatic cluster discovery, planner-side read-boundary compatibility beyond Builder, or any stage-wide mechanically enforced read control.
+- The runnable lab still does not prove automatic cluster discovery, planner-side read-boundary compatibility beyond Builder, or any stage-wide mechanically enforced read control.
 
 ### Architecture rules to keep
 - Cluster consistency must be judged against one explicit canonical source-of-truth node.

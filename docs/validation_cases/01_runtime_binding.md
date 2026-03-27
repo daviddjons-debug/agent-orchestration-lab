@@ -20,7 +20,7 @@ It does not yet prove in runtime:
 - scope-drift prevention by implementation logic alone.
 
 ## Practical target for Case 01
-Use the current runtime to validate the narrowest credible scenario:
+Use the runnable 4-role runtime to validate the narrowest credible scenario:
 - one obvious locus;
 - one narrow declared output surface;
 - no unjustified multi-file widening;
@@ -29,7 +29,7 @@ Use the current runtime to validate the narrowest credible scenario:
 ## What must be implemented next
 1. define a concrete runnable scenario for Case 01;
 2. map that scenario to current run artifacts;
-3. state what counts as localization evidence in the current runtime;
+3. state what counts as localization evidence in the current runnable lab/runtime compatibility path;
 4. state what counts as fake surgical language without runtime backing.
 
 ## Constraint

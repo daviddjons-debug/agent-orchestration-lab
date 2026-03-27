@@ -1,7 +1,7 @@
 # Validation Case 01 — Evidence
 
 ## Evidence status
-PASS for narrow contract execution in current runtime, with verified write-boundary controls.
+PASS for narrow contract execution in the runnable 4-role runtime, with verified write-boundary controls.
 
 ## What was executed
 - `python3 scripts/run_pipeline.py docs/runs`
@@ -21,7 +21,7 @@ PASS for narrow contract execution in current runtime, with verified write-bound
   - `objective`
   - `problem_locus`
   - `dependency_ring`
-  - `allowed_read_set` (Builder-compatible read-boundary payload)
+  - `allowed_read_set` (Builder-enforced read-boundary payload)
   - `allowed_change_set`
   - `forbidden_zone`
   - `verification_targets`
@@ -36,9 +36,9 @@ PASS for narrow contract execution in current runtime, with verified write-bound
 - builder returned FAIL when declared artifact path fell outside `allowed_change_set`
 
 ## What this PASS now proves
-- current runtime supports explicit 4-stage separation
+- the runnable 4-role runtime supports explicit 4-stage separation
 - planner-to-builder handoff is structured
-- surgical contract fields propagate through runnable runtime
+- surgical contract fields propagate through the runnable 4-role runtime
 - reviewer validates full manifest-plan contract alignment, not only artifact presence
 - reviewer detects undeclared output drift
 - builder enforces declared write boundary through `allowed_change_set`
@@ -49,8 +49,8 @@ PASS for narrow contract execution in current runtime, with verified write-bound
 - real problem-locus reasoning in runtime beyond propagated contract fields
 - real dependency-ring reasoning in runtime beyond propagated contract fields
 - full stage-wide runtime read-boundary enforcement beyond the current Builder-only compatibility contract
-- tester as a runnable runtime stage
-- security as a runnable runtime stage
+- tester as a runnable 4-role runtime stage
+- security as a runnable 4-role runtime stage
 - full surgical-runtime behavior on real code-patch tasks
 
 ## Final judgment

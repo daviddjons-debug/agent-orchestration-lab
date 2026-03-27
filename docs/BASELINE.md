@@ -45,7 +45,7 @@ The repository does **not** yet prove:
   - `adjacent_read_nodes`
   - `adjacent_verify_only_nodes`
   - `excluded_neighbors`;
-- full stage-wide runtime read sandboxing beyond the current Builder-compatible read-boundary contract (`allowed_read_set` / `builder_read_boundary`);
+- full stage-wide read sandboxing beyond the current Builder-enforced read-boundary payload (`allowed_read_set` / `builder_read_boundary`);
 - minimal patch-zone discipline on real source files;
 - runnable Tester stage with execution-backed validation;
 - runnable Security stage with real policy enforcement;

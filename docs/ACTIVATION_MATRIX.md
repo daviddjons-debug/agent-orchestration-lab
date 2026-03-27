@@ -82,7 +82,7 @@ Active by profile:
 ## Profile selection rule
 
 - Start in Direct at the policy layer.
-- Treat `baseline` as the current runtime compatibility label for the Direct execution profile.
+- Treat `baseline` as the compatibility label for the Direct execution profile.
 - Escalate to Lite only when bounded evidence shows that Direct/Baseline would under-control locality, adjacent validation, or drift risk.
 - Escalate to Heavy only when bounded evidence shows that Direct/Baseline or Lite would under-control locality, consistency, security, or blocker uncertainty.
 - Do not escalate by task size narrative alone.

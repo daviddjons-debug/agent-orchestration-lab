@@ -1,7 +1,7 @@
 # Validation Case 08 — Evidence
 
 ## Evidence status
-PASS for a bounded live cluster-consistency scenario on a persistent substrate in current runtime.
+PASS for a bounded live cluster-consistency scenario on a persistent substrate in the runnable 4-role runtime.
 
 ## What was executed
 - `python3 scripts/selftest.py`
@@ -27,7 +27,7 @@ PASS for a bounded live cluster-consistency scenario on a persistent substrate i
 - this proves the cluster check is not fake single-node validation disguised as multi-file reasoning
 
 ## What this PASS proves
-- current runtime now supports a persistent live bounded cluster-consistency scenario
+- the runnable 4-role runtime now supports a persistent live bounded cluster-consistency scenario
 - the system can distinguish:
   - primary correctness
   - dependent cluster staleness

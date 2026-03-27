@@ -48,7 +48,7 @@ def main() -> int:
         "heavy": [
             "full review lane is active by profile",
             "manifest read is required for builder evidence",
-            "task is routed to the widest current runtime path",
+            "task is routed to the widest active profile contract",
         ],
     }
 
@@ -58,7 +58,7 @@ def main() -> int:
         "objective": "Produce declared artifacts for the current run contract",
         "expected_end_state": "Declared artifacts exist and satisfy the runnable contract checks.",
         "symptom": "Need a visible bounded multi-role run with falsifiable artifact validation.",
-        "root_cause_hypothesis": "A small declared artifact contract can prove bounded orchestration behavior in the current runtime.",
+        "root_cause_hypothesis": "A small declared artifact contract can prove bounded orchestration behavior in the runnable lab.",
         "problem_locus": "run contract files and declared outputs",
         "locus_confidence": "high",
         "false_locality_risk": "low",
@@ -110,7 +110,7 @@ def main() -> int:
             "artifact content checks",
         ],
         "blockers_or_uncertainties": [
-            "current runtime does not enforce any stage-wide mechanically enforced read control beyond the current Builder-compatible read-boundary contract",
+            "the runnable lab does not enforce any stage-wide mechanically enforced read control beyond the current Builder-enforced read-boundary payload",
         ],
         "escalation_trigger": [
             "required Builder read exceeds allowed_read_set",

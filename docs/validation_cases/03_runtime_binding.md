@@ -1,7 +1,7 @@
 # Validation Case 03 — Runtime Binding
 
 ## Goal
-Bind the multi-file coordinated-change case to the current runnable runtime without pretending that the lab already performs real repository-scale code reasoning.
+Bind the multi-file coordinated-change case to the runnable 4-role runtime without pretending that the lab already performs real repository-scale code reasoning.
 
 ## Current runtime reality
 The runnable pipeline is still:
@@ -25,7 +25,7 @@ It does not yet prove automatically:
 - tester-backed regression execution for coordinated multi-file changes
 
 ## Practical target for Case 03
-Use the current runtime to validate a bounded pseudo-code coordinated-change task where:
+Use the runnable 4-role runtime to validate a bounded pseudo-code coordinated-change task where:
 - one explicit primary locus is declared
 - two explicit secondary nodes are justified in the same local cluster
 - widening remains bounded inside that declared cluster

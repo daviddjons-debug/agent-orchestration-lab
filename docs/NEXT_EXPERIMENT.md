@@ -15,20 +15,20 @@ It already proves in bounded form:
 - structured problem locus and dependency-ring propagation through the run contract;
 - planner-to-reviewer contract alignment checks;
 - builder-side write-boundary enforcement through `allowed_change_set`;
-- Direct-compatibility-path Builder read-boundary validation through `allowed_read_set` (`baseline` in current runtime naming);
+- Direct-path Builder read-boundary validation through `allowed_read_set` (`baseline` as the compatibility label);
 - reviewer-side falsification of content drift, undeclared output drift, and bounded adjacent consistency failures.
 
 It does not yet prove or enforce:
 - triage-first behavior as real runtime decision logic;
 - genuine dependency discovery beyond predeclared scenario structure;
-- full stage-wide runtime read sandboxing beyond the current Builder-compatible read-boundary contract;
+- full stage-wide runtime read sandboxing beyond the current Builder-enforced read-boundary payload;
 - blast-radius control on live code tasks;
 - justified local hardening based on discovered evidence;
 - runnable Tester and Security stages;
 - explicit separation between simple execution and real verification logic on non-artifact engineering work.
 
 ## Next goal
-Preserve the runnable 4-role harness, keep the current bounded proof honest, and redefine the role contracts so the system can move from a generic artifact emitter toward a surgical orchestration runtime that still keeps `baseline` only as the current compatibility label for the Direct profile.
+Preserve the runnable 4-role harness, keep the current bounded proof honest, and redefine the role contracts so the system can move from a generic artifact emitter toward a surgical orchestration runtime that still keeps `baseline` only as the compatibility label for the Direct profile.
 
 ## Immediate upgrade path
 ### Phase 1 — Normalize and finish the existing 4-role contract layer
@@ -50,7 +50,7 @@ The current priority is:
 Bounded live persistent substrates are already established through Case 07 and Case 08.
 The next step is therefore not another live mini-task, but closing a remaining runtime control gap.
 
-### Phase 3 — Introduce missing roles only after the current runtime boundary hardens further
+### Phase 3 — Introduce missing roles only after the runnable 4-role boundary hardens further
 Add:
 - tester -> behavior verification and regression-focused validation
 - security -> risk-gated inspection for security-relevant tasks
@@ -64,7 +64,7 @@ Only after the contract layer and at least one additional runtime control are co
 
 ## Success criterion
 The next stage must satisfy all of the following:
-- the runnable Direct-compatibility path (`baseline` in current runtime naming) remains operational;
+- the runnable Direct path (`baseline` as the compatibility label) remains operational;
 - the role definitions stop pretending that artifact generation alone is enough;
 - the repository clearly distinguishes proven mechanics from target behavior;
 - the transition toward a surgical system is explicit, staged, and falsifiable.

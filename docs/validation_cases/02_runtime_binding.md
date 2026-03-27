@@ -1,7 +1,7 @@
 # Validation Case 02 — Runtime Binding
 
 ## Goal
-Bind the adjacent-dependency-risk case to the current runnable runtime without pretending that the system already performs full dependency-aware reasoning automatically.
+Bind the adjacent-dependency-risk case to the runnable 4-role runtime without pretending that the system already performs full dependency-aware reasoning automatically.
 
 ## Current runtime reality
 The runnable pipeline is still:
@@ -22,7 +22,7 @@ It does not yet prove automatically:
 - real behavioral verification unless the scenario makes evidence explicit
 
 ## Practical target for Case 02
-Use the current runtime to validate a narrowly scoped task where:
+Use the runnable 4-role runtime to validate a narrowly scoped task where:
 - one primary locus is declared
 - one adjacent node is explicitly added to the dependency ring
 - allowed read scope is still narrow

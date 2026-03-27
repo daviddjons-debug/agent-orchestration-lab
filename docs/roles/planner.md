@@ -49,7 +49,7 @@ The planner output must make the baseline-required execution-contract fields exp
 - false_locality_risk;
 - path_decision;
 - dependency_ring;
-- allowed_read_set (Builder-compatible read-boundary payload);
+- allowed_read_set (Builder-enforced read-boundary payload);
 - allowed_change_set;
 - forbidden_zone;
 - acceptance_criteria;
@@ -86,7 +86,7 @@ In the current runnable baseline, this intent is only partially realized:
 - `dependency_ring` is still carried as a flat compatibility list;
 - `excluded_neighbors` is propagated separately;
 - the newer node-role fields for bounded clusters may be present contractually before they are fully enforced mechanically in runtime;
-- full structured ring semantics remain target behavior, not current runtime fact.
+- full structured ring semantics remain target behavior, not a uniformly enforced runtime fact.
 
 ## Must not do
 - must not generate output artifacts;

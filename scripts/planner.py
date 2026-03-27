@@ -139,7 +139,7 @@ def main() -> int:
         f"Locus confidence: {plan['locus_confidence']}",
         f"False locality risk: {plan['false_locality_risk']}",
         f"Path decision: {plan['path_decision']}",
-        f"Dependency ring (flat compatibility shape in current runtime): {', '.join(plan['dependency_ring'])}",
+        f"Dependency ring (flat compatibility shape in the runnable lab): {', '.join(plan['dependency_ring'])}",
         f"Dependency ring structured primary target: {primary_target}",
         f"Dependency ring structured adjacent read nodes: {', '.join(adjacent_read_nodes)}",
         f"Dependency ring structured adjacent verify-only nodes: {', '.join(adjacent_verify_only)}",

@@ -29,7 +29,7 @@ No role may silently widen scope.
 - root_cause_hypothesis
 - false_locality_risk
 - dependency_ring
-- allowed_read_set (Builder-compatible read-boundary payload)
+- allowed_read_set (Builder-enforced read-boundary payload)
 - allowed_change_set
 - forbidden_zone
 - acceptance_criteria
@@ -56,9 +56,9 @@ No role may silently widen scope.
 ## Profile-specific field requirements
 
 ### baseline
-Baseline is the runtime compatibility label for the Direct execution profile.
+Baseline is the compatibility label for the Direct execution profile.
 
-In the current runnable runtime, baseline still carries some compatibility-form contract fields that are not yet enforced uniformly across every stage.
+In the runnable 4-role runtime, baseline still carries some compatibility-form contract fields that are not yet enforced uniformly across every stage.
 
 Baseline must define at minimum:
 - task_class
@@ -70,7 +70,7 @@ Baseline must define at minimum:
 - root_cause_hypothesis
 - false_locality_risk
 - dependency_ring
-- allowed_read_set (Builder-compatible read-boundary payload)
+- allowed_read_set (Builder-enforced read-boundary payload)
 - allowed_change_set
 - forbidden_zone
 - acceptance_criteria
@@ -177,12 +177,12 @@ In the current runnable baseline, this structure may still be carried in compati
 Do not dump broad repo context into this field.
 
 ### allowed_read_set
-Current Builder-compatible read-boundary payload carried in the contract.
+Current Builder-enforced read-boundary payload carried in the contract.
 
 Important current-runtime note:
 - in the runnable 4-role runtime, this field is only mechanically enforced as the Builder read boundary;
 - Planner currently has a separate fixed input contract: `01_orchestrator.md` and `run_manifest.json`;
-- therefore `allowed_read_set` must not yet be described as a stage-wide mechanically enforced read control across all runtime stages.
+- therefore `allowed_read_set` must not be described as a stage-wide mechanically enforced read control across all runtime stages.
 
 ### allowed_change_set
 Exact set of artifacts approved for modification.
@@ -235,7 +235,7 @@ Allowed values:
 #### baseline
 Use only when locus is clear, change is narrow, false locality risk is low, adjacent blast radius is minimal, and no verify-only or adjacent consistency surface is already load-bearing.
 
-In Activation Matrix terms, `baseline` is the current runtime compatibility label for the Direct execution profile.
+In Activation Matrix terms, `baseline` is the compatibility label for the Direct execution profile.
 
 #### lite
 Use when a local patch is plausible but bounded adjacent reading or verification is still needed.
@@ -319,7 +319,7 @@ Threat surface, trust-boundary relevance, auth/data-exposure implications, and w
 ## Enforcement rules
 - If triage is incomplete, Builder must not start.
 - If allowed_read_set is undefined, Builder execution must stop.
-- In the current runnable runtime, this stop condition is mechanically enforced for Builder, not yet as a universal stage-level read sandbox.
+- In the runnable 4-role runtime, this stop condition is mechanically enforced for Builder, not yet as a universal stage-level read sandbox.
 - If allowed_change_set is undefined, execution must stop.
 - If verify_only_surfaces are declared, Reviewer must require evidence instead of assuming they were checked.
 - If actual blocking evidence contradicts the assumed scenario and re-triage is not made explicit, success must not be assumed.

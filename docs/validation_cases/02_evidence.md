@@ -1,7 +1,7 @@
 # Validation Case 02 — Evidence
 
 ## Evidence status
-PASS for a bounded adjacent-dependency-risk scenario in current runtime.
+PASS for a bounded adjacent-dependency-risk scenario in the runnable 4-role runtime.
 
 ## What was executed
 - `python3 scripts/selftest.py`
@@ -27,10 +27,10 @@ PASS for a bounded adjacent-dependency-risk scenario in current runtime.
 - reviewer returned FAIL when adjacent summary content became stale or inconsistent relative to the JSON message
 
 ## What this PASS proves
-- current runtime can distinguish direct artifact correctness from nearby adjacent-surface consistency
+- the runnable 4-role runtime can distinguish direct artifact correctness from nearby adjacent-surface consistency
 - adjacent-node verification is no longer only decorative documentation language
 - reviewer can falsify a local scenario where the primary surface is correct but the neighboring dependent surface is not
-- current runtime now supports a bounded bridge from Case 01 to Case 02
+- the runnable 4-role runtime now supports a bounded bridge from Case 01 to Case 02
 - current Builder-only read-boundary compatibility is enforced and falsifiable
 
 ## What this PASS does not prove

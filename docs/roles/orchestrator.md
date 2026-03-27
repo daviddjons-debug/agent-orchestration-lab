@@ -38,7 +38,7 @@ The orchestrator output must make the baseline-required contract fields explicit
 - false_locality_risk;
 - path_decision;
 - dependency_ring;
-- allowed_read_set (Builder-compatible read-boundary payload);
+- allowed_read_set (Builder-enforced read-boundary payload);
 - allowed_change_set;
 - forbidden_zone;
 - verification_targets;
@@ -96,7 +96,7 @@ Use when:
 
 ## Profile selection rule
 - start in Direct at the policy layer;
-- treat `baseline` as the runtime compatibility label for the Direct execution profile in `docs/ACTIVATION_MATRIX.md`;
+- treat `baseline` as the compatibility label for the Direct execution profile in `docs/ACTIVATION_MATRIX.md`;
 - escalate to `lite` only when bounded evidence shows that Direct/Baseline execution would under-control locality, adjacent validation, or drift risk;
 - escalate to `heavy` only when bounded evidence shows that Direct/Baseline or lite execution would under-control locality, consistency, security, or blocker uncertainty;
 - must not escalate by task-size narrative alone;

@@ -1,7 +1,7 @@
 # Validation Case 03 — Evidence
 
 ## Evidence status
-PASS for a bounded pseudo-code coordinated multi-file cluster scenario in current runtime.
+PASS for a bounded pseudo-code coordinated multi-file cluster scenario in the runnable 4-role runtime.
 
 ## What was executed
 - `python3 scripts/selftest.py`
@@ -35,10 +35,10 @@ PASS for a bounded pseudo-code coordinated multi-file cluster scenario in curren
 - reviewer still returned FAIL on stale adjacent summary inconsistency in the Case 02 scenario
 
 ## What this PASS proves
-- current runtime can validate a bounded coordinated multi-file local cluster
+- the runnable 4-role runtime can validate a bounded coordinated multi-file local cluster
 - widening can be justified and remain explicit inside a declared local cluster
 - reviewer can distinguish direct primary correctness from incomplete coordinated local updates
-- current runtime now supports a bounded bridge from Case 02 to Case 03
+- the runnable 4-role runtime now supports a bounded bridge from Case 02 to Case 03
 - Case 03 establishes the pseudo-code coordinated-cluster logic later extended on a persistent live substrate in Case 08
 - Case 03 extends validation beyond adjacent-pair consistency into bounded coordinated-cluster consistency
 
@@ -51,6 +51,6 @@ PASS for a bounded pseudo-code coordinated multi-file cluster scenario in curren
 - real multi-file source patch orchestration on a live repository
 
 ## Final judgment
-Validation Case 03 is passed only as a bounded pseudo-code coordinated-cluster scenario in the current runtime.
+Validation Case 03 is passed only as a bounded pseudo-code coordinated-cluster scenario in the runnable 4-role runtime.
 
 It is not yet passed as a real repository-scale code-patch orchestration scenario.
