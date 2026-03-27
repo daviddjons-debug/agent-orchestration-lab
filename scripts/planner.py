@@ -2,12 +2,12 @@ from pathlib import Path
 import json
 import sys
 
-from runtime_contract import MANIFEST_REQUIRED_LIST_FIELDS, MANIFEST_REQUIRED_STRING_FIELDS, planner_trace_expected
+from runtime_contract import MANIFEST_REQUIRED_LIST_FIELDS, MANIFEST_REQUIRED_STRING_FIELDS, build_plan_from_manifest, planner_trace_expected
 
 # Current runnable baseline note:
-# dependency_ring remains the compatibility list for downstream runtime stability.
-# dependency_ring_structured is now propagated as the target semantic shape, but is not
-# yet mechanically enforced by all runtime stages.
+# dependency_ring remains the flat compatibility shape for runtime stability.
+# dependency_ring_structured is the primary bounded-check shape used by the current
+# runtime, while dependency_ring is still preserved for compatibility and fallback flow.
 
 def main() -> int:
     if len(sys.argv) != 2:
@@ -43,53 +43,7 @@ def main() -> int:
             print(f"ERROR: run_manifest.json missing list field: {field}")
             return 1
 
-    structured_ring = manifest.get("dependency_ring_structured") or {}
-    structured_verify_only = structured_ring.get("adjacent_verify_only_nodes")
-    structured_excluded_neighbors = structured_ring.get("excluded_neighbors")
-
-    plan = {
-        "source": ["01_orchestrator.md", "run_manifest.json"],
-        "task_class": manifest.get("task_class"),
-        "objective": manifest.get("objective"),
-        "expected_end_state": manifest.get("expected_end_state"),
-        "symptom": manifest.get("symptom"),
-        "root_cause_hypothesis": manifest.get("root_cause_hypothesis"),
-        "problem_locus": manifest.get("problem_locus"),
-        "locus_confidence": manifest.get("locus_confidence"),
-        "false_locality_risk": manifest.get("false_locality_risk"),
-        "profile_selection_basis": manifest.get("profile_selection_basis", []),
-        "path_decision": manifest.get("path_decision"),
-        "dependency_ring": manifest.get("dependency_ring", []),
-        "dependency_ring_structured": structured_ring,
-        "allowed_read_set": manifest.get("allowed_read_set", []),
-        "builder_read_boundary": manifest.get("allowed_read_set", []),
-        "allowed_change_set": manifest.get("allowed_change_set", []),
-        "verify_only_surfaces": structured_verify_only if isinstance(structured_verify_only, list) else manifest.get("verify_only_surfaces", []),
-        "source_of_truth_node": manifest.get("source_of_truth_node"),
-        "stale_defect_node": manifest.get("stale_defect_node"),
-        "adjacent_consistency_node": manifest.get("adjacent_consistency_node"),
-        "expansion_trigger": manifest.get("expansion_trigger"),
-        "retriage_required_when_actual_blocker_differs": manifest.get("retriage_required_when_actual_blocker_differs"),
-        "reviewer_focus": manifest.get("reviewer_focus"),
-        "tester_focus": manifest.get("tester_focus"),
-        "security_focus": manifest.get("security_focus"),
-        "excluded_neighbors": structured_excluded_neighbors if isinstance(structured_excluded_neighbors, list) else manifest.get("excluded_neighbors", []),
-        "forbidden_zone": manifest.get("forbidden_zone", []),
-        "acceptance_criteria": manifest.get("acceptance_criteria", []),
-        "verification_targets": manifest.get("verification_targets", []),
-        "evidence_required": manifest.get("evidence_required", []),
-        "blockers_or_uncertainties": manifest.get("blockers_or_uncertainties", []),
-        "escalation_trigger": manifest.get("escalation_trigger", []),
-        "patch_strategy": "declared-artifact bounded update",
-        "change_rationale": "Current runnable planner preserves the orchestrator contract and keeps execution bounded to declared artifacts and report files.",
-        "steps": [
-            "Create output directories if missing.",
-            "Create all files declared in manifest artifacts.",
-            "Write declared content for each artifact.",
-            "Record completion in 03_builder.md.",
-        ],
-        "artifacts": artifacts,
-    }
+    plan = build_plan_from_manifest(manifest)
 
     structured_ring = plan.get("dependency_ring_structured") or {}
     primary_target = structured_ring.get("primary_target") or plan["problem_locus"]

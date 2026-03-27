@@ -3,37 +3,12 @@ import json
 import subprocess
 import sys
 
+from runtime_contract import reviewer_required_by_manifest
+
 
 def run(cmd: list[str]) -> int:
     completed = subprocess.run(cmd)
     return completed.returncode
-
-
-def should_run_reviewer(run_dir: Path) -> bool:
-    manifest_file = run_dir / "run_manifest.json"
-    if not manifest_file.exists():
-        print("ERROR: missing run_manifest.json for reviewer activation decision")
-        return False
-
-    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
-    path_decision = manifest.get("path_decision")
-    structured_ring = manifest.get("dependency_ring_structured", {}) if isinstance(manifest, dict) else {}
-    if path_decision in {"lite", "heavy"}:
-        return True
-
-    if manifest.get("verify_only_surfaces"):
-        return True
-    if isinstance(structured_ring, dict) and structured_ring.get("adjacent_verify_only_nodes"):
-        return True
-    if manifest.get("retriage_required_when_actual_blocker_differs") is True:
-        return True
-    if manifest.get("source_of_truth_node"):
-        return True
-    if manifest.get("stale_defect_node"):
-        return True
-    if manifest.get("adjacent_consistency_node"):
-        return True
-    return False
 
 
 def main() -> int:
@@ -64,7 +39,13 @@ def main() -> int:
     if rc != 0:
         return rc
 
-    if should_run_reviewer(run_dir):
+    manifest_file = run_dir / "run_manifest.json"
+    if not manifest_file.exists():
+        print("ERROR: missing run_manifest.json for reviewer activation decision")
+        return 1
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+
+    if reviewer_required_by_manifest(manifest):
         rc = run(["python3", "scripts/reviewer.py", str(run_dir)])
         if rc != 0:
             return rc
