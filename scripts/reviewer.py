@@ -5,7 +5,6 @@ import sys
 REQUIRED = [
     "01_orchestrator.md",
     "02_plan.json",
-    "02_planner.md",
     "03_builder.md",
     "run_manifest.json",
 ]
@@ -83,6 +82,8 @@ def main() -> int:
 
         require_valid_json = policy.get("require_valid_json", True)
         require_exact_text = policy.get("require_exact_text", True)
+        path_decision = plan.get("path_decision") if isinstance(plan, dict) else None
+        planner_trace_expected = path_decision in {"lite", "heavy"}
 
         if isinstance(manifest, dict) and isinstance(plan, dict):
             for field in CONTRACT_FIELDS:
@@ -202,6 +203,8 @@ def main() -> int:
                 artifact_results.append(exists_ok and content_ok)
 
             allowed_files = set(REQUIRED + ["04_reviewer.md"] + declared_artifact_paths + verify_only_surfaces)
+            if planner_trace_expected:
+                allowed_files.add("02_planner.md")
             for p in sorted(base.rglob("*")):
                 if p.is_file():
                     rel = p.relative_to(base).as_posix()

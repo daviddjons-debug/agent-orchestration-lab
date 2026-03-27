@@ -203,7 +203,11 @@ def main() -> int:
     plan_text = "\n".join(lines)
 
     (base / "02_plan.json").write_text(json.dumps(plan, indent=2) + "\n", encoding="utf-8")
-    (base / "02_planner.md").write_text(plan_text, encoding="utf-8")
+    planner_trace = base / "02_planner.md"
+    if plan["path_decision"] in {"lite", "heavy"}:
+        planner_trace.write_text(plan_text, encoding="utf-8")
+    elif planner_trace.exists():
+        planner_trace.unlink()
     print(json.dumps(plan, indent=2))
     return 0
 
