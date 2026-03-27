@@ -12,7 +12,7 @@ ORCHESTRATOR_HANDOFF_TEMPLATE = (
     "Assigned workflow:\n"
     "1. Planner must read only this handoff and run_manifest.json, then create 02_plan.json and emit 02_planner.md only when the active path keeps a separate planner trace.\n"
     "2. Builder must read only 02_plan.json and create all declared output files plus 03_builder.md.\n"
-    "3. Reviewer must evaluate files on disk and write 04_reviewer.md.\n\n"
+    "3. Reviewer must evaluate files on disk and write 04_reviewer.md only when reviewer activation is required by the active contract.\n\n"
     "Triage decisions declared in run_manifest.json are the contract source of truth for this run.\n"
     "No downstream role may silently widen scope.\n"
 )

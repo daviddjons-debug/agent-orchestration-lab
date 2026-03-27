@@ -4,7 +4,7 @@ import sys
 
 from runtime_contract import MANIFEST_REQUIRED_LIST_FIELDS, MANIFEST_REQUIRED_STRING_FIELDS, build_plan_from_manifest, planner_trace_expected
 
-# Current runnable baseline note:
+# Current runnable pipeline note:
 # dependency_ring remains the flat compatibility shape for runtime stability.
 # dependency_ring_structured is the primary bounded-check shape used by the current
 # runtime, while dependency_ring is still preserved for compatibility and fallback flow.

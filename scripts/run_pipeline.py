@@ -50,7 +50,7 @@ def main() -> int:
         if rc != 0:
             return rc
     else:
-        print("REVIEWER_SKIPPED=Direct policy / baseline runtime path (no declared review trigger)")
+        print("REVIEWER_SKIPPED=Direct policy / current runnable pipeline (no declared review trigger)")
 
     print(run_dir)
     return 0

@@ -58,7 +58,7 @@ No role may silently widen scope.
 ### baseline
 `baseline` is the runnable compatibility label for the Direct profile.
 
-In the runnable 4-role runtime, baseline still carries some compatibility-form contract fields that are not yet enforced uniformly across every stage.
+In the current runnable 4-role runtime, some contract fields still remain only partially enforced across stages.
 
 Baseline must define at minimum:
 - task_class
