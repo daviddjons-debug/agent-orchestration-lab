@@ -492,6 +492,190 @@ def main() -> int:
     sh(["python3", "scripts/planner.py", str(run_dir)])
 
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    manifest["task_class"] = "security_sensitive_change"
+    manifest["objective"] = "Validate security trigger linkage without ritual security theater"
+    manifest["problem_locus"] = "declared security review artifacts on the bounded task surface"
+    manifest["dependency_ring"] = [
+        "01_orchestrator.md",
+        "run_manifest.json",
+        "02_plan.json",
+        "output/security_input.json",
+        "output/security_review.json",
+    ]
+    manifest["dependency_ring_structured"] = {
+        "primary_target": "output/security_review.json",
+        "adjacent_read_nodes": [
+            "01_orchestrator.md",
+            "run_manifest.json",
+            "02_plan.json",
+        ],
+        "adjacent_verify_only_nodes": [],
+        "excluded_neighbors": [],
+    }
+    manifest["verify_only_surfaces"] = []
+    manifest["source_of_truth_node"] = None
+    manifest["stale_defect_node"] = None
+    manifest["adjacent_consistency_node"] = None
+    manifest["expansion_trigger"] = None
+    manifest["retriage_required_when_actual_blocker_differs"] = None
+    manifest["excluded_neighbors"] = []
+    manifest["reviewer_focus"] = None
+    manifest["tester_focus"] = None
+    manifest["security_focus"] = "file write / parsing boundary on declared output surface"
+    manifest["verification_targets"] = [
+        "manifest-plan alignment",
+        "security trigger linkage",
+        "blocking reason discipline",
+    ]
+    manifest["review_policy"]["require_valid_json"] = True
+    manifest["review_policy"]["require_exact_text"] = True
+    manifest["artifacts"] = [
+        {
+            "path": "output/security_input.json",
+            "type": "json",
+            "required_fields": {
+                "security_trigger": "file upload / parsing boundary",
+            },
+        },
+        {
+            "path": "output/security_review.json",
+            "type": "json",
+            "required_fields": {
+                "security_trigger": "file upload / parsing boundary",
+                "security_invocation_decision": "invoke",
+                "blocking_security_reason": "optional tls hardening",
+                "optional_hardening": ["optional tls hardening"],
+            },
+        },
+    ]
+    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+    for rel in [
+        "output/result.json",
+        "output/adjacent_status.txt",
+        "output/security_input.json",
+        "output/security_review.json",
+        "output/hardening_note.json",
+    ]:
+        target = run_dir / rel
+        if target.exists():
+            target.unlink()
+
+    sh(["python3", "scripts/planner.py", str(run_dir)])
+    sh(["python3", "scripts/builder.py", str(run_dir)])
+
+    case05_fail = sh(["python3", "scripts/reviewer.py", str(run_dir)], allow_fail=True)
+    if case05_fail.returncode == 0:
+        print("SELFTEST ERROR: expected FAIL on Case 05 when blocking security reason is only optional hardening")
+        return 1
+    case05_fail_text = (case05_fail.stdout or "") + (case05_fail.stderr or "")
+    if "blocking security reason is not optional hardening" not in case05_fail_text:
+        print("SELFTEST ERROR: expected reviewer evidence for invalid Case 05 blocking reason discipline")
+        return 1
+
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    manifest["artifacts"][1]["required_fields"]["blocking_security_reason"] = "unsafe file parsing remains reachable"
+    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+    sh(["python3", "scripts/planner.py", str(run_dir)])
+
+    security_review = run_dir / "output/security_review.json"
+    security_review.write_text(
+        json.dumps(
+            {
+                "security_trigger": "file upload / parsing boundary",
+                "security_invocation_decision": "invoke",
+                "blocking_security_reason": "unsafe file parsing remains reachable",
+                "optional_hardening": ["optional tls hardening"],
+            },
+            indent=2,
+        ) + "\n",
+        encoding="utf-8",
+    )
+
+    case05_pass = sh(["python3", "scripts/reviewer.py", str(run_dir)])
+    if "Final verdict: PASS" not in case05_pass.stdout:
+        print("SELFTEST ERROR: expected PASS on Case 05 after restoring concrete blocking security reason")
+        return 1
+
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    manifest["task_class"] = "justified_local_hardening"
+    manifest["objective"] = "Validate local hardening without disguised refactoring"
+    manifest["problem_locus"] = "declared local hardening note on the bounded task surface"
+    manifest["tester_focus"] = "local hardening must stay evidence-linked and non-refactoring"
+    manifest["security_focus"] = None
+    manifest["verification_targets"] = [
+        "manifest-plan alignment",
+        "hardening scope discipline",
+        "hardening reason linkage",
+    ]
+    manifest["artifacts"] = [
+        {
+            "path": "output/hardening_note.json",
+            "type": "json",
+            "required_fields": {
+                "hardening_scope": "local",
+                "hardening_reason": "prevents same nearby failure mode",
+                "refactoring_detected": False,
+            },
+        },
+    ]
+    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+    for rel in [
+        "output/security_input.json",
+        "output/security_review.json",
+        "output/hardening_note.json",
+    ]:
+        target = run_dir / rel
+        if target.exists():
+            target.unlink()
+
+    sh(["python3", "scripts/planner.py", str(run_dir)])
+    sh(["python3", "scripts/builder.py", str(run_dir)])
+
+    hardening_note = run_dir / "output/hardening_note.json"
+    hardening_note.write_text(
+        json.dumps(
+            {
+                "hardening_scope": "local",
+                "hardening_reason": "prevents same nearby failure mode",
+                "refactoring_detected": True,
+            },
+            indent=2,
+        ) + "\n",
+        encoding="utf-8",
+    )
+
+    case06_fail = sh(["python3", "scripts/reviewer.py", str(run_dir)], allow_fail=True)
+    if case06_fail.returncode == 0:
+        print("SELFTEST ERROR: expected FAIL on Case 06 when refactoring is disguised as hardening")
+        return 1
+    case06_fail_text = (case06_fail.stdout or "") + (case06_fail.stderr or "")
+    if "refactoring is not disguised as hardening" not in case06_fail_text:
+        print("SELFTEST ERROR: expected reviewer evidence for disguised refactoring in Case 06")
+        return 1
+
+    hardening_note.write_text(
+        json.dumps(
+            {
+                "hardening_scope": "local",
+                "hardening_reason": "prevents same nearby failure mode",
+                "refactoring_detected": False,
+            },
+            indent=2,
+        ) + "\n",
+        encoding="utf-8",
+    )
+
+    case06_pass = sh(["python3", "scripts/reviewer.py", str(run_dir)])
+    if "Final verdict: PASS" not in case06_pass.stdout:
+        print("SELFTEST ERROR: expected PASS on Case 06 after restoring local evidence-linked hardening")
+        return 1
+
+    sh(["python3", "scripts/planner.py", str(run_dir)])
+
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
     manifest["objective"] = "Produce declared artifacts for the current run contract"
     manifest["problem_locus"] = "run contract files and declared outputs"
     manifest["dependency_ring"] = ["01_orchestrator.md", "run_manifest.json", "02_plan.json", "output/"]
