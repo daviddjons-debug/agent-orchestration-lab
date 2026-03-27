@@ -78,6 +78,17 @@ Define the minimum task set required to distinguish a real surgical orchestratio
 - tester/security are invoked ritualistically
 - system reads or changes more than necessary without proof
 
+### 9. Source-of-truth vs stale-node vs adjacent-consistency triad
+- Goal: verify that the system can distinguish canonical truth, stale dependent state, and adjacent consistency obligations without collapsing them into generic cluster language.
+- Expected profile: Heavy
+- Runnable lab interpretation: a bounded declared cluster where one node is canonical, one node is stale against it, and one adjacent node must remain consistency-aligned.
+- What must be checked:
+  - `source_of_truth_node` is explicitly declared and is not interchangeable with `stale_defect_node`;
+  - `stale_defect_node` is proven stale relative to the declared source of truth;
+  - `adjacent_consistency_node` is validated as a separate consistency obligation, not merely a second stale node;
+  - reviewer fails when triad roles are collapsed, swapped, or left semantically unproven;
+  - the case can distinguish schema-presence from actual triad reasoning.
+
 ## Current status
 This validation matrix is no longer documentation-only.
 

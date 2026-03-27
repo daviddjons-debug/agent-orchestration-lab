@@ -732,6 +732,67 @@ assert manifest.get("message") == message, "expected generated_manifest.json to 
         case08_summary.write_text(case08_summary_original, encoding="utf-8")
         case08_manifest.write_text(case08_manifest_original, encoding="utf-8")
 
+    print("== CASE 09: source-truth / stale-defect / adjacent-consistency triad ==")
+    case09_src = Path("lab_cases/case_09_source_truth_stale_consistency/src")
+    case09_source = case09_src / "source.json"
+    case09_stale = case09_src / "stale_view.json"
+    case09_adjacent = case09_src / "adjacent_index.txt"
+
+    case09_source_original = case09_source.read_text(encoding="utf-8")
+    case09_stale_original = case09_stale.read_text(encoding="utf-8")
+    case09_adjacent_original = case09_adjacent.read_text(encoding="utf-8")
+
+    case09_cmd = ["python3", "lab_cases/case_09_source_truth_stale_consistency/check_case09.py"]
+
+    try:
+        source_message = json.loads(case09_source.read_text(encoding="utf-8")).get("message")
+        if not isinstance(source_message, str) or not source_message.strip():
+            print("SELFTEST ERROR: expected non-empty source message in Case 09")
+            return 1
+
+        case09_stale.write_text(
+            json.dumps({"message": "STALE VIEW"}, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        case09_adjacent.write_text("STALE ADJACENT\\n", encoding="utf-8")
+
+        case09_fail_stale = sh(case09_cmd, allow_fail=True)
+        if case09_fail_stale.returncode == 0:
+            print("SELFTEST ERROR: expected FAIL on Case 09 when stale_view.json is stale")
+            return 1
+
+        case09_stale.write_text(
+            json.dumps({"message": source_message}, indent=2) + "\n",
+            encoding="utf-8",
+        )
+
+        case09_fail_adjacent = sh(case09_cmd, allow_fail=True)
+        if case09_fail_adjacent.returncode == 0:
+            print("SELFTEST ERROR: expected FAIL on Case 09 when adjacent_index.txt is stale")
+            return 1
+
+        case09_adjacent.write_text(source_message + "\n", encoding="utf-8")
+
+        case09_pass = sh(case09_cmd)
+        if case09_pass.returncode != 0:
+            print("SELFTEST ERROR: expected PASS on Case 09 after full triad alignment")
+            return 1
+
+        selftest_text = Path("scripts/selftest.py").read_text(encoding="utf-8")
+        triad_tokens = [
+            "source_of_truth_node",
+            "stale_defect_node",
+            "adjacent_consistency_node",
+        ]
+        for token in triad_tokens:
+            if token not in selftest_text:
+                print(f"SELFTEST ERROR: expected explicit {token} coverage in scripts/selftest.py")
+                return 1
+    finally:
+        case09_source.write_text(case09_source_original, encoding="utf-8")
+        case09_stale.write_text(case09_stale_original, encoding="utf-8")
+        case09_adjacent.write_text(case09_adjacent_original, encoding="utf-8")
+
     print("== PIPELINE ACTIVATION CHECK: baseline vs lite reviewer behavior ==")
     baseline_pipeline = sh(["python3", "scripts/run_pipeline.py", str(base), "baseline"])
     baseline_runs = sorted(base.glob("orchestrated-*"))
