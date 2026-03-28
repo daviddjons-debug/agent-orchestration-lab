@@ -62,7 +62,7 @@ That defect was corrected by making the builder consume planner-defined contract
 
 ## Reproducible checks
 ### Happy path
-`python3 scripts/run_pipeline.py`
+`python3 scripts/run_pipeline.py docs/runs baseline`
 
 ### Full regression
 `python3 scripts/selftest.py`
