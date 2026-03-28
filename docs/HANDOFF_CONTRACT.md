@@ -176,7 +176,7 @@ The contract should distinguish, conceptually, between:
 
 In bounded cluster or coordinated-consistency tasks, the domain dependency ring should be described first. Execution/report artifacts must not be mixed into the domain ring unless explicitly justified as execution context.
 
-In the current runtime baseline, this structure may still be carried in current runtime form rather than as a fully enforced structured runtime object.
+In the current runtime baseline, this structured ring is mechanically enforced by the Builder (required object with primary/adjacent/verify-only/excluded fields aligned to dependency_ring).
 
 Do not dump broad repo context into this field.
 
