@@ -99,11 +99,13 @@ What this adapter blueprint defines now:
 - the canonical VS Code attachment model
 - the distinction between reusable brain and project-local overlay
 - a first thin on-disk adapter-side artifact at `orchestration/adapters/vscode.md`
+- a thin bounded usage proof card at `orchestration/adapters/vscode_usage.md`
 
 What it does not yet define:
 - exact UI/configuration steps for a specific VS Code extension or agent shell
 - automatic enforcement guarantees
 - extension-specific implementation proof
+- UI-level attachment verification in a live VS Code environment
 
 ---
 
