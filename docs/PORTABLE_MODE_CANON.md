@@ -167,7 +167,9 @@ What portable mode now has:
 - minimum overlay definition,
 - adapter blueprints for VS Code and Antigravity,
 - bounded task attachment template,
-- canonical bootstrap sequence.
+- canonical bootstrap sequence,
+- a first minimal on-disk operational skeleton under `orchestration/`,
+- a materialized project-overlay skeleton under `orchestration/overlays/project/`.
 
 What portable mode does not yet claim:
 - automatic enforcement in every external environment,
