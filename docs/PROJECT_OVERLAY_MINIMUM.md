@@ -96,4 +96,7 @@ What it does not yet define:
 ---
 
 ## Next required step
-After this document, the next canonical layer should define the first environment adapter, starting with the most realistic target environment.
+After this document, the next step should be the first minimal operational portable-pack checkpoint:
+- define the smallest safe on-disk project overlay skeleton,
+- keep it separate from reusable core truth,
+- and avoid treating blueprint-level adapter guidance as implemented attachment behavior.

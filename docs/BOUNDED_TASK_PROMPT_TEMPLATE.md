@@ -139,7 +139,7 @@ It does not yet define an automated loader or UI-specific integration path.
 ---
 
 ## Next required step
-After this document, the next canonical layer should define the new-project bootstrap sequence:
-- what to create first,
-- what to fill in first,
-- and when the portable pack may be considered safely attached.
+After this document, the next step should be the first minimal operational portable-pack checkpoint:
+- define how a bounded task surface is materialized without duplicating core logic,
+- keep task attachment thinner than project overlay plus reusable core,
+- and avoid claiming automated loader behavior before a real bounded implementation exists.
