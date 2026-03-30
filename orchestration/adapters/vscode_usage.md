@@ -52,3 +52,4 @@ This card does not prove:
 - adapter artifact: `orchestration/adapters/vscode.md`
 - project overlay: `orchestration/overlays/project/`
 - bounded task template: `docs/BOUNDED_TASK_PROMPT_TEMPLATE.md`
+- bounded task instance: `orchestration/tasks/vscode_bounded_task_example.md`
