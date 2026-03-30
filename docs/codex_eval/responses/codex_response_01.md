@@ -1,0 +1,17 @@
+Task 1
+
+Mechanically enforced now: Planner validates required manifest fields and only reads 01_orchestrator.md + run_manifest.json before emitting 02_plan.json (and 02_planner.md only for lite/heavy) per scripts/planner.py. Builder enforces plan schema, dependency_ring_structured integrity, exact allowed_read_set by profile, actual read sources constrained to adjacent_read_nodes, and writes only artifacts inside allowed_change_set, recording evidence in 03_builder.md (scripts/builder.py). Reviewer checks manifest↔plan equality across CONTRACT_FIELDS, artifact existence/content, structured ring consistency, verify-only surfaces, builder-read evidence, cluster triad fields, retriage policy, security/hardening rules, undeclared outputs, and writes 04_reviewer.md (scripts/reviewer.py). Pipeline invokes reviewer only when runtime triggers fire (scripts/run_pipeline.py + scripts/runtime_contract.py).
+Partially enforced: Stage-wide read sandbox exists only at Builder; Planner/Orchestrator reads are policy-level. Profiles (baseline/lite/heavy) remain policy labels; Tester/Security are conceptual (no runnable stages). Dependency ring is still flat compatibility data carried alongside a structured ring; no graph walk. Verify-only surfaces require reviewer evidence but do not gate reads/writes earlier.
+Reviewer activation triggers (runtime): path_decision in {"lite","heavy"}; any verify_only_surfaces; dependency_ring_structured.adjacent_verify_only_nodes non-empty; retriage_required_when_actual_blocker_differs is True; source_of_truth_node; stale_defect_node; adjacent_consistency_node (runtime_contract.reviewer_required_by_manifest).
+Builder read contract by profile: baseline → only 02_plan.json; lite/heavy → 02_plan.json + run_manifest.json (ALLOWED_READ_SET_BY_PROFILE in scripts/runtime_contract.py, enforced in scripts/builder.py).
+
+Task 2
+
+Wording/runtime alignment: Baseline (Direct) skips reviewer when no trigger; lite/heavy always run reviewer; additional triggers come from verify-only/cluster/retriage fields. Runtime behavior (scripts/run_pipeline.py + reviewer_required_by_manifest) matches profile descriptions in docs/EXECUTION_PROFILES.md and orchestrator handoff text. No patch required.
+
+Task 3
+
+Failure modes exercised in selftest/live cases: plan corruption of artifacts; manifest/plan contract drift (allowed_change_set); builder bounds (change-set and read-set for baseline/heavy); undeclared output drift; stale result/summary pairing; coordinated cluster consistency (spec ↔ summary/manifest); missing verify-only evidence (false-local Case 04); retriage flag misalignment; security trigger with optional-only blocking reason; hardening note disguised refactor; invalid plan schema; live bounded code with pending verify-only gate (Case 07); live cluster stale dependent surface (Case 08); source/truth vs stale vs adjacent triad staleness (Case 09).
+Each failure is restored to PASS after fixing the specific contract or file (selftest toggles fail→pass per scenario).
+Bounded falsifiability demonstrated: the suite repeatedly forces observable FAIL when declared bounds or adjacent evidence are violated and returns to PASS after restoring the bounded contract, across both generated run artifacts and persistent live substrates.
+Not yet proven: stage-wide read sandboxing beyond Builder; real repo-scale or multi-file surgical patching; dependency-ring enforced as a graph; runnable Tester/Security stages; external model behavior against the contract; broader cluster escalation beyond the covered bounded cases.
