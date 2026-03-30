@@ -132,4 +132,7 @@ This preserves discipline without pretending locality already exists.
 ---
 
 ## Next required step
-After this document, the next step should be a small sync pass updating `docs/README.md` so the portable-pack layer appears explicitly in the documentation map.
+After this document, the next step should be the first minimal operational portable-pack checkpoint:
+- define the smallest safe on-disk project overlay skeleton,
+- keep it separate from the reusable core,
+- and avoid claiming automated adapter enforcement before a real bounded implementation exists.
