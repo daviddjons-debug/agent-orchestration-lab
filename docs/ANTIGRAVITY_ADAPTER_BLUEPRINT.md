@@ -109,4 +109,7 @@ What it does not yet define:
 ---
 
 ## Next required step
-After this document, the next canonical layer should define the shared bounded task prompt template used across adapters.
+After this document, the next step should be the first minimal operational portable-pack checkpoint:
+- define the smallest safe adapter-side attachment artifact for Antigravity,
+- keep it thin relative to reusable core, project overlay, and bounded task surface,
+- and avoid claiming automatic environment enforcement before a real bounded implementation exists.
