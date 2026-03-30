@@ -101,12 +101,13 @@ What this adapter blueprint defines now:
 - a first thin on-disk adapter-side artifact at `orchestration/adapters/vscode.md`
 - a thin bounded usage proof card at `orchestration/adapters/vscode_usage.md`
 - a bounded verification note at `orchestration/adapters/vscode_verification.md`
+- a bounded live verification checklist at `orchestration/adapters/vscode_live_verification_checklist.md`
 
 What it does not yet define:
 - exact UI/configuration steps for a specific VS Code extension or agent shell
 - automatic enforcement guarantees
 - extension-specific implementation proof
-- UI-level attachment verification in a live VS Code environment
+- UI-level attachment verification proof in a live VS Code environment
 
 ---
 

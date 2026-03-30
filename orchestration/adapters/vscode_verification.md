@@ -59,5 +59,6 @@ This verification note does not establish:
 - blueprint: `docs/VSCODE_ADAPTER_BLUEPRINT.md`
 - adapter artifact: `orchestration/adapters/vscode.md`
 - usage proof: `orchestration/adapters/vscode_usage.md`
+- live verification checklist: `orchestration/adapters/vscode_live_verification_checklist.md`
 - project overlay: `orchestration/overlays/project/`
 - bounded task template: `docs/BOUNDED_TASK_PROMPT_TEMPLATE.md`

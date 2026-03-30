@@ -54,7 +54,8 @@ For portable-pack attachment/design understanding, then read:
 17. `orchestration/adapters/vscode.md`
 18. `orchestration/adapters/vscode_usage.md`
 19. `orchestration/adapters/vscode_verification.md`
-20. `orchestration/tasks/vscode_bounded_task_example.md`
+20. `orchestration/adapters/vscode_live_verification_checklist.md`
+21. `orchestration/tasks/vscode_bounded_task_example.md`
 
 Then read supporting material as needed:
 - `docs/roles/`
