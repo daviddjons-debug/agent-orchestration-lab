@@ -126,8 +126,7 @@ What does not yet exist:
 ---
 
 ## Next required step
-After this blueprint, the next document should define:
-- the canonical directory layout for the portable pack;
-- which files are global reusable core;
-- which files are environment adapters;
-- which files are project-local overlays.
+After this blueprint, the next step should be the first minimal operational portable-pack checkpoint:
+- define the smallest safe on-disk portable-pack skeleton,
+- keep reusable core, adapter attachment, project overlay, and bounded task layers separated,
+- and avoid claiming implemented multi-environment attachment before a real bounded structure exists.

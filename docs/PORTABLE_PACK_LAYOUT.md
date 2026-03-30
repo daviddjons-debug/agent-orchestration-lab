@@ -156,6 +156,7 @@ Before any future directory migration:
 ---
 
 ## Next required step
-After this layout doc, the next canonical document should define:
-- the minimum required contents of the project-local overlay;
-- what a new project must supply before the portable pack can be attached safely.
+After this layout doc, the next step should be the first minimal operational portable-pack checkpoint:
+- materialize the smallest safe on-disk skeleton implied by the current layout,
+- keep blueprint-level layer separation intact,
+- and avoid claiming adapter enforcement or project attachment automation before bounded implementation proof exists.
