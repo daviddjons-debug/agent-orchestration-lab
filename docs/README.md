@@ -8,7 +8,14 @@
 5. `docs/VALIDATION_MATRIX.md` — validation-case coverage and status
 6. `docs/UNIFIED_HANDOFF_CONTRACT_CANON_V4.md` — unified canon snapshot
 7. `docs/agent_pack_v2_rule_extraction.md` — extracted architecture rules from observed bounded validation behavior
-8. `docs/NEXT_EXPERIMENT.md` — current next-step target, if still active
+8. `docs/PORTABLE_PACK_BLUEPRINT.md` — portable pack design blueprint
+9. `docs/PORTABLE_PACK_LAYOUT.md` — canonical portable pack layout
+10. `docs/PROJECT_OVERLAY_MINIMUM.md` — minimum required project-local overlay
+11. `docs/VSCODE_ADAPTER_BLUEPRINT.md` — VS Code attachment model
+12. `docs/ANTIGRAVITY_ADAPTER_BLUEPRINT.md` — Antigravity attachment model
+13. `docs/BOUNDED_TASK_PROMPT_TEMPLATE.md` — shared bounded current-task attachment template
+14. `docs/NEW_PROJECT_BOOTSTRAP_SEQUENCE.md` — canonical bootstrap order for new projects
+15. `docs/NEXT_EXPERIMENT.md` — current next-step target, if still active
 
 ## Supporting directories
 - `docs/roles/` — role-level behavior docs aligned to the canonical contract
@@ -28,6 +35,15 @@ For current architecture/runtime understanding, start with:
 4. `docs/BASELINE.md`
 5. `docs/VALIDATION_MATRIX.md`
 6. `docs/agent_pack_v2_rule_extraction.md`
+
+For portable-pack attachment/design understanding, then read:
+7. `docs/PORTABLE_PACK_BLUEPRINT.md`
+8. `docs/PORTABLE_PACK_LAYOUT.md`
+9. `docs/PROJECT_OVERLAY_MINIMUM.md`
+10. `docs/VSCODE_ADAPTER_BLUEPRINT.md`
+11. `docs/ANTIGRAVITY_ADAPTER_BLUEPRINT.md`
+12. `docs/BOUNDED_TASK_PROMPT_TEMPLATE.md`
+13. `docs/NEW_PROJECT_BOOTSTRAP_SEQUENCE.md`
 
 Then read supporting material as needed:
 - `docs/roles/`
