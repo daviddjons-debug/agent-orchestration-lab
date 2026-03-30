@@ -25,6 +25,7 @@
 - `docs/session_recaps/` — session-level historical recap layer
 - `docs/baseline_v1/` — preserved older baseline role pack / reference layer
 - `orchestration/` — first minimal operational portable-pack skeleton; not a full migrated core or implemented adapter layer
+- `orchestration/adapters/` — thin adapter-side operational artifacts when materialized
 
 ## Evidence layers
 - `docs/codex_eval/` — raw external evaluation artifacts; not a canonical policy/contract layer
@@ -50,6 +51,7 @@ For portable-pack attachment/design understanding, then read:
 14. `docs/PORTABLE_MODE_CANON.md`
 15. `docs/PORTABLE_MODE_CHECKLIST.md`
 16. `orchestration/README.md`
+17. `orchestration/adapters/vscode.md`
 
 Then read supporting material as needed:
 - `docs/roles/`

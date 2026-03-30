@@ -98,11 +98,12 @@ This avoids rewriting the core per project while still grounding decisions local
 What this adapter blueprint defines now:
 - the canonical VS Code attachment model
 - the distinction between reusable brain and project-local overlay
+- a first thin on-disk adapter-side artifact at `orchestration/adapters/vscode.md`
 
 What it does not yet define:
 - exact UI/configuration steps for a specific VS Code extension or agent shell
 - automatic enforcement guarantees
-- a finalized on-disk `orchestration/adapters/vscode.md` implementation
+- extension-specific implementation proof
 
 ---
 
