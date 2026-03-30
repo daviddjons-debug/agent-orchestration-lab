@@ -159,6 +159,28 @@ Then read deeper supporting docs only as needed.
 
 ---
 
+## Practical validation status
+
+The portable starter layer is now practically validated for:
+- future project starts,
+- truthful overlay initialization,
+- bounded task shaping,
+- tiny real coding tasks,
+- bounded improvement steps,
+- small multi-file validation loops with generated artifact output,
+- honest PASS / FAIL behavior during early project phases.
+
+This does **not** yet prove:
+- medium-complexity project work,
+- ambiguous multi-dependency engineering tasks,
+- sustained correctness on real feature work,
+- production-grade repo-scale orchestration,
+- final optimality of the current pack.
+
+So the correct boundary is:
+- validated for future project starts and early bounded implementation loops;
+- not yet validated for medium-complexity project work.
+
 ## Current boundary
 What portable mode now has:
 - bounded reusable orchestration core,
