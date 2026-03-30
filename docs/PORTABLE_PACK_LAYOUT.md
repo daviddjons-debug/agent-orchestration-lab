@@ -118,10 +118,10 @@ This layer supports truthfulness and auditing but is not policy truth.
 - `docs/runs/`
 
 ### Current missing layers
-Not yet defined as canon:
-- adapter docs
-- project-local overlay docs
-- implemented `orchestration/` directory
+Not yet implemented as an operational pack:
+- materialized `orchestration/` directory
+- adapter implementation files beyond blueprint docs
+- on-disk project overlay implementation under `orchestration/overlays/project/`
 
 ---
 

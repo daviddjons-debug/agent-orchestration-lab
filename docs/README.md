@@ -15,7 +15,9 @@
 12. `docs/ANTIGRAVITY_ADAPTER_BLUEPRINT.md` — Antigravity attachment model
 13. `docs/BOUNDED_TASK_PROMPT_TEMPLATE.md` — shared bounded current-task attachment template
 14. `docs/NEW_PROJECT_BOOTSTRAP_SEQUENCE.md` — canonical bootstrap order for new projects
-15. `docs/NEXT_EXPERIMENT.md` — current next-step target, if still active
+15. `docs/PORTABLE_MODE_CANON.md` — single operator-facing portable-mode canon
+16. `docs/PORTABLE_MODE_CHECKLIST.md` — compact operator checklist for portable-mode attachment
+17. `docs/NEXT_EXPERIMENT.md` — current next-step target, if still active
 
 ## Supporting directories
 - `docs/roles/` — role-level behavior docs aligned to the canonical contract
@@ -44,6 +46,8 @@ For portable-pack attachment/design understanding, then read:
 11. `docs/ANTIGRAVITY_ADAPTER_BLUEPRINT.md`
 12. `docs/BOUNDED_TASK_PROMPT_TEMPLATE.md`
 13. `docs/NEW_PROJECT_BOOTSTRAP_SEQUENCE.md`
+14. `docs/PORTABLE_MODE_CANON.md`
+15. `docs/PORTABLE_MODE_CHECKLIST.md`
 
 Then read supporting material as needed:
 - `docs/roles/`
