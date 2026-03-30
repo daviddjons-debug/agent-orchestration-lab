@@ -53,6 +53,7 @@ For portable-pack attachment/design understanding, then read:
 16. `orchestration/README.md`
 17. `orchestration/adapters/vscode.md`
 18. `orchestration/adapters/vscode_usage.md`
+19. `orchestration/adapters/vscode_verification.md`
 
 Then read supporting material as needed:
 - `docs/roles/`

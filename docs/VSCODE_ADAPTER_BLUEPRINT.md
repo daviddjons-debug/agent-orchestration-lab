@@ -100,6 +100,7 @@ What this adapter blueprint defines now:
 - the distinction between reusable brain and project-local overlay
 - a first thin on-disk adapter-side artifact at `orchestration/adapters/vscode.md`
 - a thin bounded usage proof card at `orchestration/adapters/vscode_usage.md`
+- a bounded verification note at `orchestration/adapters/vscode_verification.md`
 
 What it does not yet define:
 - exact UI/configuration steps for a specific VS Code extension or agent shell
