@@ -32,12 +32,18 @@ Attached skills:
 Purpose:
 - run a bounded contradiction check when the current path may be wrong, incomplete, or under-validated.
 
+### browser_verification
+Attached skills:
+- `skills/browser_visible_behavior_check.md`
+
+Purpose:
+- require explicit visible-behavior verification when completion depends on what actually appears or works in the browser.
+
 ## Modules with no materialized skills yet
 - `triage`
 - `planning`
 - `execution`
 - `security`
-- `browser_verification`
 - `release_packaging`
 
 ## Rule
