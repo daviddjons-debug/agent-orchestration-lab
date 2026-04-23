@@ -13,10 +13,12 @@ It exists to prevent:
 ### review
 Attached skills:
 - `skills/review_false_locality_check.md`
+- `skills/frontend_design_audit_check.md`
 
 Purpose:
 - detect false-local success;
-- block completion when adjacent or verify-only validation remains unresolved.
+- block completion when adjacent or verify-only validation remains unresolved;
+- run a bounded frontend design audit for critique, polish readiness, and redesign readiness without accepting generic frontend slop as sufficient.
 
 ### testing
 Attached skills:
@@ -35,9 +37,11 @@ Purpose:
 ### browser_verification
 Attached skills:
 - `skills/browser_visible_behavior_check.md`
+- `skills/frontend_polish_execution_check.md`
 
 Purpose:
-- require explicit visible-behavior verification when completion depends on what actually appears or works in the browser.
+- require explicit visible-behavior verification when completion depends on what actually appears or works in the browser;
+- guide bounded frontend polish execution so visible improvement does not degrade into decorative noise, layout thrash, or generic premium styling.
 
 ### security
 Attached skills:
