@@ -39,11 +39,17 @@ Attached skills:
 Purpose:
 - require explicit visible-behavior verification when completion depends on what actually appears or works in the browser.
 
+### security
+Attached skills:
+- `skills/security_boundary_exposure_check.md`
+
+Purpose:
+- require bounded inspection of trust-boundary or exposure-relevant surfaces when the task may affect auth, permissions, secrets, parsing, uploads, or externally reachable behavior.
+
 ## Modules with no materialized skills yet
 - `triage`
 - `planning`
 - `execution`
-- `security`
 - `release_packaging`
 
 ## Rule
