@@ -1,43 +1,67 @@
 # Agent Orchestration Lab
 
 ## Purpose
-This repository is a controlled sandbox to verify whether multi-agent orchestration is real, observable, falsifiable, and reproducible rather than simulated.
+This repository is a controlled sandbox for building and checking a bounded orchestration system that is observable, falsifiable, and reproducible rather than narrative-driven.
 
-## Operating rule
-Do not jump to a large system first.
-Start with the smallest end-to-end orchestration that can be tested, broken, reviewed, and restored.
+## Core operating rule
+Do not start from maximum agent count or maximum ceremony.
+Start from the smallest justified execution path that can still localize the problem, bound scope, apply a minimal change, and verify completion honestly.
 
-## Current runnable baseline
-The lab currently proves a minimal 4-role contract-driven pipeline with:
-- explicit role separation;
-- visible handoff artifacts;
-- planner-to-builder execution through structured `02_plan.json`;
-- multi-file artifact generation from manifest-declared outputs;
-- reviewer validation against both plan contract and output artifacts;
-- reproducible negative tests and recovery.
+## Current repository state
+The repository now contains three distinct layers:
 
-The runnable baseline roles are:
+1. **Operational core**
+   - handoff contract
+   - activation / execution profile logic
+   - bounded runtime scripts
+   - validation matrix
+   - role behavior docs aligned to the bounded contract
+
+2. **Portable / design layer**
+   - portable pack blueprint and layout
+   - project overlay minimum
+   - bounded task prompt template
+   - adapter blueprints for environments such as VS Code and Antigravity
+
+3. **Evidence / archive layer**
+   - validation cases
+   - generated run artifacts
+   - session recaps
+   - external evaluator artifacts
+
+## Current runnable runtime
+The runnable harness is still the bounded 4-role runtime centered on:
 - orchestrator
 - planner
 - builder
 - reviewer
 
-## What this lab does not yet prove
-This repository does not yet prove:
-- advanced autonomous reasoning;
-- strong decomposition on complex real-world tasks;
-- surgical debugging behavior;
-- dependency-aware patch planning;
-- blast-radius control across realistic code changes;
-- tester and security participation as real execution roles.
+This runtime is supported by:
+- `scripts/orchestrator.py`
+- `scripts/planner.py`
+- `scripts/builder.py`
+- `scripts/reviewer.py`
+- `scripts/run_pipeline.py`
+- `scripts/runtime_contract.py`
+- `scripts/selftest.py`
 
-It currently proves orchestration mechanics and contract enforcement.
+## What is currently proven
+The repository currently proves a bounded orchestration core with:
+- explicit contract-driven handoff;
+- profile-aware activation logic at the policy/documentation layer;
+- Builder boundary enforcement;
+- reviewer failure on contract drift and undeclared drift;
+- validation cases for bounded locality, adjacent verification, and consistency logic;
+- a materialized but still bounded portable / VS Code attachment seam.
 
-## Current transition
-The next stage is not to inflate the system with more roles immediately.
-The next stage is to transform the existing 4 runnable roles from a simple artifact-contract pipeline into a surgical contract baseline while preserving the current runnable harness.
+## What is not yet proven
+The repository does not yet prove:
+- universal repo-scale surgical orchestration on arbitrary codebases;
+- full live interactive enforcement inside host environments;
+- complete Heavy-path maturity;
+- broad autonomous decomposition without bounded evidence.
 
-That means:
-- keep the runnable 4-role pipeline intact;
-- rewrite role behavior around triage, boundaries, dependency awareness, and minimal change discipline;
-- only add tester and security after the surgical contract model is coherent.
+## Where to start
+- Read `docs/README.md` first for the current documentation map.
+- Treat `docs/HANDOFF_CONTRACT.md`, `docs/ACTIVATION_MATRIX.md`, `docs/EXECUTION_PROFILES.md`, `docs/BASELINE.md`, and `docs/VALIDATION_MATRIX.md` as the operational spine.
+- Treat portable/adapters as secondary until current runtime truth is clear.
