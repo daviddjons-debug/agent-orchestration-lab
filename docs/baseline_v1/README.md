@@ -1,5 +1,13 @@
 # Agent Orchestration Lab
 
+## Archive/evidence status
+`agent-orchestration-lab` is the R&D / validation / evidence lab.
+`Leo_Agents_V2` is the active exported authority/runtime pack for real project orchestration.
+
+This `baseline_v1` directory is historical baseline evidence for early lab orchestration mechanics.
+It is not current Leo authority and should not be used as the active runtime contract.
+This marker does not physically archive, move, or delete any baseline artifact.
+
 ## Purpose
 This repository is a controlled sandbox to verify whether multi-agent orchestration is real, observable, falsifiable, and reproducible rather than simulated.
 

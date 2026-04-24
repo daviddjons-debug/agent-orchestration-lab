@@ -1,5 +1,10 @@
 # Codex External Evaluation Artifacts
 
+Authority note:
+- `agent-orchestration-lab` is the R&D / validation / evidence lab;
+- `Leo_Agents_V2` is the active exported authority/runtime pack for real project orchestration;
+- this directory is historical/evaluation evidence, not current authority.
+
 Purpose:
 - store raw bounded external-evaluation prompts and responses for Codex behavior validation;
 - preserve evaluator artifacts separately from canonical architecture docs;
@@ -18,3 +23,4 @@ Rules:
 - do not treat files here as source of truth for runtime semantics;
 - do not edit runtime/docs based on these artifacts without proving a real mismatch in the live repo;
 - prefer extracting durable conclusions into canonical docs rather than expanding this folder casually.
+- this marker does not physically archive, move, or delete any eval artifact.

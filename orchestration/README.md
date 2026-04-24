@@ -1,5 +1,14 @@
 # Orchestration Layer
 
+## Lab-only status
+`agent-orchestration-lab` is the R&D / validation / evidence lab.
+`Leo_Agents_V2` is the active exported authority/runtime pack for real project orchestration.
+
+This lab `orchestration/` directory is a lab R&D / export-source surface.
+It is not active Leo authority, and it must not override `/Users/leonidgolub/Developer/Leo_Agents_V2` when that exported pack is present.
+This marker does not physically archive, move, or delete any orchestration file.
+
+## Purpose
 This directory is the current portable/operator-facing orchestration surface.
 
 ## Current contents
