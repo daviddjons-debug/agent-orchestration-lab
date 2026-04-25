@@ -1,0 +1,31 @@
+{
+  "source_rows": [
+    {
+      "source_file": "avc_packet.pdf",
+      "source_page": 12,
+      "source_item_id": "A-100",
+      "description": "Industrial circulation pump",
+      "quantity": 2,
+      "duty": "continuous"
+    },
+    {
+      "source_file": "avc_packet.pdf",
+      "source_page": 13,
+      "source_item_id": "B-200",
+      "description": "Control cabinet",
+      "quantity": 1,
+      "duty": "indoor"
+    }
+  ],
+  "required_output_fields": [
+    "output_row_id",
+    "source_file",
+    "source_page",
+    "source_item_id",
+    "description",
+    "quantity",
+    "duty",
+    "confidence",
+    "limitation_note"
+  ]
+}

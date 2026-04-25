@@ -1,0 +1,46 @@
+{
+  "validation_required": true,
+  "validation_level": "technical",
+  "validation_status": "PASS_WITH_LIMITATIONS",
+  "coverage_checked": true,
+  "source_mapping_checked": true,
+  "required_fields_checked": true,
+  "consistency_checked": true,
+  "uncertainties_declared": true,
+  "final_delivery_allowed": true,
+  "validation_loop": {
+    "validation_passes_before_final": 1,
+    "correction_passes_by_default": 1,
+    "revalidation_passes_by_default": 1,
+    "further_loops_require": "explicit_user_approval_or_PARTIAL_BLOCKED_or_FAIL_NEEDS_REWORK"
+  },
+  "rows": [
+    {
+      "output_row_id": "1",
+      "source_file": "avc_packet.pdf",
+      "source_page": 12,
+      "source_item_id": "A-100",
+      "description": "Industrial circulation pump",
+      "quantity": 2,
+      "duty": "continuous",
+      "confidence": "confirmed",
+      "limitation_note": ""
+    },
+    {
+      "output_row_id": "2",
+      "source_file": "avc_packet.pdf",
+      "source_page": 13,
+      "source_item_id": "B-200",
+      "description": "Control cabinet",
+      "quantity": 1,
+      "duty": "indoor",
+      "confidence": "limited",
+      "limitation_note": "Technical equivalence is not confirmed; source only supports screening-level category mapping."
+    }
+  ],
+  "summary": {
+    "row_count": 2,
+    "confirmed_count": 1,
+    "limited_count": 1
+  }
+}

@@ -89,6 +89,19 @@ Define the minimum task set required to distinguish a real surgical orchestratio
   - reviewer fails when triad roles are collapsed, swapped, or left semantically unproven;
   - the case can distinguish schema-presence from actual triad reasoning.
 
+### 10. Risk-based final validation gate
+- Goal: verify that high-risk artifact/source-mapping work cannot be finalized when traceability, required fields, or summary/detail consistency are missing.
+- Expected profile: Heavy only when material artifact, source mapping, traceability, or sensitive-output risk requires it; low-risk prose remains light or skipped.
+- Runnable lab interpretation: a bounded source table plus two declared outputs:
+  - a flawed draft that claims final delivery while source mapping and validation fields are incomplete;
+  - a corrected draft that restores required mapping and reaches `PASS_WITH_LIMITATIONS`.
+- What must be checked:
+  - `validation_required: true` is present for the high-risk artifact task;
+  - missing required traceability produces `FAIL_NEEDS_REWORK`;
+  - `final_delivery_allowed` is false when validation fails;
+  - corrected output may pass only after coverage, source mapping, required fields, consistency, and uncertainty declaration are all checked;
+  - the case preserves anti-cycle semantics: one validation pass, one correction plus one re-validation by default, then explicit approval or blocked/partial status.
+
 ## Current status
 This validation matrix is no longer documentation-only.
 
@@ -101,11 +114,15 @@ Currently implemented and evidenced at bounded runtime level:
 - Case 06: task with justified local hardening
 - Case 07: persistent bounded live code-level validation with verify-only completion gate
 - Case 08: persistent bounded live cluster-consistency validation on a declared repository substrate
+- Case 09: source-of-truth / stale-defect / adjacent-consistency triad on a declared live substrate
+- Case 10: final validation gate failure and corrected pass on a bounded artifact/source-mapping substrate
 
 Current boundary:
 - Cases 01-06 are proven in bounded lab-runtime form
 - Case 07 is now proven as an automated selftest scenario on a persistent substrate under `lab_cases/`
 - Case 08 is now proven as an automated selftest scenario on a persistent live cluster substrate under `lab_cases/`
+- Case 09 is proven as a dedicated automated selftest scenario on a persistent live substrate under `lab_cases/`
+- Case 10 is proven by a dedicated runnable lab-case checker and fixtures under `lab_cases/`; it does not prove host-wide automatic enforcement
 - this is still not evidence of repository-scale code orchestration
 - baseline runtime still propagates `dependency_ring` as a flat list rather than enforcing a structured ring object
 - planner-side contract propagation beyond the fixed planner input scope and stage-wide runtime read sandboxing remain unproven
